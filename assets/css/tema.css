@@ -1,24 +1,116 @@
-:root {
-    --bg-theme: black;
-    --card: #f5f5f5;
-    --text: black;
-    
-}
 
+/* =========================
+   THEME SYSTEM
+   DEFAULT: LIGHT
+========================= */
+
+:root,
 html.light {
+    color-scheme: light;
+
     --bg-theme: #fbfbfb;
-    --card: #3e3e47;
-    --text: black;
+    --card: #ffffff;
+    --text: #171717;
+    --text-muted: #737373;
+    --border: #e5e5e5;
+    --primary: #2563eb;
+    --input-bg: #ffffff;
+    --shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
 }
-.mycard{
 
-    background: var(--card);
+/* =========================
+   DARK THEME
+========================= */
 
-    color: var(--text);
+html.dark {
+    color-scheme: dark;
 
-     
+    --bg-theme: #111827;
+    --card: #1f2937;
+    --text: #f9fafb;
+    --text-muted: #9ca3af;
+    --border: #374151;
+    --primary: #60a5fa;
+    --input-bg: #1f2937;
+    --shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
 }
-body{
+
+/* =========================
+   GLOBAL
+========================= */
+
+html {
+    background: var(--bg-theme);
+}
+
+body {
     background: var(--bg-theme);
     color: var(--text);
+    transition:
+        background-color .25s ease,
+        color .25s ease;
+}
+
+/* CARDS */
+
+.mycard {
+    background: var(--card);
+    color: var(--text);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow);
+
+    transition:
+        background-color .25s ease,
+        color .25s ease,
+        border-color .25s ease;
+}
+
+/* TEXTOS */
+
+.theme-text {
+    color: var(--text);
+}
+
+.text-muted {
+    color: var(--text-muted);
+}
+
+/* BORDERS */
+
+.theme-border {
+    border-color: var(--border);
+}
+
+/* INPUTS */
+
+input,
+select,
+textarea {
+    background: var(--input-bg);
+    color: var(--text);
+    border-color: var(--border);
+}
+
+input::placeholder,
+textarea::placeholder {
+    color: var(--text-muted);
+}
+
+/* BOTÃO PRINCIPAL */
+
+.theme-primary {
+    background: var(--primary);
+    color: #ffffff;
+}
+
+/* TRANSIÇÃO DOS ELEMENTOS */
+
+.mycard,
+.theme-text,
+.text-muted,
+.theme-border {
+    transition:
+        background-color .25s ease,
+        color .25s ease,
+        border-color .25s ease;
 }

@@ -1,55 +1,70 @@
-// assets/js/theme.js
 
+// ===============================
+// THEME SYSTEM
+// DEFAULT: LIGHT
+// ===============================
+
+const root = document.documentElement;
+
+// Atualizar todos os botões
 function updateThemeIcon() {
-    const btn = document.getElementById('themeToggle');
 
-    if (!btn) return;
+    const isDark = root.classList.contains('dark');
 
-    btn.textContent =
-        document.documentElement.classList.contains('dark')
-            ? '☀️'
-            : '🌙';
+    document.querySelectorAll('[data-theme-toggle]').forEach(btn => {
+
+        btn.textContent = isDark ? '☀️' : '🌙';
+
+        btn.setAttribute(
+            'aria-label',
+            isDark ? 'Ativar tema claro' : 'Ativar tema escuro'
+        );
+
+        btn.setAttribute(
+            'title',
+            isDark ? 'Tema claro' : 'Tema escuro'
+        );
+
+    });
 }
 
+// Carregar tema
 function loadTheme() {
 
     const savedTheme = localStorage.getItem('theme');
 
-    // Primeira visita
-    if (!savedTheme) {
-        document.documentElement.classList.add('dark');
-    }
+    root.classList.remove('dark', 'light');
 
-    // Tema salvo
+    // Light como padrão
     if (savedTheme === 'dark') {
-        document.documentElement.classList.add('dark');
-    }
-
-    if (savedTheme === 'light') {
-        document.documentElement.classList.remove('dark');
+        root.classList.add('dark');
+    } else {
+        root.classList.add('light');
     }
 
     updateThemeIcon();
 }
 
+// Alternar tema
 function toggleTheme() {
 
-    const root = document.documentElement;
+    const isDark = root.classList.contains('dark');
 
-    root.classList.toggle('dark');
+    root.classList.remove('dark', 'light');
 
-    localStorage.setItem(
-        'theme',
-        root.classList.contains('dark')
-            ? 'dark'
-            : 'light'
-    );
+    if (isDark) {
+        root.classList.add('light');
+        localStorage.setItem('theme', 'light');
+    } else {
+        root.classList.add('dark');
+        localStorage.setItem('theme', 'dark');
+    }
 
     updateThemeIcon();
 }
 
-// Disponibiliza para onclick=""
+// Disponibilizar globalmente
 window.toggleTheme = toggleTheme;
 
-// Inicialização
-document.addEventListener('DOMContentLoaded', loadTheme);
+// Inicializar imediatamente
+loadTheme();

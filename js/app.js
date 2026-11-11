@@ -11,11 +11,7 @@ import { logout } from "../services/sessionService.js";
 import { initAuthUI } from "./auth/authUI.js";
 
 console.log('app loaded');
-function toggleTheme() {
-
-    document.documentElement.classList.toggle("light");
-
-}
+ 
 document.addEventListener("click", function (e) {
 
     const button = e.target.closest(".dropdown-toggle");

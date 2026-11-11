@@ -1,0 +1,394 @@
+<button
+    onclick="toggleTheme()"
+    data-theme-toggle
+    class="w-full flex items-center gap-3 p-3 rounded-lg"
+>
+    🌙
+</button>
+
+
+<!DOCTYPE html>
+<html lang="pt-BR" class="light">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Theme System | Light & Dark</title>
+
+    <link rel="stylesheet" href="assets/css/theme.css">
+
+    <script src="assets/js/theme.js"></script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+        }
+
+        .theme-panel {
+            background: var(--card);
+            color: var(--text);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            box-shadow: var(--shadow);
+        }
+
+        .theme-button {
+            background: var(--primary);
+            color: white;
+            padding: 10px 16px;
+            border-radius: 9px;
+            font-weight: 600;
+        }
+
+        .theme-button-secondary {
+            background: var(--bg-theme);
+            color: var(--text);
+            border: 1px solid var(--border);
+            padding: 10px 16px;
+            border-radius: 9px;
+        }
+
+        .theme-input {
+            width: 100%;
+            padding: 11px 13px;
+            border: 1px solid var(--border);
+            border-radius: 9px;
+            outline: none;
+        }
+
+        .theme-input:focus {
+            border-color: var(--primary);
+        }
+
+        .theme-nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            border-radius: 9px;
+            color: var(--text-muted);
+        }
+
+        .theme-nav-item.active {
+            background: var(--bg-theme);
+            color: var(--text);
+        }
+
+        .theme-divider {
+            border-color: var(--border);
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+    <header class="theme-panel rounded-none border-x-0 border-t-0">
+        <div class="max-w-7xl mx-auto px-5 h-16 flex items-center justify-between">
+
+            <div class="flex items-center gap-3">
+                <div class="w-9 h-9 rounded-xl theme-primary flex items-center justify-center font-bold">
+                    T
+                </div>
+
+                <strong class="text-lg">Theme System</strong>
+            </div>
+
+            <div class="flex items-center gap-3">
+
+                <span class="hidden sm:block text-sm text-muted">
+                    Alternar aparência
+                </span>
+
+                <button
+                    data-theme-toggle
+                    onclick="toggleTheme()"
+                    class="theme-button-secondary w-11 h-11 flex items-center justify-center"
+                >🌙</button>
+
+            </div>
+
+        </div>
+    </header>
+
+
+    <!-- LAYOUT -->
+    <div class="max-w-7xl mx-auto p-5 lg:p-8 grid grid-cols-1 lg:grid-cols-[230px_1fr] gap-6">
+
+        <!-- SIDEBAR -->
+        <aside class="theme-panel p-4 h-fit">
+
+            <div class="px-3 py-3 mb-3">
+                <p class="text-xs text-muted uppercase tracking-wider">
+                    Menu principal
+                </p>
+            </div>
+
+            <nav class="space-y-1">
+
+                <a href="#" class="theme-nav-item active">
+                    <span>⌂</span> Dashboard
+                </a>
+
+                <a href="#" class="theme-nav-item">
+                    <span>▤</span> Relatórios
+                </a>
+
+                <a href="#" class="theme-nav-item">
+                    <span>◷</span> Atividades
+                </a>
+
+                <a href="#" class="theme-nav-item">
+                    <span>⚙</span> Configurações
+                </a>
+
+            </nav>
+
+            <hr class="theme-divider my-5">
+
+            <button
+                onclick="toggleTheme()"
+                data-theme-toggle
+                class="theme-button-secondary w-full flex items-center justify-center gap-2"
+            >
+                🌙
+            </button>
+
+        </aside>
+
+
+        <!-- MAIN -->
+        <main class="space-y-6">
+
+            <!-- TITLE -->
+            <section class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+
+                <div>
+                    <p class="text-sm text-muted mb-1">
+                        Bem-vindo de volta
+                    </p>
+
+                    <h1 class="text-2xl sm:text-3xl font-bold">
+                        Dashboard
+                    </h1>
+
+                    <p class="text-sm text-muted mt-2">
+                        Teste completo do sistema de temas.
+                    </p>
+                </div>
+
+                <button class="theme-button">
+                    + Nova atividade
+                </button>
+
+            </section>
+
+
+            <!-- CARDS -->
+            <section class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
+
+                <div class="theme-panel p-5">
+                    <p class="text-sm text-muted">Total de usuários</p>
+                    <h2 class="text-3xl font-bold mt-3">2.450</h2>
+                    <p class="text-sm mt-3 text-green-500">↑ 12,5% este mês</p>
+                </div>
+
+                <div class="theme-panel p-5">
+                    <p class="text-sm text-muted">Receita mensal</p>
+                    <h2 class="text-3xl font-bold mt-3">R$ 8.450</h2>
+                    <p class="text-sm mt-3 text-green-500">↑ 8,2% este mês</p>
+                </div>
+
+                <div class="theme-panel p-5">
+                    <p class="text-sm text-muted">Atividades</p>
+                    <h2 class="text-3xl font-bold mt-3">128</h2>
+                    <p class="text-sm mt-3 text-muted">Últimos 30 dias</p>
+                </div>
+
+            </section>
+
+
+            <!-- CONTENT -->
+            <section class="grid grid-cols-1 xl:grid-cols-2 gap-5">
+
+                <!-- FORM -->
+                <div class="theme-panel p-5">
+
+                    <h2 class="font-bold text-lg mb-1">
+                        Formulário
+                    </h2>
+
+                    <p class="text-sm text-muted mb-5">
+                        Teste inputs e campos.
+                    </p>
+
+                    <form class="space-y-4">
+
+                        <div>
+                            <label class="block text-sm mb-2">Nome</label>
+                            <input
+                                type="text"
+                                placeholder="Digite seu nome"
+                                class="theme-input"
+                            >
+                        </div>
+
+                        <div>
+                            <label class="block text-sm mb-2">E-mail</label>
+                            <input
+                                type="email"
+                                placeholder="seu@email.com"
+                                class="theme-input"
+                            >
+                        </div>
+
+                        <div>
+                            <label class="block text-sm mb-2">Categoria</label>
+                            <select class="theme-input">
+                                <option>Selecione</option>
+                                <option>Desenvolvimento</option>
+                                <option>Design</option>
+                                <option>Marketing</option>
+                            </select>
+                        </div>
+
+                        <button type="button" class="theme-button w-full">
+                            Salvar informações
+                        </button>
+
+                    </form>
+
+                </div>
+
+
+                <!-- BUTTONS -->
+                <div class="theme-panel p-5">
+
+                    <h2 class="font-bold text-lg mb-1">
+                        Componentes
+                    </h2>
+
+                    <p class="text-sm text-muted mb-5">
+                        Elementos que acompanham as variáveis do tema.
+                    </p>
+
+                    <div class="space-y-4">
+
+                        <div class="flex flex-wrap gap-3">
+                            <button class="theme-button">
+                                Primário
+                            </button>
+
+                            <button class="theme-button-secondary">
+                                Secundário
+                            </button>
+                        </div>
+
+                        <hr class="theme-divider">
+
+                        <div>
+                            <p class="text-sm text-muted mb-3">
+                                Alternância de tema
+                            </p>
+
+                            <button
+                                onclick="toggleTheme()"
+                                data-theme-toggle
+                                class="theme-button-secondary w-12 h-12"
+                            >🌙</button>
+                        </div>
+
+                        <hr class="theme-divider">
+
+                        <div>
+                            <p class="text-sm text-muted mb-2">
+                                Texto principal
+                            </p>
+
+                            <p class="font-semibold">
+                                Este texto acompanha o tema.
+                            </p>
+
+                            <p class="text-sm text-muted mt-2">
+                                Este é um texto secundário.
+                            </p>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- TABLE -->
+            <section class="theme-panel p-5">
+
+                <h2 class="font-bold text-lg mb-4">
+                    Últimas atividades
+                </h2>
+
+                <div class="overflow-x-auto">
+
+                    <table class="w-full text-sm text-left">
+
+                        <thead>
+                            <tr class="text-muted border-b theme-divider">
+                                <th class="py-3 pr-4">Nome</th>
+                                <th class="py-3 pr-4">Categoria</th>
+                                <th class="py-3 pr-4">Status</th>
+                                <th class="py-3">Data</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+
+                            <tr class="border-b theme-divider">
+                                <td class="py-4 pr-4 font-medium">Projeto Alpha</td>
+                                <td class="py-4 pr-4">Desenvolvimento</td>
+                                <td class="py-4 pr-4 text-green-500">Concluído</td>
+                                <td class="py-4">11/11/2026</td>
+                            </tr>
+
+                            <tr class="border-b theme-divider">
+                                <td class="py-4 pr-4 font-medium">Projeto Beta</td>
+                                <td class="py-4 pr-4">Design</td>
+                                <td class="py-4 pr-4 text-yellow-500">Pendente</td>
+                                <td class="py-4">10/11/2026</td>
+                            </tr>
+
+                            <tr>
+                                <td class="py-4 pr-4 font-medium">Projeto Gamma</td>
+                                <td class="py-4 pr-4">Marketing</td>
+                                <td class="py-4 pr-4 text-green-500">Concluído</td>
+                                <td class="py-4">09/11/2026</td>
+                            </tr>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </section>
+
+
+            <!-- FOOTER -->
+            <footer class="text-center text-sm text-muted py-5">
+                Theme System · Light & Dark · 2026
+            </footer>
+
+        </main>
+
+    </div>
+
+</body>
+</html>
