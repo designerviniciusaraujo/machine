@@ -1,0 +1,335 @@
+
+
+  
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fecha Responsa</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="bg-zinc-950 text-zinc-100 min-h-screen">
+
+<div class="max-w-xl mx-auto p-5">
+
+  <header class="flex items-center gap-3 mb-8">
+    <button onclick="history.back()" class="p-2 rounded-xl bg-zinc-800 hover:bg-zinc-700">
+      <i data-lucide="arrow-left"></i>
+    </button>
+    <div>
+      <h1 class="text-xl font-bold">Fecha Responsa</h1>
+      <p class="text-xs text-zinc-500">Controle seus fechamentos</p>
+    </div>
+  </header>
+
+  <section class="bg-zinc-900 border border-zinc-800 rounded-2xl p-5 mb-5">
+    <h2 class="font-semibold mb-4 flex items-center gap-2">
+      <i data-lucide="plus-circle" class="w-5"></i> Novo fechamento
+    </h2>
+
+    <form id="fechaForm" class="space-y-4">
+      <div>
+        <label class="text-xs text-zinc-400">Produto que trampei</label>
+        <input id="produto" required placeholder="Nome do produto"
+          class="w-full mt-1 bg-zinc-800 border border-zinc-700 rounded-xl p-3 outline-none focus:border-blue-500">
+      </div>
+
+      <div>
+        <label class="text-xs text-zinc-400">Período</label>
+        <select id="periodo" required class="w-full mt-1 bg-zinc-800 border border-zinc-700 rounded-xl p-3">
+          <option value="12">12 horas</option>
+          <option value="24">24 horas</option>
+        </select>
+      </div>
+
+      <div class="grid grid-cols-2 gap-3">
+        <div>
+          <label class="text-xs text-zinc-400">Dia do FECHA</label>
+          <input type="date" id="dia" required
+            class="w-full mt-1 bg-zinc-800 border border-zinc-700 rounded-xl p-3">
+        </div>
+        <div>
+          <label class="text-xs text-zinc-400">Hora do FECHA</label>
+          <input type="time" id="hora" required
+            class="w-full mt-1 bg-zinc-800 border border-zinc-700 rounded-xl p-3">
+        </div>
+      </div>
+
+      <div>
+        <label class="text-xs text-zinc-400">Total do FECHA (R$)</label>
+        <input type="number" id="total" required min="0" step="0.01" placeholder="0,00"
+          class="w-full mt-1 bg-zinc-800 border border-zinc-700 rounded-xl p-3 text-lg font-bold">
+      </div>
+
+      <div class="border-t border-zinc-800 pt-4">
+        <h3 class="text-sm font-semibold mb-3">Distribuição do FECHA</h3>
+
+        <div class="space-y-3">
+          <div>
+            <label class="flex justify-between text-sm">
+              <span>Deus</span>
+              <span class="text-zinc-500 text-xs">Sugestão: 20%</span>
+            </label>
+            <div class="flex items-center gap-2 mt-1">
+              <input type="number" id="deus" value="20" min="0" max="100" step="0.01"
+                class="w-24 bg-zinc-800 border border-zinc-700 rounded-lg p-2">
+              <span class="text-zinc-400 text-sm">%</span>
+              <span id="valorDeus" class="ml-auto font-semibold">R$ 0,00</span>
+            </div>
+          </div>
+
+          <div class="flex justify-between text-sm">
+            <span class="text-zinc-400">Empresa</span>
+            <span class="font-semibold">70% · <span id="valorEmpresa">R$ 0,00</span></span>
+          </div>
+
+          <div class="flex justify-between text-sm">
+            <span class="text-zinc-400">Lucro</span>
+            <span class="font-semibold">30% · <span id="valorLucro">R$ 0,00</span></span>
+          </div>
+
+          <div class="border-t border-zinc-800 pt-3 flex justify-between">
+            <span class="font-semibold">Resultado</span>
+            <span id="resultado" class="text-xl font-bold text-emerald-400">R$ 0,00</span>
+          </div>
+          <p class="text-xs text-zinc-500">Resultado = Deus + Empresa + Lucro. Empresa e Lucro são calculados sobre o valor restante após Deus.</p>
+        </div>
+      </div>
+
+      <button id="salvar" type="submit"
+        class="w-full bg-blue-600 hover:bg-blue-500 rounded-xl p-3 font-semibold">
+        Salvar FECHA
+      </button>
+      <button type="button" id="cancelar" onclick="resetForm()"
+        class="hidden w-full bg-zinc-800 rounded-xl p-3 text-sm">Cancelar edição</button>
+    </form>
+  </section>
+
+  <section>
+    <div class="flex justify-between items-center mb-4">
+      <h2 class="font-semibold">Histórico de FECHAS</h2>
+      <span id="quantidade" class="text-xs text-zinc-500">0 registros</span>
+    </div>
+    <div id="lista" class="space-y-3">
+      <p class="text-center text-zinc-500 py-8">Carregando...</p>
+    </div>
+  </section>
+
+</div>
+
+<script type="module">
+import { initializeApp, getApps, getApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import {
+  getFirestore, collection, addDoc, getDocs, doc, updateDoc,
+  deleteDoc, query, orderBy, serverTimestamp
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+// ALTERE SUAS CREDENCIAIS
+const firebaseConfig = {
+   apiKey: "AIzaSyD-xzRjMRVUpey19g745DvPjjpCApqSHVE",
+  authDomain: "myops-d7525.firebaseapp.com",
+  projectId: "myops-d7525",
+  storageBucket: "myops-d7525.firebasestorage.app",
+  messagingSenderId: "247824192162",
+  appId: "1:247824192162:web:77c91ab1e3df855dc7fdfb"
+};
+
+const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const ref = collection(db, "fechaResponsa");
+
+const $ = id => document.getElementById(id);
+let editId = null;
+
+const money = value => Number(value || 0).toLocaleString("pt-BR", {
+  style: "currency", currency: "BRL"
+});
+
+function calcular() {
+  const total = Number($("total").value) || 0;
+  const percentualDeus = Number($("deus").value) || 0;
+  const deus = total * percentualDeus / 100;
+  const restante = total - deus;
+  const empresa = restante * 0.70;
+  const lucro = restante * 0.30;
+
+  $("valorDeus").textContent = money(deus);
+  $("valorEmpresa").textContent = money(empresa);
+  $("valorLucro").textContent = money(lucro);
+  $("resultado").textContent = money(deus + empresa + lucro);
+
+  return { deus, empresa, lucro, resultado: deus + empresa + lucro };
+}
+
+$("total").addEventListener("input", calcular);
+$("deus").addEventListener("input", calcular);
+
+$("fechaForm").addEventListener("submit", async e => {
+  e.preventDefault();
+
+  const total = Number($("total").value);
+  const percentualDeus = Number($("deus").value);
+
+  if (percentualDeus < 0 || percentualDeus > 100) {
+    alert("Informe uma porcentagem entre 0 e 100.");
+    return;
+  }
+
+  const distribuicao = calcular();
+
+  const dados = {
+    produto: $("produto").value.trim(),
+    periodo: Number($("periodo").value),
+    dia: $("dia").value,
+    hora: $("hora").value,
+    total,
+    percentualDeus,
+    empresaPercentual: 70,
+    lucroPercentual: 30,
+    ...distribuicao,
+    atualizadoEm: serverTimestamp()
+  };
+
+  try {
+    $("salvar").disabled = true;
+    $("salvar").textContent = "Salvando...";
+
+    if (editId) {
+      await updateDoc(doc(db, "fechaResponsa", editId), dados);
+    } else {
+      dados.criadoEm = serverTimestamp();
+      await addDoc(ref, dados);
+    }
+
+    resetForm();
+    await carregar();
+  } catch (error) {
+    console.error(error);
+    alert("Erro ao salvar. Verifique o Firebase.");
+  } finally {
+    $("salvar").disabled = false;
+    $("salvar").textContent = editId ? "Atualizar FECHA" : "Salvar FECHA";
+  }
+});
+
+window.resetForm = function() {
+  $("fechaForm").reset();
+  $("deus").value = 20;
+  editId = null;
+  $("salvar").textContent = "Salvar FECHA";
+  $("cancelar").classList.add("hidden");
+  calcular();
+};
+
+window.editar = function(id, dados) {
+  editId = id;
+  $("produto").value = dados.produto;
+  $("periodo").value = dados.periodo;
+  $("dia").value = dados.dia;
+  $("hora").value = dados.hora;
+  $("total").value = dados.total;
+  $("deus").value = dados.percentualDeus;
+
+  $("salvar").textContent = "Atualizar FECHA";
+  $("cancelar").classList.remove("hidden");
+  calcular();
+  window.scrollTo({ top: 0, behavior: "smooth" });
+};
+
+window.excluir = async function(id) {
+  if (!confirm("Excluir este FECHA permanentemente?")) return;
+  try {
+    await deleteDoc(doc(db, "fechaResponsa", id));
+    await carregar();
+  } catch (error) {
+    alert("Erro ao excluir.");
+  }
+};
+
+async function carregar() {
+  try {
+    const q = query(ref, orderBy("dia", "desc"));
+    const snapshot = await getDocs(q);
+
+    $("quantidade").textContent = `${snapshot.size} registros`;
+
+    if (snapshot.empty) {
+      $("lista").innerHTML = '<p class="text-center text-zinc-500 py-8">Nenhum FECHA cadastrado.</p>';
+      return;
+    }
+
+    $("lista").innerHTML = "";
+
+    snapshot.forEach(item => {
+      const d = item.data();
+      const card = document.createElement("article");
+      card.className = "bg-zinc-900 border border-zinc-800 rounded-2xl p-4 space-y-3";
+
+      const top = document.createElement("div");
+      top.className = "flex justify-between gap-3";
+      const info = document.createElement("div");
+      const nome = document.createElement("h3");
+      nome.className = "font-semibold";
+      nome.textContent = d.produto || "Sem produto";
+      const data = document.createElement("p");
+      data.className = "text-xs text-zinc-500 mt-1";
+      data.textContent = `${d.dia || ""} · ${d.hora || ""} · ${d.periodo || 12} horas`;
+      info.append(nome, data);
+
+      const valor = document.createElement("strong");
+      valor.className = "text-emerald-400 whitespace-nowrap";
+      valor.textContent = money(d.total);
+      top.append(info, valor);
+
+      const details = document.createElement("div");
+      details.className = "grid grid-cols-3 gap-2 border-t border-zinc-800 pt-3 text-xs";
+
+      [
+        ["Deus", d.deus],
+        ["Empresa", d.empresa],
+        ["Lucro", d.lucro]
+      ].forEach(([label, amount]) => {
+        const div = document.createElement("div");
+        const small = document.createElement("p");
+        small.className = "text-zinc-500 mb-1";
+        small.textContent = label;
+        const strong = document.createElement("p");
+        strong.className = "font-semibold";
+        strong.textContent = money(amount);
+        div.append(small, strong);
+        details.append(div);
+      });
+
+      const actions = document.createElement("div");
+      actions.className = "flex gap-2 pt-2";
+
+      const edit = document.createElement("button");
+      edit.className = "flex-1 bg-zinc-800 rounded-lg p-2 text-xs";
+      edit.textContent = "Editar";
+      edit.onclick = () => window.editar(item.id, d);
+
+      const del = document.createElement("button");
+      del.className = "px-4 bg-red-950 text-red-300 rounded-lg p-2 text-xs";
+      del.textContent = "Excluir";
+      del.onclick = () => window.excluir(item.id);
+
+      actions.append(edit, del);
+      card.append(top, details, actions);
+      $("lista").append(card);
+    });
+
+  } catch (error) {
+    console.error(error);
+    $("lista").innerHTML = '<p class="text-red-400 text-sm">Erro ao carregar. Confira as credenciais e as regras do Firestore.</p>';
+  }
+}
+
+calcular();
+carregar();
+lucide.createIcons();
+</script>
+
+</body>
+</html>

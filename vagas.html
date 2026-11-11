@@ -1,0 +1,460 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Inteligência Profissional | Vagas</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-neutral-950 text-white min-h-screen">
+  <main class="max-w-6xl mx-auto px-5 py-8">
+
+    <header class="flex flex-wrap justify-between items-center gap-4 mb-8">
+      <div>
+        <p class="text-orange-500 text-xs font-bold uppercase tracking-widest">
+          Professional Intelligence
+        </p>
+        <h1 class="text-3xl font-bold mt-2">Central de oportunidades</h1>
+        <p class="text-neutral-400 mt-2">Encontre, registre e acompanhe suas candidaturas.</p>
+      </div>
+      <a href="./inteligencia.html"
+        class="bg-neutral-800 hover:bg-neutral-700 px-4 py-3 rounded-xl text-sm">
+        Currículo mestre →
+      </a>
+    </header>
+
+    <div id="notice" class="mb-6 p-4 rounded-xl bg-neutral-900 border border-neutral-800 text-sm">
+      Conectando ao Firebase...
+    </div>
+
+    <section class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-8">
+      <div class="bg-neutral-900 border border-neutral-800 rounded-2xl p-4">
+        <p class="text-neutral-400 text-sm">Total de vagas</p>
+        <p id="total" class="text-3xl font-bold mt-2">0</p>
+      </div>
+      <div class="bg-neutral-900 border border-neutral-800 rounded-2xl p-4">
+        <p class="text-neutral-400 text-sm">Candidaturas</p>
+        <p id="sent" class="text-3xl font-bold mt-2">0</p>
+      </div>
+      <div class="bg-neutral-900 border border-neutral-800 rounded-2xl p-4">
+        <p class="text-neutral-400 text-sm">Entrevistas</p>
+        <p id="interviews" class="text-3xl font-bold mt-2">0</p>
+      </div>
+      <div class="bg-neutral-900 border border-neutral-800 rounded-2xl p-4">
+        <p class="text-neutral-400 text-sm">Aprovadas</p>
+        <p id="approved" class="text-3xl font-bold mt-2">0</p>
+      </div>
+    </section>
+
+    <section class="bg-neutral-900 border border-neutral-800 rounded-2xl p-5 mb-8">
+      <h2 class="text-xl font-bold mb-5">Registrar oportunidade</h2>
+
+      <form id="jobForm" class="grid md:grid-cols-2 gap-4">
+        <div>
+          <label class="block text-sm mb-2">Cargo *</label>
+          <input name="role" required maxlength="160"
+            placeholder="Desenvolvedor Júnior"
+            class="field">
+        </div>
+
+        <div>
+          <label class="block text-sm mb-2">Empresa *</label>
+          <input name="company" required maxlength="160"
+            placeholder="Nome da empresa"
+            class="field">
+        </div>
+
+        <div>
+          <label class="block text-sm mb-2">Plataforma *</label>
+          <select name="platform" required class="field">
+            <option value="LinkedIn">LinkedIn</option>
+            <option value="Gupy">Gupy</option>
+            <option value="Indeed">Indeed</option>
+            <option value="Remotar">Remotar</option>
+            <option value="Programathor">Programathor</option>
+            <option value="Outro">Outro</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-sm mb-2">Status *</label>
+          <select name="status" required class="field">
+            <option value="Encontrada">Encontrada</option>
+            <option value="Candidatura enviada">Candidatura enviada</option>
+            <option value="Entrevista">Entrevista</option>
+            <option value="Aprovada">Aprovada</option>
+            <option value="Recusada">Recusada</option>
+            <option value="Encerrada">Encerrada</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-sm mb-2">Modalidade</label>
+          <select name="workMode" class="field">
+            <option value="Remoto">Remoto</option>
+            <option value="Híbrido">Híbrido</option>
+            <option value="Presencial">Presencial</option>
+            <option value="Não informado">Não informado</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-sm mb-2">Salário informado</label>
+          <input name="salary" maxlength="100"
+            placeholder="Ex.: R$ 3.000 ou a combinar"
+            class="field">
+        </div>
+
+        <div class="md:col-span-2">
+          <label class="block text-sm mb-2">Link da vaga *</label>
+          <input name="url" type="url" required maxlength="2000"
+            placeholder="https://..."
+            class="field">
+        </div>
+
+        <div>
+          <label class="block text-sm mb-2">Data de acompanhamento</label>
+          <input name="followUp" type="date" class="field">
+        </div>
+
+        <div>
+          <label class="block text-sm mb-2">Próxima ação</label>
+          <input name="nextAction" maxlength="300"
+            placeholder="Ex.: revisar requisitos e enviar currículo"
+            class="field">
+        </div>
+
+        <div class="md:col-span-2">
+          <label class="block text-sm mb-2">Notas</label>
+          <textarea name="notes" rows="3" maxlength="3000"
+            placeholder="Requisitos, contato, observações..."
+            class="field"></textarea>
+        </div>
+
+        <div class="md:col-span-2 flex flex-wrap gap-3">
+          <button id="saveButton" type="submit"
+            class="bg-orange-600 hover:bg-orange-500 px-6 py-3 rounded-xl font-bold">
+            Salvar oportunidade
+          </button>
+          <button id="cancelEdit" type="button" hidden
+            class="bg-neutral-700 px-5 py-3 rounded-xl">
+            Cancelar edição
+          </button>
+        </div>
+      </form>
+    </section>
+
+    <section>
+      <div class="flex flex-wrap justify-between items-center gap-4 mb-5">
+        <h2 class="text-xl font-bold">Minhas oportunidades</h2>
+        <button id="refreshButton"
+          class="bg-neutral-800 hover:bg-neutral-700 px-4 py-2 rounded-xl text-sm">
+          Atualizar lista
+        </button>
+      </div>
+
+      <div class="grid sm:grid-cols-2 gap-3 mb-5">
+        <input id="search" placeholder="Buscar cargo ou empresa..."
+          class="field">
+        <select id="filterStatus" class="field">
+          <option value="">Todos os status</option>
+          <option>Encontrada</option>
+          <option>Candidatura enviada</option>
+          <option>Entrevista</option>
+          <option>Aprovada</option>
+          <option>Recusada</option>
+          <option>Encerrada</option>
+        </select>
+        <select id="filterPlatform" class="field sm:col-span-2">
+          <option value="">Todas as plataformas</option>
+          <option>LinkedIn</option>
+          <option>Gupy</option>
+          <option>Indeed</option>
+          <option>Remotar</option>
+          <option>Programathor</option>
+          <option>Outro</option>
+        </select>
+      </div>
+
+      <div id="jobList" class="grid md:grid-cols-2 gap-4">
+        <p class="text-neutral-400">Carregando oportunidades...</p>
+      </div>
+    </section>
+  </main>
+
+  <style>
+    .field {
+      width: 100%;
+      background: #171717;
+      border: 1px solid #404040;
+      border-radius: 10px;
+      padding: 12px;
+      color: white;
+      outline: none;
+    }
+    .field:focus { border-color: #ff3008; }
+    .field::placeholder { color: #737373; }
+    button:disabled { opacity: .5; cursor: not-allowed; }
+  </style>
+
+  <script type="module">
+    import { initializeApp, getApps, getApp }
+      from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
+
+    import {
+      getAuth, onAuthStateChanged
+    } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
+
+    import {
+      getFirestore, collection, addDoc, getDocs, doc,
+      updateDoc, deleteDoc, serverTimestamp
+    } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+
+    // Use a mesma configuração do seu projeto.
+    const firebaseConfig = {
+     apiKey: "AIzaSyCUdvLKNzNyqmhRuPGl3OW16QDK4G8j2-A",
+  authDomain: "engineomda.firebaseapp.com",
+  projectId: "engineomda",
+  storageBucket: "engineomda.firebasestorage.app",
+  messagingSenderId: "151196305319",
+  appId: "1:151196305319:web:f146670c5edc4cd0339882"
+    };
+
+    const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    const form = document.getElementById("jobForm");
+    const notice = document.getElementById("notice");
+    const jobList = document.getElementById("jobList");
+    const saveButton = document.getElementById("saveButton");
+
+    let user = null;
+    let jobs = [];
+    let editingId = null;
+    let loading = false;
+
+    const statuses = [
+      "Encontrada", "Candidatura enviada", "Entrevista",
+      "Aprovada", "Recusada", "Encerrada"
+    ];
+
+    function showNotice(message, error = false) {
+      notice.textContent = message;
+      notice.className = "mb-6 p-4 rounded-xl border text-sm " +
+        (error
+          ? "bg-red-950 border-red-800 text-red-300"
+          : "bg-neutral-900 border-neutral-800 text-neutral-300");
+    }
+
+    function jobsRef() {
+      return collection(db, "users", user.uid, "professionalJobs");
+    }
+
+    function safeText(value) {
+      return String(value ?? "").replace(/[&<>"']/g, char => ({
+        "&": "&amp;", "<": "&lt;", ">": "&gt;",
+        '"': "&quot;", "'": "&#39;"
+      })[char]);
+    }
+
+    function validHttpUrl(value) {
+      try {
+        const url = new URL(value);
+        return url.protocol === "https:" || url.protocol === "http:";
+      } catch {
+        return false;
+      }
+    }
+
+    function resetForm() {
+      form.reset();
+      editingId = null;
+      saveButton.textContent = "Salvar oportunidade";
+      document.getElementById("cancelEdit").hidden = true;
+    }
+
+    function updateStats() {
+      document.getElementById("total").textContent = jobs.length;
+      document.getElementById("sent").textContent =
+        jobs.filter(j => ["Candidatura enviada", "Entrevista", "Aprovada"]
+          .includes(j.status)).length;
+      document.getElementById("interviews").textContent =
+        jobs.filter(j => j.status === "Entrevista").length;
+      document.getElementById("approved").textContent =
+        jobs.filter(j => j.status === "Aprovada").length;
+    }
+
+    function renderJobs() {
+      updateStats();
+
+      const query = document.getElementById("search").value.toLowerCase().trim();
+      const status = document.getElementById("filterStatus").value;
+      const platform = document.getElementById("filterPlatform").value;
+
+      const filtered = jobs.filter(job =>
+        (!query || `${job.role} ${job.company}`.toLowerCase().includes(query)) &&
+        (!status || job.status === status) &&
+        (!platform || job.platform === platform)
+      );
+
+      if (!filtered.length) {
+        jobList.innerHTML =
+          '<p class="text-neutral-400 md:col-span-2">Nenhuma oportunidade encontrada.</p>';
+        return;
+      }
+
+      jobList.innerHTML = filtered.map(job => `
+        <article class="bg-neutral-900 border border-neutral-800 rounded-2xl p-5">
+          <div class="flex justify-between items-start gap-3">
+            <div>
+              <p class="text-orange-500 text-xs font-bold uppercase">
+                ${safeText(job.platform)}
+              </p>
+              <h3 class="text-lg font-bold mt-2">${safeText(job.role)}</h3>
+              <p class="text-neutral-400 text-sm mt-1">${safeText(job.company)}</p>
+            </div>
+            <span class="text-xs bg-neutral-800 rounded-lg px-2 py-1">
+              ${safeText(job.status)}
+            </span>
+          </div>
+
+          <div class="text-sm text-neutral-400 mt-4 space-y-1">
+            <p>Modalidade: ${safeText(job.workMode || "Não informado")}</p>
+            <p>Salário: ${safeText(job.salary || "Não informado")}</p>
+            ${job.followUp ? `<p>Acompanhar em: ${safeText(job.followUp)}</p>` : ""}
+            ${job.nextAction ? `<p>Próxima ação: ${safeText(job.nextAction)}</p>` : ""}
+            ${job.notes ? `<p class="mt-2 whitespace-pre-wrap">${safeText(job.notes)}</p>` : ""}
+          </div>
+
+          <div class="flex flex-wrap gap-2 mt-5">
+            <a href="${safeText(job.url)}" target="_blank" rel="noopener noreferrer"
+              class="bg-orange-600 hover:bg-orange-500 rounded-lg px-3 py-2 text-sm">
+              Abrir vaga ↗
+            </a>
+            <button data-edit="${safeText(job.id)}"
+              class="bg-neutral-800 hover:bg-neutral-700 rounded-lg px-3 py-2 text-sm">
+              Editar
+            </button>
+            <button data-delete="${safeText(job.id)}"
+              class="bg-neutral-800 hover:bg-red-950 rounded-lg px-3 py-2 text-sm">
+              Excluir
+            </button>
+          </div>
+        </article>
+      `).join("");
+    }
+
+    async function loadJobs() {
+      if (!user || loading) return;
+      loading = true;
+      showNotice("Carregando oportunidades...");
+
+      try {
+        const snapshot = await getDocs(jobsRef());
+        jobs = snapshot.docs.map(item => ({ id: item.id, ...item.data() }));
+        renderJobs();
+        showNotice("Oportunidades carregadas com sucesso.");
+      } catch (error) {
+        console.error(error);
+        showNotice("Erro ao carregar: " + error.message, true);
+      } finally {
+        loading = false;
+      }
+    }
+
+    form.addEventListener("submit", async event => {
+      event.preventDefault();
+      if (!user) return showNotice("Faça login antes de continuar.", true);
+
+      const data = Object.fromEntries(new FormData(form).entries());
+
+      if (!validHttpUrl(data.url)) {
+        return showNotice("Informe um link válido iniciado por http:// ou https://.", true);
+      }
+
+      saveButton.disabled = true;
+      saveButton.textContent = "Salvando...";
+
+      try {
+        data.updatedAt = serverTimestamp();
+
+        if (editingId) {
+          await updateDoc(doc(db, "users", user.uid, "professionalJobs", editingId), data);
+          showNotice("Oportunidade atualizada.");
+        } else {
+          data.createdAt = serverTimestamp();
+          await addDoc(jobsRef(), data);
+          showNotice("Oportunidade salva no Firestore.");
+        }
+
+        resetForm();
+        await loadJobs();
+      } catch (error) {
+        console.error(error);
+        showNotice("Erro ao salvar: " + error.message, true);
+      } finally {
+        saveButton.disabled = false;
+        saveButton.textContent = editingId
+          ? "Atualizar oportunidade"
+          : "Salvar oportunidade";
+      }
+    });
+
+    jobList.addEventListener("click", async event => {
+      const editButton = event.target.closest("[data-edit]");
+      const deleteButton = event.target.closest("[data-delete]");
+
+      if (editButton) {
+        const job = jobs.find(item => item.id === editButton.dataset.edit);
+        if (!job) return;
+
+        for (const field of form.elements) {
+          if (field.name) field.value = job[field.name] || "";
+        }
+
+        editingId = job.id;
+        saveButton.textContent = "Atualizar oportunidade";
+        document.getElementById("cancelEdit").hidden = false;
+        form.scrollIntoView({ behavior: "smooth" });
+      }
+
+      if (deleteButton) {
+        const id = deleteButton.dataset.delete;
+        if (!confirm("Deseja realmente excluir esta oportunidade?")) return;
+
+        try {
+          await deleteDoc(doc(db, "users", user.uid, "professionalJobs", id));
+          showNotice("Oportunidade excluída.");
+          await loadJobs();
+        } catch (error) {
+          console.error(error);
+          showNotice("Erro ao excluir: " + error.message, true);
+        }
+      }
+    });
+
+    document.getElementById("cancelEdit").addEventListener("click", resetForm);
+    document.getElementById("refreshButton").addEventListener("click", loadJobs);
+    document.getElementById("search").addEventListener("input", renderJobs);
+    document.getElementById("filterStatus").addEventListener("change", renderJobs);
+    document.getElementById("filterPlatform").addEventListener("change", renderJobs);
+
+    onAuthStateChanged(auth, async authenticatedUser => {
+      user = authenticatedUser;
+
+      if (!user) {
+        form.classList.add("hidden");
+        showNotice("Faça login com sua conta Firebase para gerenciar suas vagas.", true);
+        jobList.innerHTML = "";
+        return;
+      }
+
+      form.classList.remove("hidden");
+      await loadJobs();
+    });
+  </script>
+</body>
+</html>

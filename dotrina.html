@@ -1,0 +1,283 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Minha Rotina</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-white text-gray-900 p-4">
+
+<main class="max-w-3xl mx-auto space-y-5">
+  <header class="flex items-center justify-between">
+    <h1 class="text-xl font-bold">Minha Rotina</h1>
+    <button id="nova" class="bg-black text-white px-4 py-2 rounded">
+      + Nova
+    </button>
+  </header>
+
+  <form id="form" class="hidden border rounded p-4 space-y-3">
+    <input id="atividadeId" type="hidden">
+
+    <input id="nome" required maxlength="150"
+      placeholder="Nome da atividade"
+      class="w-full border rounded p-2">
+
+    <label class="block text-sm">Dia da semana
+      <select id="dia" required class="w-full border rounded p-2">
+        <option value="1">Segunda-feira</option>
+        <option value="2">Terça-feira</option>
+        <option value="3">Quarta-feira</option>
+        <option value="4">Quinta-feira</option>
+        <option value="5">Sexta-feira</option>
+        <option value="6">Sábado</option>
+        <option value="0">Domingo</option>
+      </select>
+    </label>
+
+    <div class="grid grid-cols-2 gap-3">
+      <label class="text-sm">Início
+        <input id="inicio" type="time" required
+          class="w-full border rounded p-2">
+      </label>
+      <label class="text-sm">Fim
+        <input id="fim" type="time" required
+          class="w-full border rounded p-2">
+      </label>
+    </div>
+
+    <label class="block text-sm">Tipo de atividade
+      <select id="tipo" required class="w-full border rounded p-2">
+        <option value="trabalho_fisico">Trabalho físico</option>
+        <option value="lazer">Lazer</option>
+      </select>
+    </label>
+
+    <div class="flex gap-2">
+      <button id="salvar" type="submit"
+        class="bg-black text-white px-4 py-2 rounded">Salvar</button>
+      <button id="cancelar" type="button"
+        class="border px-4 py-2 rounded">Cancelar</button>
+    </div>
+  </form>
+
+  <p id="status" class="text-sm text-gray-500">Carregando rotina...</p>
+  <div id="lista" class="space-y-6"></div>
+</main>
+
+<script type="module">
+  import { initializeApp } from
+    "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js";
+
+  import {
+    getFirestore, collection, addDoc, getDocs,
+    doc, updateDoc, deleteDoc, serverTimestamp
+  } from
+    "https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore.js";
+
+  // SUBSTITUA PELAS SUAS CREDENCIAIS FIREBASE
+  const firebaseConfig = {
+   apiKey: "AIzaSyD-xzRjMRVUpey19g745DvPjjpCApqSHVE",
+  authDomain: "myops-d7525.firebaseapp.com",
+  projectId: "myops-d7525",
+  storageBucket: "myops-d7525.firebasestorage.app",
+  messagingSenderId: "247824192162",
+  appId: "1:247824192162:web:77c91ab1e3df855dc7fdfb"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+  const tabela = collection(db, "atividades");
+  const $ = id => document.getElementById(id);
+
+  const dias = [
+    { id: 1, nome: "Segunda-feira" },
+    { id: 2, nome: "Terça-feira" },
+    { id: 3, nome: "Quarta-feira" },
+    { id: 4, nome: "Quinta-feira" },
+    { id: 5, nome: "Sexta-feira" },
+    { id: 6, nome: "Sábado" },
+    { id: 0, nome: "Domingo" }
+  ];
+
+  const periodos = [
+    { nome: "Manhã", inicio: "05:00", fim: "12:00" },
+    { nome: "Tarde", inicio: "12:00", fim: "18:00" },
+    { nome: "Noite", inicio: "18:00", fim: "23:59" }
+  ];
+
+  let ocupado = false;
+
+  $("nova").onclick = () => {
+    $("form").reset();
+    $("atividadeId").value = "";
+    $("dia").value = String(new Date().getDay());
+    $("form").classList.remove("hidden");
+    $("nome").focus();
+  };
+
+  $("cancelar").onclick = () => {
+    $("form").classList.add("hidden");
+    $("form").reset();
+  };
+
+  function elemento(tag, classe, texto) {
+    const el = document.createElement(tag);
+    el.className = classe || "";
+    if (texto !== undefined) el.textContent = texto;
+    return el;
+  }
+
+  async function carregar() {
+    $("status").textContent = "Carregando atividades...";
+    $("lista").replaceChildren();
+
+    try {
+      const snapshot = await getDocs(tabela);
+      const atividades = snapshot.docs.map(d => ({
+        id: d.id, ...d.data()
+      }));
+
+      atividades.sort((a, b) =>
+        (a.inicio || "").localeCompare(b.inicio || "")
+      );
+
+      dias.forEach(dia => {
+        const doDia = atividades.filter(a =>
+          String(a.dia) === String(dia.id)
+        );
+
+        const secao = elemento("section", "space-y-3");
+        secao.append(elemento("h2", "text-lg font-bold border-b pb-2", dia.nome));
+
+        periodos.forEach(periodo => {
+          const grupo = elemento("div", "space-y-2");
+          grupo.append(elemento("h3", "text-sm font-semibold text-gray-500 uppercase", periodo.nome));
+
+          const itens = doDia.filter(a => {
+            const hora = a.inicio || "";
+            if (periodo.nome === "Manhã")
+              return hora >= "05:00" && hora < "12:00";
+            if (periodo.nome === "Tarde")
+              return hora >= "12:00" && hora < "18:00";
+            return hora >= "18:00" || hora < "05:00";
+          });
+
+          if (!itens.length) {
+            grupo.append(elemento("p", "text-sm text-gray-400", "Nenhuma atividade"));
+          }
+
+          itens.forEach(a => {
+            const card = elemento("article", "border rounded p-3 flex justify-between items-center gap-3");
+            const info = elemento("div", "min-w-0");
+            info.append(
+              elemento("p", "font-medium break-words", a.nome || "Sem nome"),
+              elemento("p", "text-sm text-gray-500",
+                `${a.inicio || "--:--"} – ${a.fim || "--:--"}`),
+              elemento("p", "text-xs text-gray-500",
+                a.tipo === "lazer" ? "Lazer" : "Trabalho físico")
+            );
+
+            const acoes = elemento("div", "flex gap-3 text-sm shrink-0");
+
+            const editar = elemento("button", "underline", "Editar");
+            editar.type = "button";
+            editar.onclick = () => {
+              $("atividadeId").value = a.id;
+              $("nome").value = a.nome || "";
+              $("dia").value = String(a.dia ?? 1);
+              $("inicio").value = a.inicio || "";
+              $("fim").value = a.fim || "";
+              $("tipo").value = a.tipo || "trabalho_fisico";
+              $("form").classList.remove("hidden");
+              $("nome").focus();
+            };
+
+            const excluir = elemento("button", "text-red-600", "Excluir");
+            excluir.type = "button";
+            excluir.onclick = async () => {
+              if (!confirm(`Excluir "${a.nome}"?`)) return;
+              try {
+                await deleteDoc(doc(db, "atividades", a.id));
+                await carregar();
+              } catch (e) {
+                alert("Erro ao excluir: " + e.message);
+              }
+            };
+
+            acoes.append(editar, excluir);
+            card.append(info, acoes);
+            grupo.append(card);
+          });
+
+          secao.append(grupo);
+        });
+
+        $("lista").append(secao);
+      });
+
+      $("status").textContent =
+        `${atividades.length} atividade(s) cadastrada(s)`;
+    } catch (e) {
+      $("status").textContent = "Erro ao carregar: " + e.message;
+    }
+  }
+
+  $("form").onsubmit = async e => {
+    e.preventDefault();
+    if (ocupado) return;
+
+    const nome = $("nome").value.trim();
+    const inicio = $("inicio").value;
+    const fim = $("fim").value;
+
+    if (!nome || !inicio || !fim) {
+      alert("Preencha todos os campos.");
+      return;
+    }
+
+    if (fim <= inicio) {
+      alert("O horário final deve ser posterior ao inicial.");
+      return;
+    }
+
+    const dados = {
+      nome,
+      dia: Number($("dia").value),
+      inicio,
+      fim,
+      tipo: $("tipo").value,
+      atualizadoEm: serverTimestamp()
+    };
+
+    ocupado = true;
+    $("salvar").disabled = true;
+
+    try {
+      const id = $("atividadeId").value;
+
+      if (id) {
+        await updateDoc(doc(db, "atividades", id), dados);
+      } else {
+        await addDoc(tabela, {
+          ...dados,
+          criadoEm: serverTimestamp()
+        });
+      }
+
+      $("form").reset();
+      $("form").classList.add("hidden");
+      await carregar();
+    } catch (e) {
+      alert("Erro ao salvar: " + e.message);
+    } finally {
+      ocupado = false;
+      $("salvar").disabled = false;
+    }
+  };
+
+  carregar();
+</script>
+</body>
+</html>

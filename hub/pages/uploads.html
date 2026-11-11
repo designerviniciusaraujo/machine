@@ -1,0 +1,692 @@
+<div class="w-full min-h-full bg-[#0b0b0b] text-white">
+
+  <form
+    id="torrentUploadForm"
+    class="w-full max-w-7xl mx-auto px-4 py-6 sm:px-6 lg:px-8"
+  >
+
+    <!-- HEADER -->
+    <div class="mb-8">
+
+      <div class="flex items-center gap-3 mb-3">
+        <span class="w-2 h-2 rounded-full bg-[#5864be]"></span>
+
+        <span class="text-xs font-bold tracking-[0.2em] text-[#93a0ff] uppercase">
+          Torrent
+        </span>
+      </div>
+
+      <h1 class="text-2xl sm:text-3xl font-bold">
+        Publicar Torrent
+      </h1>
+
+      <p class="mt-2 text-sm text-zinc-500">
+        Envie as informações do conteúdo para publicar no tracker.
+      </p>
+
+    </div>
+
+
+    <!-- GRID PRINCIPAL -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+
+      <!-- ========================================= -->
+      <!-- ARQUIVO -->
+      <!-- ========================================= -->
+
+      <div class="lg:col-span-1">
+
+        <div class="rounded-2xl border border-white/5 bg-[#111111] p-5">
+
+          <h2 class="text-sm font-bold text-white">
+            Arquivo .torrent
+          </h2>
+
+          <p class="mt-1 mb-5 text-xs text-zinc-500">
+            Selecione o arquivo torrent para publicar.
+          </p>
+
+
+          <!-- DROPZONE -->
+
+          <div
+            id="dropZone"
+            class="
+              min-h-[240px]
+              rounded-2xl
+              border-2
+              border-dashed
+              border-white/10
+              bg-[#171717]
+              flex
+              flex-col
+              items-center
+              justify-center
+              text-center
+              p-6
+              cursor-pointer
+              transition
+              hover:border-[#5864be]
+              hover:bg-[#1a1a1a]
+            "
+          >
+
+            <input
+              id="torrentFile"
+              type="file"
+              accept=".torrent"
+              class="hidden"
+            >
+
+
+            <div
+              class="
+                w-14
+                h-14
+                rounded-2xl
+                bg-[#5864be]/10
+                border
+                border-[#5864be]/20
+                flex
+                items-center
+                justify-center
+                mb-4
+              "
+            >
+
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="26"
+                height="26"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+              >
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                <polyline points="17 8 12 3 7 8"/>
+                <line x1="12" y1="3" x2="12" y2="15"/>
+              </svg>
+
+            </div>
+
+
+            <p class="text-sm font-semibold">
+              Clique para selecionar
+            </p>
+
+            <p class="mt-2 text-xs text-zinc-500">
+              ou arraste o arquivo aqui
+            </p>
+
+            <p class="mt-4 text-[11px] text-zinc-600">
+              Apenas arquivos .torrent
+            </p>
+
+          </div>
+
+
+          <!-- ARQUIVO SELECIONADO -->
+
+          <div
+            id="selectedFile"
+            class="hidden mt-4"
+          >
+
+            <div
+              class="
+                flex
+                items-center
+                gap-3
+                rounded-xl
+                border
+                border-white/5
+                bg-[#171717]
+                p-4
+              "
+            >
+
+              <div
+                class="
+                  w-10
+                  h-10
+                  shrink-0
+                  rounded-xl
+                  bg-[#5864be]/15
+                  flex
+                  items-center
+                  justify-center
+                "
+              >
+
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                >
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                  <polyline points="14 2 14 8 20 8"/>
+                </svg>
+
+              </div>
+
+
+              <div class="min-w-0 flex-1">
+
+                <p
+                  id="fileName"
+                  class="truncate text-sm font-medium text-white"
+                >
+                  arquivo.torrent
+                </p>
+
+                <p
+                  id="fileSize"
+                  class="mt-1 text-xs text-zinc-500"
+                >
+                  0 MB
+                </p>
+
+              </div>
+
+
+              <button
+                id="removeFile"
+                type="button"
+                class="
+                  flex
+                  h-8
+                  w-8
+                  shrink-0
+                  items-center
+                  justify-center
+                  rounded-lg
+                  text-zinc-500
+                  hover:bg-red-500/10
+                  hover:text-red-400
+                "
+              >
+
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="17"
+                  height="17"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <line x1="18" y1="6" x2="6" y2="18"/>
+                  <line x1="6" y1="6" x2="18" y2="18"/>
+                </svg>
+
+              </button>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+
+      <!-- ========================================= -->
+      <!-- INFORMAÇÕES -->
+      <!-- ========================================= -->
+
+      <div class="lg:col-span-2">
+
+        <div class="rounded-2xl border border-white/5 bg-[#111111] p-5 sm:p-6">
+
+          <div class="mb-6">
+
+            <h2 class="text-sm font-bold">
+              Informações do Torrent
+            </h2>
+
+            <p class="mt-1 text-xs text-zinc-500">
+              Preencha os dados que aparecerão na tabela.
+            </p>
+
+          </div>
+
+
+          <!-- TÍTULO -->
+
+          <div class="mb-5">
+
+            <label
+              for="title"
+              class="mb-2 block text-xs font-semibold text-zinc-400"
+            >
+              Título
+            </label>
+
+            <input
+              id="title"
+              type="text"
+              required
+              placeholder="Ex: Demon Slayer Hashira Training Arc"
+              class="
+                h-12
+                w-full
+                rounded-xl
+                border
+                border-white/10
+                bg-[#171717]
+                px-4
+                text-sm
+                text-white
+                outline-none
+                placeholder:text-zinc-600
+                focus:border-[#5864be]
+              "
+            >
+
+          </div>
+
+
+          <!-- DESCRIÇÃO -->
+
+          <div class="mb-5">
+
+            <label
+              for="description"
+              class="mb-2 block text-xs font-semibold text-zinc-400"
+            >
+              Descrição
+            </label>
+
+            <textarea
+              id="description"
+              rows="4"
+              placeholder="Descrição do conteúdo..."
+              class="
+                w-full
+                resize-none
+                rounded-xl
+                border
+                border-white/10
+                bg-[#171717]
+                px-4
+                py-3
+                text-sm
+                text-white
+                outline-none
+                placeholder:text-zinc-600
+                focus:border-[#5864be]
+              "
+            ></textarea>
+
+          </div>
+
+
+          <!-- CATEGORIA -->
+
+          <div class="mb-5">
+
+            <label class="mb-3 block text-xs font-semibold text-zinc-400">
+              Categoria
+            </label>
+
+            <input
+              id="category"
+              type="hidden"
+              value="Anime"
+            >
+
+            <div class="grid grid-cols-2 gap-2 sm:grid-cols-4">
+
+              <button
+                type="button"
+                data-category="Anime"
+                class="
+                  category-btn
+                  h-11
+                  rounded-xl
+                  bg-[#5864be]
+                  text-sm
+                  font-semibold
+                  text-white
+                "
+              >
+                Anime
+              </button>
+
+              <button
+                type="button"
+                data-category="Filme"
+                class="
+                  category-btn
+                  h-11
+                  rounded-xl
+                  border
+                  border-white/10
+                  bg-[#171717]
+                  text-sm
+                  font-semibold
+                  text-zinc-400
+                  hover:border-[#5864be]
+                "
+              >
+                Filme
+              </button>
+
+              <button
+                type="button"
+                data-category="OVA"
+                class="
+                  category-btn
+                  h-11
+                  rounded-xl
+                  border
+                  border-white/10
+                  bg-[#171717]
+                  text-sm
+                  font-semibold
+                  text-zinc-400
+                  hover:border-[#5864be]
+                "
+              >
+                OVA
+              </button>
+
+              <button
+                type="button"
+                data-category="Música"
+                class="
+                  category-btn
+                  h-11
+                  rounded-xl
+                  border
+                  border-white/10
+                  bg-[#171717]
+                  text-sm
+                  font-semibold
+                  text-zinc-400
+                  hover:border-[#5864be]
+                "
+              >
+                Música
+              </button>
+
+            </div>
+
+          </div>
+
+
+          <!-- QUALIDADE / CODEC -->
+
+          <div class="mb-5 grid grid-cols-1 gap-4 sm:grid-cols-2">
+
+            <div>
+
+              <label
+                for="quality"
+                class="mb-2 block text-xs font-semibold text-zinc-400"
+              >
+                Qualidade
+              </label>
+
+              <select
+                id="quality"
+                class="
+                  h-12
+                  w-full
+                  rounded-xl
+                  border
+                  border-white/10
+                  bg-[#171717]
+                  px-4
+                  text-sm
+                  text-white
+                  outline-none
+                  focus:border-[#5864be]
+                "
+              >
+
+                <option value="1080p">1080p</option>
+                <option value="720p">720p</option>
+                <option value="4K">4K</option>
+                <option value="480p">480p</option>
+
+              </select>
+
+            </div>
+
+
+            <div>
+
+              <label
+                for="codec"
+                class="mb-2 block text-xs font-semibold text-zinc-400"
+              >
+                Codec
+              </label>
+
+              <select
+                id="codec"
+                class="
+                  h-12
+                  w-full
+                  rounded-xl
+                  border
+                  border-white/10
+                  bg-[#171717]
+                  px-4
+                  text-sm
+                  text-white
+                  outline-none
+                  focus:border-[#5864be]
+                "
+              >
+
+                <option value="H264">H264</option>
+                <option value="H265">H265</option>
+                <option value="HEVC">HEVC</option>
+                <option value="AV1">AV1</option>
+
+              </select>
+
+            </div>
+
+          </div>
+
+
+          <!-- TAGS -->
+
+          <div class="mb-6">
+
+            <label
+              for="tags"
+              class="mb-2 block text-xs font-semibold text-zinc-400"
+            >
+              Tags
+            </label>
+
+            <input
+              id="tags"
+              type="text"
+              placeholder="ação, anime, 1080p, dublado"
+              class="
+                h-12
+                w-full
+                rounded-xl
+                border
+                border-white/10
+                bg-[#171717]
+                px-4
+                text-sm
+                text-white
+                outline-none
+                placeholder:text-zinc-600
+                focus:border-[#5864be]
+              "
+            >
+
+          </div>
+
+
+          <!-- OPÇÕES -->
+
+          <div class="mb-6 border-t border-white/5 pt-5">
+
+            <div class="space-y-3">
+
+
+              <!-- GOLD -->
+
+              <label
+                class="
+                  flex
+                  cursor-pointer
+                  items-center
+                  justify-between
+                  gap-4
+                  rounded-xl
+                  border
+                  border-white/5
+                  bg-[#171717]
+                  p-4
+                "
+              >
+
+                <div>
+
+                  <p class="text-sm font-medium text-white">
+                    Gold Coin
+                  </p>
+
+                  <p class="mt-1 text-xs text-zinc-500">
+                    Marcar conteúdo como especial.
+                  </p>
+
+                </div>
+
+                <input
+                  id="goldCoin"
+                  type="checkbox"
+                  class="h-4 w-4 accent-[#5864be]"
+                >
+
+              </label>
+
+
+              <!-- RESTRITO -->
+
+              <label
+                class="
+                  flex
+                  cursor-pointer
+                  items-center
+                  justify-between
+                  gap-4
+                  rounded-xl
+                  border
+                  border-white/5
+                  bg-[#171717]
+                  p-4
+                "
+              >
+
+                <div>
+
+                  <p class="text-sm font-medium text-white">
+                    Conteúdo restrito
+                  </p>
+
+                  <p class="mt-1 text-xs text-zinc-500">
+                    Marcar conteúdo como restrito.
+                  </p>
+
+                </div>
+
+                <input
+                  id="restricted"
+                  type="checkbox"
+                  class="h-4 w-4 accent-[#5864be]"
+                >
+
+              </label>
+
+            </div>
+
+          </div>
+
+
+          <!-- ========================================= -->
+          <!-- PUBLICAR -->
+          <!-- ========================================= -->
+
+          <div
+            class="
+              flex
+              flex-col
+              gap-4
+              border-t
+              border-white/5
+              pt-5
+              sm:flex-row
+              sm:items-center
+              sm:justify-between
+            "
+          >
+
+            <div>
+
+              <p class="text-xs text-zinc-500">
+                O arquivo será ignorado nesta etapa.
+              </p>
+
+              <p class="mt-1 text-xs text-zinc-600">
+                Apenas os dados serão enviados ao Firestore.
+              </p>
+
+            </div>
+
+
+            <button
+              id="s"
+              type="submit"
+               
+              class="
+                h-12
+                w-full
+                rounded-xl
+                bg-[#5864be]
+                px-6
+                text-sm
+                font-semibold
+                text-white
+                opacity-30
+                cursor-not-allowed
+                transition
+                hover:bg-[#6672d2]
+                sm:w-auto
+                sm:min-w-[190px]
+              "
+            >
+              Publicar Torrent
+            </button>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </form>
+
+</div>
+
+
+ 

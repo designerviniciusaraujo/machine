@@ -1,0 +1,327 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Meus 3 Valores</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    body {
+      font-family: Inter, system-ui, sans-serif;
+      background: #09090b;
+      color: #fafafa;
+    }
+    input, textarea {
+      outline: none;
+    }
+    input:focus, textarea:focus {
+      border-color: #71717a !important;
+    }
+  </style>
+</head>
+
+<body class="min-h-screen">
+
+  <main class="max-w-xl mx-auto px-5 py-10">
+
+    <header class="mb-10">
+      <div class="flex items-center gap-2 text-zinc-500 text-xs uppercase tracking-widest mb-5">
+        <i data-lucide="compass" class="w-4 h-4"></i>
+        Inteligência pessoal
+      </div>
+
+      <h1 class="text-3xl font-semibold tracking-tight">
+        Meus 3 valores
+      </h1>
+
+      <p class="text-zinc-500 text-sm mt-2">
+        Os princípios que orientam quem sou e minhas decisões.
+      </p>
+    </header>
+
+    <section id="lista" class="space-y-3"></section>
+
+    <div class="mt-8 border-t border-zinc-800 pt-6">
+      <div class="flex justify-between text-xs text-zinc-500 mb-3">
+        <span>Progresso</span>
+        <span id="contador">0 de 3 definidos</span>
+      </div>
+
+      <div class="h-1 bg-zinc-800 rounded-full overflow-hidden">
+        <div id="progresso"
+          class="h-full bg-white transition-all"
+          style="width:0%">
+        </div>
+      </div>
+    </div>
+
+    <div id="editor" class="hidden mt-8 border border-zinc-800 rounded-2xl p-5">
+
+      <div class="flex justify-between items-center mb-5">
+        <h2 id="editorTitulo" class="font-medium">Novo valor</h2>
+        <button onclick="fecharEditor()" class="text-zinc-500">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <form id="form">
+        <input type="hidden" id="slot">
+
+        <label class="block text-xs text-zinc-500 mb-2">
+          Nome do valor
+        </label>
+
+        <input id="nome"
+          maxlength="50"
+          required
+          placeholder="Ex: Honestidade"
+          class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-3 text-sm mb-5">
+
+        <label class="block text-xs text-zinc-500 mb-2">
+          O que esse valor significa para mim?
+        </label>
+
+        <textarea id="descricao"
+          maxlength="500"
+          rows="4"
+          placeholder="Descreva como esse princípio orienta sua vida..."
+          class="w-full resize-none bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-3 text-sm mb-5"></textarea>
+
+        <div class="flex gap-2">
+          <button type="button"
+            onclick="fecharEditor()"
+            class="flex-1 bg-zinc-800 rounded-xl py-3 text-sm">
+            Cancelar
+          </button>
+
+          <button type="submit"
+            id="salvar"
+            class="flex-1 bg-white text-black rounded-xl py-3 text-sm font-semibold">
+            Salvar valor
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <p id="status" class="text-xs text-zinc-500 text-center mt-8">
+      Conectando ao banco de dados...
+    </p>
+
+  </main>
+
+  <script type="module">
+
+    import { initializeApp }
+      from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+
+    import {
+      getFirestore,
+      doc,
+      getDoc,
+      setDoc
+    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+    // ======================================
+    // CONFIGURAÇÃO FIREBASE
+    // INSIRA SUAS CREDENCIAIS AQUI
+    // ======================================
+
+    const firebaseConfig = {
+    apiKey: "AIzaSyD-xzRjMRVUpey19g745DvPjjpCApqSHVE",
+  authDomain: "myops-d7525.firebaseapp.com",
+  projectId: "myops-d7525",
+  storageBucket: "myops-d7525.firebasestorage.app",
+  messagingSenderId: "247824192162",
+  appId: "1:247824192162:web:77c91ab1e3df855dc7fdfb"
+    };
+
+    // ======================================
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    // Documento único com os três valores
+    const referencia = doc(db, "valoresPessoais", "meus3valores");
+
+    let valores = ["", "", ""].map(() => ({
+      nome: "",
+      descricao: ""
+    }));
+
+    let carregado = false;
+
+    const lista = document.getElementById("lista");
+    const editor = document.getElementById("editor");
+    const form = document.getElementById("form");
+    const status = document.getElementById("status");
+
+    function atualizar() {
+      lista.innerHTML = "";
+
+      valores.forEach((valor, index) => {
+
+        const preenchido = valor.nome.trim() !== "";
+
+        const card = document.createElement("article");
+        card.className = "border border-zinc-800 bg-zinc-900/40 rounded-2xl p-5";
+
+        const topo = document.createElement("div");
+        topo.className = "flex justify-between items-center mb-4";
+
+        const numero = document.createElement("span");
+        numero.className = "text-xs text-zinc-500 tracking-widest";
+        numero.textContent = `VALOR 0${index + 1}`;
+
+        const acoes = document.createElement("div");
+        acoes.className = "flex gap-3";
+
+        if (preenchido) {
+          const excluir = document.createElement("button");
+          excluir.className = "text-zinc-600 hover:text-red-400";
+          excluir.innerHTML = '<i data-lucide="trash-2" class="w-4 h-4"></i>';
+          excluir.title = "Excluir";
+          excluir.onclick = () => remover(index);
+          acoes.appendChild(excluir);
+        }
+
+        const editar = document.createElement("button");
+        editar.className = "text-zinc-400 hover:text-white";
+        editar.innerHTML = '<i data-lucide="pencil" class="w-4 h-4"></i>';
+        editar.title = "Editar";
+        editar.onclick = () => abrirEditor(index);
+        acoes.appendChild(editar);
+
+        topo.append(numero, acoes);
+
+        const titulo = document.createElement("h3");
+        titulo.className = "text-lg font-medium mb-2";
+        titulo.textContent = preenchido ? valor.nome : "Definir valor";
+
+        const descricao = document.createElement("p");
+        descricao.className = "text-sm text-zinc-500 leading-relaxed";
+        descricao.textContent = preenchido
+          ? valor.descricao || "Sem descrição."
+          : "Escolha um princípio que represente você.";
+
+        const botao = document.createElement("button");
+        botao.className = "mt-4 text-xs text-zinc-400 hover:text-white";
+        botao.textContent = preenchido ? "Editar valor" : "+ Adicionar valor";
+        botao.onclick = () => abrirEditor(index);
+
+        card.append(topo, titulo, descricao, botao);
+        lista.appendChild(card);
+      });
+
+      const total = valores.filter(v => v.nome.trim()).length;
+
+      document.getElementById("contador").textContent =
+        `${total} de 3 definidos`;
+
+      document.getElementById("progresso").style.width =
+        `${(total / 3) * 100}%`;
+
+      lucide.createIcons();
+    }
+
+    function abrirEditor(index) {
+      if (!carregado) return;
+
+      document.getElementById("slot").value = index;
+      document.getElementById("nome").value = valores[index].nome;
+      document.getElementById("descricao").value = valores[index].descricao;
+
+      document.getElementById("editorTitulo").textContent =
+        valores[index].nome ? "Editar valor" : "Novo valor";
+
+      editor.classList.remove("hidden");
+      editor.scrollIntoView({ behavior: "smooth", block: "center" });
+      document.getElementById("nome").focus();
+    }
+
+    window.fecharEditor = function() {
+      editor.classList.add("hidden");
+      form.reset();
+    };
+
+    async function salvarBanco() {
+      status.textContent = "Salvando...";
+
+      try {
+        await setDoc(referencia, {
+          valores,
+          atualizadoEm: new Date().toISOString()
+        });
+
+        status.textContent = "Alterações salvas.";
+        atualizar();
+
+      } catch (erro) {
+        console.error(erro);
+        status.textContent = "Erro ao salvar. Verifique sua conexão e permissões.";
+      }
+    }
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      if (!carregado) return;
+
+      const index = Number(document.getElementById("slot").value);
+
+      valores[index] = {
+        nome: document.getElementById("nome").value.trim(),
+        descricao: document.getElementById("descricao").value.trim()
+      };
+
+      fecharEditor();
+      await salvarBanco();
+    });
+
+    async function remover(index) {
+      if (!carregado) return;
+
+      if (!confirm("Deseja excluir este valor?")) return;
+
+      valores[index] = {
+        nome: "",
+        descricao: ""
+      };
+
+      await salvarBanco();
+    }
+
+    async function iniciar() {
+      try {
+        const snapshot = await getDoc(referencia);
+
+        if (snapshot.exists()) {
+          const dados = snapshot.data();
+
+          if (Array.isArray(dados.valores)) {
+            valores = [0, 1, 2].map(i => ({
+              nome: dados.valores[i]?.nome || "",
+              descricao: dados.valores[i]?.descricao || ""
+            }));
+          }
+        }
+
+        carregado = true;
+        status.textContent = "Conectado ao Firebase.";
+        atualizar();
+
+      } catch (erro) {
+        console.error(erro);
+        status.textContent = "Não foi possível carregar. Verifique as credenciais e regras do Firestore.";
+      }
+    }
+
+    iniciar();
+
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,61 @@
+<div class=" xl:p-6">
+
+   
+    <div class="rounded-[28px] border border-white/10 bg-[#171717] mt-8 overflow-hidden">
+
+    <!-- HEADER -->
+
+    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 p-6 border-b border-white/10 ">
+
+        <div>
+            <h2 class="text-2xl font-bold">
+                Usuários
+            </h2>
+
+            <p class="text-sm text-zinc-500">
+                Gerencie os membros da plataforma
+            </p>
+        </div>
+
+        <button
+            onclick="location.href='cadastro.html'"
+            class="h-12 px-5 rounded-xl bg-[#5864be] text-white font-medium hover:opacity-90 transition">
+
+            + Novo Usuário
+
+        </button>
+
+    </div>
+
+    <!-- LISTA -->
+
+    <div class="p-4 space-y-3">
+ <div class="overflow-x-auto rounded-2xl border border-white/10 bg-zinc-900">
+
+    <table class="min-w-full text-sm text-left">
+
+        <thead class="bg-zinc-800 text-zinc-400 uppercase text-xs">
+
+            <tr>
+                <th class="px-6 py-4">Usuário</th>
+                <th class="px-6 py-4">Email</th>
+                <th class="px-6 py-4">Cargo</th>
+                <th class="px-6 py-4">Downloads</th>
+                <th class="px-6 py-4">Status</th>
+                <th class="px-6 py-4 text-right">Ações</th>
+            </tr>
+
+        </thead>
+
+        <tbody id="usersList" class="divide-y divide-white/10">
+
+        </tbody>
+
+    </table>
+
+</div>
+    </div>
+
+</div>
+
+</div>

@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>OMDA Hero Prototype</title>
+
+<!-- Tailwind -->
+<script src="https://cdn.tailwindcss.com"></script>
+
+<!-- Swiper -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
+
+<style>
+
+body{
+    background:#eee;
+    font-family:Inter,sans-serif;
+}
+
+/* Card */
+
+.hero{
+
+    border-radius:30px;
+    overflow:hidden;
+
+    box-shadow:
+    0 20px 60px rgba(0,0,0,.15);
+
+}
+
+/* Personagem */
+
+.character{
+
+    opacity:0;
+
+    transform:
+    translateY(60px)
+    scale(.88);
+
+    transition:
+    .65s cubic-bezier(.19,1,.22,1);
+
+    filter:
+    drop-shadow(0 25px 35px rgba(0,0,0,.35));
+
+}
+
+/* entra depois */
+
+.swiper-slide-active .character{
+
+    opacity:1;
+
+    transform:
+    translateY(0)
+    scale(1);
+
+    transition-delay:.30s;
+
+}
+
+/* Glow */
+
+.glow{
+
+    position:absolute;
+
+    width:280px;
+    height:280px;
+
+    right:-40px;
+    bottom:-50px;
+
+    border-radius:100%;
+
+    filter:blur(70px);
+
+    opacity:.35;
+
+}
+
+/* Progress */
+
+.progress{
+
+    position:absolute;
+
+    left:50%;
+    bottom:20px;
+
+    transform:translateX(-50%);
+
+    width:120px;
+    height:5px;
+
+    background:rgba(255,255,255,.25);
+
+    border-radius:99px;
+
+    overflow:hidden;
+
+    z-index:50;
+
+}
+
+.progress span{
+
+    display:block;
+
+    width:0;
+
+    height:100%;
+
+    background:#fff;
+
+}
+
+/* animação */
+
+.animateProgress{
+
+    animation:progress 5s linear forwards;
+
+}
+
+@keyframes progress{
+
+from{
+width:0%;
+}
+
+to{
+width:100%;
+}
+
+}
+
+.swiper{
+overflow:hidden;
+}
+
+</style>
+
+</head>
+<body>
+
+
+<div class="max-w-md mx-auto p-5">
+
+<div class="hero">
+
+<div class="swiper heroSwiper">
+
+<div class="swiper-wrapper">
+
+<!-- Naruto -->
+
+<div class="swiper-slide bg-orange-500">
+
+<div class="relative h-[460px] p-8 flex items-center">
+
+<div class="absolute glow bg-yellow-300"></div>
+
+<div class="z-20 max-w-[180px]">
+
+<span class="inline-flex items-center gap-2 bg-white/20 text-white text-xs px-3 py-1 rounded-full">
+
+<i data-lucide="flame" class="w-4 h-4"></i>
+
+Novidade
+
+</span>
+
+<h1 class="text-white text-4xl font-black mt-5">
+
+Naruto
+
+</h1>
+
+<p class="text-white/80 mt-3">
+
+Nunca desista dos seus sonhos.
+
+</p>
+
+<button class="mt-7 bg-white text-orange-600 px-5 py-3 rounded-xl font-semibold flex items-center gap-2">
+
+Assistir
+
+<i data-lucide="play"></i>
+
+</button>
+
+</div>
+
+<img
+class="character absolute right-0 bottom-0 h-[92%]"
+src="https://i.imgur.com/YkF7R7R.png">
+
+</div>
+
+</div>
+
+<!-- One Piece -->
+
+<div class="swiper-slide bg-violet-600">
+
+<div class="relative h-[460px] p-8 flex items-center">
+
+<div class="absolute glow bg-fuchsia-400"></div>
+
+<div class="z-20 max-w-[180px]">
+
+<span class="inline-flex items-center gap-2 bg-white/20 text-white text-xs px-3 py-1 rounded-full">
+
+<i data-lucide="sparkles"></i>
+
+Trending
+
+</span>
+
+<h1 class="text-white text-4xl font-black mt-5">
+
+One Piece
+
+</h1>
+
+<p class="text-white/80 mt-3">
+
+O maior tesouro do mundo espera por você.
+
+</p>
+
+<button class="mt-7 bg-white text-violet-700 px-5 py-3 rounded-xl font-semibold flex items-center gap-2">
+
+Explorar
+
+<i data-lucide="arrow-right"></i>
+
+</button>
+
+</div>
+
+<img
+class="character absolute right-0 bottom-0 h-[92%]"
+src="https://i.imgur.com/rQ9QK5N.png">
+
+</div>
+
+</div>
+
+<!-- Dragon Ball -->
+
+<div class="swiper-slide bg-emerald-600">
+
+<div class="relative h-[460px] p-8 flex items-center">
+
+<div class="absolute glow bg-lime-300"></div>
+
+<div class="z-20 max-w-[180px]">
+
+<span class="inline-flex items-center gap-2 bg-white/20 text-white text-xs px-3 py-1 rounded-full">
+
+<i data-lucide="zap"></i>
+
+Clássico
+
+</span>
+
+<h1 class="text-white text-4xl font-black mt-5">
+
+Dragon Ball
+
+</h1>
+
+<p class="text-white/80 mt-3">
+
+As batalhas mais lendárias.
+
+</p>
+
+<button class="mt-7 bg-white text-emerald-700 px-5 py-3 rounded-xl font-semibold flex items-center gap-2">
+
+Ver agora
+
+<i data-lucide="play-circle"></i>
+
+</button>
+
+</div>
+
+<img
+class="character absolute right-0 bottom-0 h-[92%]"
+src="https://i.imgur.com/7m9D8bE.png">
+
+</div>
+
+</div>
+
+</div>
+
+<div class="progress">
+
+<span id="progressBar"></span>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+<script src="https://unpkg.com/lucide@latest"></script>
+
+<script>
+
+lucide.createIcons();
+
+const progress=document.getElementById("progressBar");
+
+function restartProgress(){
+
+progress.classList.remove("animateProgress");
+
+void progress.offsetWidth;
+
+progress.classList.add("animateProgress");
+
+}
+
+const swiper=new Swiper(".heroSwiper",{
+
+loop:true,
+
+speed:700,
+
+autoplay:{
+delay:5000,
+disableOnInteraction:false
+},
+
+on:{
+
+init(){
+
+restartProgress();
+
+},
+
+slideChangeTransitionStart(){
+
+restartProgress();
+
+}
+
+}
+
+});
+
+</script>
+
+</body>
+</html>

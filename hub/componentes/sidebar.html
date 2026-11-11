@@ -1,0 +1,641 @@
+  
+<!-- SIDEBAR -->
+<aside
+  id="sidebar"
+  class="
+    z-50
+    fixed xl:sticky
+    xl:top-0
+    xl:self-start
+    xl:h-full
+    w-[90%] xl:w-[280px]
+    myThme
+    bg-transparent
+    -translate-x-full
+    xl:translate-x-0
+    transition-all
+    duration-300
+  "
+>
+
+  <!-- CONTAINER -->
+  <div class="h-full flex flex-col gap-3 p-3">
+
+
+    <!-- ================================================= -->
+    <!-- BOLHA PERFIL -->
+    <!-- ================================================= -->
+
+    <div class="user-card">
+
+      <div
+        class="
+          relative overflow-hidden
+          rounded-[28px]
+          border border-white/[0.06]
+          bg-[#111111]/90
+          backdrop-blur-xl
+        "
+      >
+
+        <!-- GLOW -->
+        <div
+          class="
+            absolute
+            -top-20
+            left-1/2
+            -translate-x-1/2
+            w-40
+            h-40
+            rounded-full
+            bg-[#5864be]/10
+            blur-3xl
+          "
+        ></div>
+
+
+        <!-- LOGO -->
+
+        <div
+          onclick="toggleSidebar()"
+          class="relative flex items-center justify-center p-5 cursor-pointer"
+        >
+
+          <img
+            class="sidebar-logo-icon h-10 transition-all duration-300 hidden xl:block"
+            src="assets/images/omda-icon-dark.png"
+            alt="Logo"
+          >
+
+          <img
+            class="sidebar-logo-full h-10 transition-all duration-300 xl:hidden"
+            src="assets/images/ft-logo-dark.png"
+            alt="Logo"
+          >
+
+        </div>
+
+
+        <!-- PERFIL -->
+
+        <div class="relative px-5 pb-5">
+
+          <div class="flex flex-col items-center">
+
+
+            <!-- AVATAR -->
+
+            <div
+              class="
+                relative
+                w-20 h-20
+                rounded-[24px]
+                bg-[#5864be]/10
+                p-1
+                border border-white/[0.06]
+                shadow-lg
+                shadow-[#5864be]/10
+              "
+            >
+
+              <img
+                src="assets/capa/avatar.png"
+                class="hidden w-full h-full rounded-[20px] object-cover"
+                alt="Avatar"
+              >
+
+            </div>
+
+
+            <!-- NOME -->
+
+            <h3
+              class="
+                mt-4
+                text-lg
+                font-bold
+                tracking-wide
+                text-white
+                text-center
+              "
+              data-user-name
+            ></h3>
+
+
+            <!-- ROLE -->
+
+            <span
+              data-user-role
+              class="
+                mt-2
+                px-3 py-1
+                rounded-full
+                text-[10px]
+                bg-[#5864be]/10
+                border border-[#5864be]/20
+                text-[#b7c2ff]
+                uppercase
+                tracking-widest
+              "
+            ></span>
+
+
+            <!-- EMAIL -->
+
+            <span
+              class="
+                mt-2
+                text-xs
+                text-zinc-500
+                text-center
+                truncate
+                max-w-full
+              "
+              data-user-email
+            ></span>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+
+    <!-- ================================================= -->
+    <!-- BOLHA MENU -->
+    <!-- ================================================= -->
+
+    <div
+      class="
+        rounded-[28px]
+        border border-white/[0.06]
+        bg-[#111111]/90
+        backdrop-blur-xl
+        p-3
+      "
+    >
+
+      <nav class="space-y-1.5">
+
+
+        <!-- HOME -->
+
+        <a
+          href="#"
+          data-page="home"
+          class="
+            sidebar-item
+            group
+            flex items-center gap-3
+            p-3
+            rounded-[18px]
+            text-zinc-400
+            hover:text-white
+            hover:bg-white/[0.05]
+            transition-all
+            duration-200
+          "
+        >
+
+          <span
+            class="
+              flex items-center justify-center
+              w-9 h-9
+              rounded-xl
+              bg-white/[0.03]
+              group-hover:bg-white/[0.07]
+              transition
+            "
+          >
+            <i data-lucide="home" class="w-4 h-4"></i>
+          </span>
+
+          <span class="sidebar-text">
+            Home
+          </span>
+
+        </a>
+
+
+
+        <!-- ENVIAR -->
+
+        <a
+          href="/up.html"
+          class="
+            sidebar-item
+            group
+            flex items-center gap-3
+            p-3
+            rounded-[18px]
+            text-zinc-400
+            hover:text-white
+            hover:bg-blue-500/[0.08]
+            transition-all
+            duration-200
+          "
+        >
+
+          <span
+            class="
+              flex items-center justify-center
+              w-9 h-9
+              rounded-xl
+              bg-blue-500/[0.08]
+              group-hover:bg-blue-500/[0.15]
+              transition
+            "
+          >
+            <i
+              data-lucide="cloud-upload"
+              class="w-4 h-4 text-blue-500"
+            ></i>
+          </span>
+
+          <span class="sidebar-text">
+            Enviar
+          </span>
+
+        </a>
+
+
+
+        <!-- BAIXAR -->
+
+        <a
+          href="/down.html"
+          class="
+            sidebar-item
+            group
+            flex items-center gap-3
+            p-3
+            rounded-[18px]
+            text-zinc-400
+            hover:text-white
+            hover:bg-green-500/[0.08]
+            transition-all
+            duration-200
+          "
+        >
+
+          <span
+            class="
+              flex items-center justify-center
+              w-9 h-9
+              rounded-xl
+              bg-green-500/[0.08]
+              group-hover:bg-green-500/[0.15]
+              transition
+            "
+          >
+            <i
+              data-lucide="download-cloud"
+              class="w-4 h-4 text-green-500"
+            ></i>
+          </span>
+
+          <span class="sidebar-text">
+            Baixar
+          </span>
+
+        </a>
+
+
+
+        <!-- USUÁRIOS -->
+
+        <a
+          href="#"
+          data-page="usuarios"
+          class="
+            sidebar-item
+            group
+            flex items-center gap-3
+            p-3
+            rounded-[18px]
+            text-zinc-400
+            hover:text-white
+            hover:bg-white/[0.05]
+            transition-all
+          "
+        >
+
+          <span
+            class="
+              flex items-center justify-center
+              w-9 h-9
+              rounded-xl
+              bg-white/[0.03]
+              group-hover:bg-white/[0.07]
+            "
+          >
+            <i data-lucide="users" class="w-4 h-4"></i>
+          </span>
+
+          <span class="sidebar-text">
+            Usuários
+          </span>
+
+        </a>
+
+
+
+        <!-- PERFIL -->
+
+        <a
+          href="#"
+          data-page="perfil"
+          class="
+            hidden
+            sidebar-item
+            flex items-center gap-3
+            p-3
+            rounded-[18px]
+          "
+        >
+
+          <span>
+            <i data-lucide="user"></i>
+          </span>
+
+          <span class="sidebar-text">
+            Perfil
+          </span>
+
+        </a>
+
+
+
+        <!-- DETALHES -->
+
+        <a
+          href="#"
+          data-page="detalhe"
+          class="
+            sidebar-item
+            group
+            flex items-center gap-3
+            p-3
+            rounded-[18px]
+            text-zinc-400
+            hover:text-white
+            hover:bg-white/[0.05]
+            transition-all
+          "
+        >
+
+          <span
+            class="
+              flex items-center justify-center
+              w-9 h-9
+              rounded-xl
+              bg-white/[0.03]
+            "
+          >
+            <i data-lucide="scan" class="w-4 h-4"></i>
+          </span>
+
+          <span class="sidebar-text">
+            Detalhes
+          </span>
+
+        </a>
+
+
+
+        <!-- ================================================= -->
+        <!-- VOLTAR AO SITE -->
+        <!-- ================================================= -->
+
+        <a
+          href="/"
+          class="
+            sidebar-item
+            group
+            flex items-center justify-between
+            gap-3
+            p-3
+            mt-2
+            rounded-[18px]
+            bg-black/40
+            border border-white/[0.05]
+            hover:border-lime-400/20
+            hover:bg-lime-400/[0.03]
+            transition-all
+          "
+        >
+
+          <div class="flex items-center gap-3">
+
+            <span
+              class="
+                flex items-center justify-center
+                w-9 h-9
+                rounded-xl
+                bg-lime-400/[0.08]
+              "
+            >
+
+              <i
+                data-lucide="radar"
+                class="w-4 h-4 text-lime-400"
+              ></i>
+
+            </span>
+
+            <span class="sidebar-text text-zinc-400 group-hover:text-white">
+              Portal
+            </span>
+
+          </div>
+
+
+          <i
+            data-lucide="external-link"
+            class="
+              sidebar-text
+              w-4 h-4
+              text-zinc-600
+              group-hover:text-lime-400
+              transition-colors
+            "
+          ></i>
+
+        </a>
+
+      </nav>
+
+    </div>
+
+
+
+    <!-- ================================================= -->
+    <!-- BOLHA CONFIGURAÇÕES -->
+    <!-- ================================================= -->
+
+    <div
+      class="
+        rounded-[28px]
+        border border-white/[0.06]
+        bg-[#111111]/90
+        backdrop-blur-xl
+        p-3
+      "
+    >
+
+      <!-- APARÊNCIA -->
+
+      <button
+        onclick="toggleTheme()"
+        class="
+          sidebar-item
+          group
+          w-full
+          flex items-center gap-3
+          p-3
+          rounded-[18px]
+          text-zinc-400
+          hover:text-white
+          hover:bg-white/[0.05]
+          transition-all
+        "
+      >
+
+        <span
+          class="
+            flex items-center justify-center
+            w-9 h-9
+            rounded-xl
+            bg-white/[0.03]
+          "
+        >
+
+          <i
+            id="themeIcon"
+            data-lucide="moon"
+            class="w-4 h-4"
+          ></i>
+
+        </span>
+
+        <span class="sidebar-text">
+          Aparência
+        </span>
+
+      </button>
+
+
+
+      <!-- CONFIGURAÇÕES -->
+
+      <div class="hidden sidebar-dropdown mt-1">
+
+        <button
+          type="button"
+          class="
+            dropdown-toggle
+            sidebar-item
+            w-full
+            flex items-center justify-between
+            p-3
+            rounded-[18px]
+            hover:bg-white/[0.05]
+            transition
+          "
+        >
+
+          <div class="flex items-center gap-3">
+
+            <i data-lucide="settings"></i>
+
+            <span class="sidebar-text">
+              Configurações
+            </span>
+
+          </div>
+
+          <i
+            data-lucide="chevron-down"
+            class="dropdown-arrow sidebar-text transition duration-300"
+          ></i>
+
+        </button>
+
+
+        <div class="dropdown-menu">
+
+          <a href="#" data-page="geral" class="dropdown-item">
+            Geral
+          </a>
+
+          <a href="#" data-page="categorias" class="dropdown-item">
+            Categorias
+          </a>
+
+          <a href="#" data-page="aparencia" class="dropdown-item">
+            Aparência
+          </a>
+
+          <a href="#" data-page="seo" class="dropdown-item">
+            SEO
+          </a>
+
+          <a href="#" data-page="api" class="dropdown-item">
+            API
+          </a>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+
+    <!-- ================================================= -->
+    <!-- BOTÃO COLAPSAR -->
+    <!-- ================================================= -->
+
+    <div
+      class="
+        mt-auto
+        flex
+        items-center
+        justify-end
+        p-2
+      "
+    >
+
+      <button
+        onclick="toggleSidebar()"
+        class="
+          w-10 h-10
+          flex items-center justify-center
+          rounded-full
+          bg-[#111111]/90
+          border border-white/[0.06]
+          text-zinc-500
+          hover:text-white
+          hover:bg-white/[0.06]
+          transition-all
+        "
+      >
+
+        <i
+          id="sidebarToggleIcon"
+          data-lucide="panel-left-open"
+          class="w-4 h-4"
+        ></i>
+
+      </button>
+
+    </div>
+
+
+  </div>
+
+</aside>
+ 

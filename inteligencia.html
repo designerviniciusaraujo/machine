@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#0a0a0a">
+<title>Inteligência Profissional</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="min-h-screen bg-neutral-950 text-white">
+<main class="mx-auto max-w-3xl p-4 py-6 sm:p-8">
+<header class="mb-6">
+<p class="text-xs font-bold tracking-widest text-orange-500">PROFESSIONAL INTELLIGENCE</p>
+<h1 class="mt-2 text-2xl font-bold sm:text-3xl">Currículo mestre</h1>
+<p class="mt-1 text-sm text-neutral-400">Sua fonte central profissional.</p>
+</header>
+
+<div id="status" role="status" class="mb-4 rounded-xl border border-neutral-800 bg-neutral-900 p-3 text-sm">Conectando ao Firebase...</div>
+
+<form id="profileForm" class="space-y-4 rounded-2xl border border-neutral-800 bg-neutral-900 p-4 sm:p-5">
+<div><label>Nome profissional</label><input name="name" required class="field" placeholder="Nome completo"></div>
+<div><label>Título profissional</label><input name="title" required class="field" placeholder="Desenvolvedor em formação"></div>
+<div><label>Resumo profissional</label><textarea name="summary" rows="3" class="field"></textarea></div>
+<div><label>Competências</label><input name="skills" class="field" placeholder="JavaScript, HTML, Firebase"></div>
+<div><label>Experiência profissional complementar</label><textarea name="experience" rows="3" class="field" placeholder="Projetos, resultados e informações adicionais."></textarea></div>
+
+<section class="border-t border-neutral-800 pt-4">
+<div class="mb-3 flex items-center justify-between gap-3">
+<h2 class="text-sm font-semibold">Experiências profissionais</h2>
+<button type="button" id="refreshHistory" class="icon-btn" aria-label="Atualizar experiências" title="Atualizar"><i data-lucide="refresh-cw"></i></button>
+</div>
+<p id="historyCount" class="mb-2 text-xs text-neutral-500"></p>
+<div id="historyList" class="space-y-2"><p class="text-sm text-neutral-400">Carregando...</p></div>
+</section>
+
+<section class="border-t border-neutral-800 pt-4">
+<div class="mb-3 flex items-center justify-between gap-3">
+<h2 class="text-sm font-semibold">Formação acadêmica</h2>
+<button type="button" id="refreshAcademic" class="icon-btn" aria-label="Atualizar formação acadêmica" title="Atualizar"><i data-lucide="refresh-cw"></i></button>
+</div>
+<p id="academicCount" class="mb-2 text-xs text-neutral-500"></p>
+<div id="academicList" class="space-y-2"><p class="text-sm text-neutral-400">Carregando...</p></div>
+</section>
+
+<div class="border-t border-neutral-800 pt-4"><label>Cargos desejados</label><input name="targetRoles" class="field"></div>
+<div><label>Modalidade</label><select name="workMode" class="field"><option value="remoto">Remoto</option><option value="hibrido">Híbrido</option><option value="presencial">Presencial</option><option value="qualquer">Qualquer modalidade</option></select></div>
+<div><label>Localização</label><input name="location" class="field"></div>
+<div><label>LinkedIn</label><input name="linkedin" type="url" class="field" placeholder="https://..."></div>
+<div><label>Portfólio</label><input name="portfolio" type="url" class="field" placeholder="https://..."></div>
+<div><label>GitHub</label><input name="github" type="url" class="field" placeholder="https://..."></div>
+
+<div class="grid grid-cols-1 gap-2 pt-2 sm:grid-cols-3">
+<button id="saveButton" type="submit" class="action bg-orange-600"><i data-lucide="save"></i><span>Salvar currículo</span></button>
+<button type="button" id="previewButton" class="action bg-white !text-black"><i data-lucide="eye"></i><span>Preview</span></button>
+<button type="button" id="reloadButton" class="action bg-neutral-800"><i data-lucide="rotate-cw"></i><span>Recarregar</span></button>
+</div>
+</form>
+<p id="profileInfo" class="mt-3 text-xs text-neutral-500"></p>
+</main>
+
+<section id="preview" class="fixed inset-0 z-50 hidden overflow-y-auto bg-white text-neutral-900">
+<div class="mx-auto max-w-3xl p-5 sm:p-10">
+<div class="mb-8 flex items-center justify-between">
+<span class="text-xs tracking-widest text-neutral-500">PRÉ-VISUALIZAÇÃO</span>
+<button type="button" id="closePreview" class="icon-btn dark" aria-label="Fechar pré-visualização"><i data-lucide="x"></i></button>
+</div>
+<article id="resume"></article>
+</div>
+</section>
+
+<style>
+.field{display:block;width:100%;margin-top:6px;background:#171717;border:1px solid #404040;border-radius:10px;padding:11px 12px;color:white;outline:none;font-size:16px}
+.field:focus{border-color:#f97316}
+label{display:block;font-size:13px;color:#d4d4d4}
+.action{display:flex;align-items:center;justify-content:center;gap:9px;min-height:44px;border-radius:10px;padding:11px 14px;font-size:14px;font-weight:600}
+.action svg,.icon-btn svg{width:17px;height:17px}
+.icon-btn{display:inline-flex;align-items:center;justify-content:center;width:38px;height:38px;flex-shrink:0;border:1px solid #404040;border-radius:10px;color:#d4d4d4}
+.icon-btn:hover{background:#262626}
+.icon-btn.dark{background:#171717;color:white}
+</style>
+
+<script type="module">
+import{initializeApp,getApps,getApp}from"https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
+import{getAuth,onAuthStateChanged}from"https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
+import{getFirestore,doc,getDoc,setDoc,serverTimestamp,collection,getDocs}from"https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+
+const config={
+ apiKey:"AIzaSyD-xzRjMRVUpey19g745DvPjjpCApqSHVE",
+ authDomain:"myops-d7525.firebaseapp.com",
+ projectId:"myops-d7525",
+ storageBucket:"myops-d7525.firebasestorage.app",
+ messagingSenderId:"247824192162",
+ appId:"1:247824192162:web:77c91ab1e3df855dc7fdfb"
+};
+const app=getApps().length?getApp():initializeApp(config);
+const auth=getAuth(app),db=getFirestore(app);
+const form=document.getElementById("profileForm");
+const status=document.getElementById("status");
+let user=null,historias=[],academicos=[];
+
+const ref=()=>doc(db,"professionalProfiles",user.uid);
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const read=()=>Object.fromEntries(new FormData(form));
+const icons=()=>window.lucide?.createIcons();
+
+const section=(title,value)=>value?`<section class="mb-7"><h2 class="mb-3 border-b pb-2 text-lg font-bold">${title}</h2><div class="whitespace-pre-line leading-7">${value}</div></section>`:"";
+
+function renderHistory(){
+ document.getElementById("historyCount").textContent=`${historias.length} registro(s)`;
+ document.getElementById("historyList").innerHTML=historias.length?historias.map(j=>`
+ <article class="rounded-xl border border-neutral-800 bg-neutral-950 p-3">
+  <h3 class="text-sm font-semibold">${esc(j.cargo||"Cargo não informado")}</h3>
+  <p class="mt-1 text-xs text-neutral-500">${esc(j.dataDe||"")} ${j.dataDe?"— ":""}${esc(j.cargoAtual?"Atual":j.dataAte||"")}</p>
+  ${j.funcoes?`<p class="mt-2 whitespace-pre-line text-sm leading-6 text-neutral-300">${esc(j.funcoes)}</p>`:""}
+ </article>`).join(""):'<p class="rounded-xl border border-dashed border-neutral-800 p-3 text-sm text-neutral-500">Nenhuma experiência encontrada. Os registros aparecerão aqui quando forem cadastrados no módulo de origem.</p>';
+}
+
+function renderAcademic(){
+ document.getElementById("academicCount").textContent=`${academicos.length} registro(s)`;
+ document.getElementById("academicList").innerHTML=academicos.length?academicos.map(a=>{
+  const curso=a.curso||a.formacao||a.formação||a.titulo||a.título||a.nome||"Formação não informada";
+  const instituicao=a.instituicao||a.instituição||a.instituicaoEnsino||a.escola||"";
+  const inicio=a.dataDe||a.dataInicio||a.inicio||"";
+  const fim=a.emAndamento?"Em andamento":a.dataAte||a.dataFim||a.conclusao||a.conclusão||"";
+  return `<article class="rounded-xl border border-neutral-800 bg-neutral-950 p-3">
+   <h3 class="text-sm font-semibold">${esc(curso)}</h3>
+   ${instituicao?`<p class="mt-1 text-sm text-neutral-300">${esc(instituicao)}</p>`:""}
+   ${inicio||fim?`<p class="mt-1 text-xs text-neutral-500">${esc(inicio)}${inicio&&fim?" — ":""}${esc(fim)}</p>`:""}
+   ${a.descricao?`<p class="mt-2 whitespace-pre-line text-sm text-neutral-300">${esc(a.descricao)}</p>`:""}
+  </article>`;
+ }).join(""):'<article class="rounded-xl border border-dashed border-neutral-800 bg-neutral-950 p-3"><p class="text-sm font-medium text-neutral-300">Exemplo de formação acadêmica</p><p class="mt-1 text-sm text-neutral-500">Nome do curso · Instituição · Período</p><p class="mt-2 text-xs text-neutral-600">Nenhum registro encontrado. Modelo visual, sem gravar dados.</p></article>';
+}
+
+async function loadHistory(){
+ const list=document.getElementById("historyList");
+ list.innerHTML='<p class="text-sm text-neutral-400">Carregando...</p>';
+ try{
+  const snap=await getDocs(collection(db,"historias"));
+  historias=snap.docs.map(d=>({id:d.id,...d.data()}));
+  historias.sort((a,b)=>String(b.dataDe||"").localeCompare(String(a.dataDe||"")));
+  renderHistory();
+ }catch(e){list.innerHTML=`<p class="text-sm text-red-400">Erro ao carregar: ${esc(e.message)}</p>`;}
+}
+
+async function loadAcademic(){
+ const list=document.getElementById("academicList");
+ list.innerHTML='<p class="text-sm text-neutral-400">Carregando...</p>';
+ try{
+  const snap=await getDocs(collection(db,"academicos"));
+  academicos=snap.docs.map(d=>({id:d.id,...d.data()}));
+  academicos.sort((a,b)=>String(b.dataDe||b.dataInicio||"").localeCompare(String(a.dataDe||a.dataInicio||"")));
+  renderAcademic();
+ }catch(e){
+  document.getElementById("academicCount").textContent="";
+  list.innerHTML=`<p class="text-sm text-red-400">Erro ao carregar formação: ${esc(e.message)}</p>`;
+ }
+}
+
+async function load(){
+ if(!user)return;
+ try{
+  const snap=await getDoc(ref()),d=snap.exists()?snap.data():{};
+  for(const f of form.elements)if(f.name)f.value=f.name==="skills"?(Array.isArray(d.skills)?d.skills:[]).join(", "):(d[f.name]||"");
+  status.textContent=snap.exists()?"Currículo carregado.":"Cadastre seu currículo.";
+  document.getElementById("profileInfo").textContent="Perfil sincronizado com Firebase.";
+  await Promise.all([loadHistory(),loadAcademic()]);
+ }catch(e){status.textContent="Erro ao carregar currículo: "+e.message;}
+}
+
+form.onsubmit=async e=>{
+ e.preventDefault();if(!user)return;
+ const b=document.getElementById("saveButton");
+ b.disabled=true;b.querySelector("span").textContent="Salvando...";
+ try{
+  const d=read();
+  d.skills=d.skills.split(",").map(s=>s.trim()).filter(Boolean);
+  d.uid=user.uid;d.email=user.email||"";d.updatedAt=serverTimestamp();
+  await setDoc(ref(),d,{merge:true});
+  status.textContent="Currículo salvo com sucesso.";
+ }catch(e){status.textContent="Erro ao salvar: "+e.message;}
+ finally{b.disabled=false;b.querySelector("span").textContent="Salvar currículo";}
+};
+
+document.getElementById("reloadButton").onclick=load;
+document.getElementById("refreshHistory").onclick=loadHistory;
+document.getElementById("refreshAcademic").onclick=loadAcademic;
+
+document.getElementById("previewButton").onclick=async()=>{
+ const d=read(),out=document.getElementById("resume");
+ await Promise.all([loadHistory(),loadAcademic()]);
+ const skills=d.skills.split(",").map(s=>s.trim()).filter(Boolean);
+ const links=["linkedin","portfolio","github"].filter(k=>d[k]).map(k=>`<a class="underline" href="${esc(d[k])}" target="_blank" rel="noopener">${k==="linkedin"?"LinkedIn":k==="portfolio"?"Portfólio":"GitHub"}</a>`).join(" · ");
+ const jobs=historias.map(j=>`<div class="mb-5"><h3 class="font-bold">${esc(j.cargo||"Cargo não informado")}</h3><p class="text-sm text-neutral-600">${esc(j.dataDe||"")}${j.dataDe?" — ":""}${esc(j.cargoAtual?"Atual":j.dataAte||"")}</p>${j.funcoes?`<p class="mt-2 whitespace-pre-line leading-7">${esc(j.funcoes)}</p>`:""}</div>`).join("");
+ const education=academicos.map(a=>`<div class="mb-5"><h3 class="font-bold">${esc(a.curso||a.formacao||a.formação||a.titulo||a.título||a.nome||"Formação não informada")}</h3><p class="text-sm text-neutral-600">${esc(a.instituicao||a.instituição||a.instituicaoEnsino||a.escola||"")}</p><p class="text-sm text-neutral-600">${esc(a.dataDe||a.dataInicio||a.inicio||"")}${(a.dataDe||a.dataInicio||a.inicio)&&(a.emAndamento||a.dataAte||a.dataFim||a.conclusao||a.conclusão)?" — ":""}${esc(a.emAndamento?"Em andamento":a.dataAte||a.dataFim||a.conclusao||a.conclusão||"")}</p>${a.descricao?`<p class="mt-2 whitespace-pre-line leading-7">${esc(a.descricao)}</p>`:""}</div>`).join("");
+ out.innerHTML=`<header class="mb-8 border-b-2 border-neutral-900 pb-6"><h1 class="text-3xl font-bold">${esc(d.name)}</h1><p class="mt-2 text-xl">${esc(d.title)}</p><p class="mt-3 text-sm text-neutral-600">${esc(d.location)}</p><div class="mt-3 flex flex-wrap gap-3 text-sm">${links}</div></header>${section("Resumo profissional",esc(d.summary))}${section("Competências",skills.map(esc).join(" · "))}${section("Experiências profissionais",jobs||"Nenhuma experiência cadastrada.")}${section("Experiência complementar",esc(d.experience))}${section("Formação acadêmica",education||"Nenhuma formação cadastrada.")}${section("Objetivo profissional",esc(d.targetRoles))}${section("Modalidade",esc(d.workMode))}`;
+ document.getElementById("preview").classList.remove("hidden");
+ icons();
+};
+
+document.getElementById("closePreview").onclick=()=>document.getElementById("preview").classList.add("hidden");
+
+onAuthStateChanged(auth,async u=>{
+ user=u;
+ if(!u){form.classList.add("hidden");status.textContent="Faça login para continuar.";return;}
+ form.classList.remove("hidden");
+ await load();
+});
+icons();
+</script>
+</body>
+</html>

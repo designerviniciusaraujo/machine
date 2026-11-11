@@ -1,0 +1,98 @@
+
+<div id="rotina-app" class="bg-white text-gray-900 antialiased">
+  <main class="max-w-2xl mx-auto px-4 py-6 pb-24">
+
+    <header class="flex items-center justify-between mb-6">
+      <div>
+        <h1 class="text-2xl font-semibold tracking-tight">Minha rotina</h1>
+        <p class="text-sm text-gray-500 mt-1">Organize seu dia.</p>
+      </div>
+      <button id="nova" type="button" aria-label="Nova atividade"
+        class="bg-gray-900 text-white rounded-xl p-3 hover:bg-gray-700">
+        <i data-lucide="plus" class="w-5 h-5"></i>
+      </button>
+    </header>
+
+    <nav id="dias" class="grid grid-cols-7 gap-1 mb-6"
+      aria-label="Dias da semana"></nav>
+
+    <div id="status" class="text-sm text-gray-500 mb-4" role="status">
+      Carregando rotina...
+    </div>
+
+    <section id="agenda" class="space-y-6"></section>
+
+    <form id="form" class="hidden border rounded-2xl p-4 mt-6 space-y-4">
+      <div class="flex items-center justify-between">
+        <h2 id="tituloForm" class="font-semibold">Nova atividade</h2>
+        <button type="button" id="fechar" aria-label="Fechar formulário"
+          class="p-1 text-gray-500">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <input id="atividadeId" type="hidden">
+
+      <div>
+        <label for="nome" class="block text-sm mb-1">Atividade</label>
+        <input id="nome" type="text" required maxlength="150"
+          placeholder="Ex.: Estudar programação"
+          class="w-full border rounded-xl px-3 py-3 outline-none focus:ring-2 focus:ring-gray-300">
+      </div>
+
+      <div>
+        <label for="dia" class="block text-sm mb-1">Dia da semana</label>
+        <select id="dia" required class="w-full border rounded-xl px-3 py-3 bg-white">
+          <option value="1">Segunda-feira</option>
+          <option value="2">Terça-feira</option>
+          <option value="3">Quarta-feira</option>
+          <option value="4">Quinta-feira</option>
+          <option value="5">Sexta-feira</option>
+          <option value="6">Sábado</option>
+          <option value="0">Domingo</option>
+        </select>
+      </div>
+
+      <div class="grid grid-cols-2 gap-3">
+        <div>
+          <label for="inicio" class="block text-sm mb-1">Início</label>
+          <input id="inicio" type="time" required
+            class="w-full border rounded-xl px-3 py-3">
+        </div>
+        <div>
+          <label for="fim" class="block text-sm mb-1">Fim</label>
+          <input id="fim" type="time" required
+            class="w-full border rounded-xl px-3 py-3">
+        </div>
+      </div>
+
+      <div>
+        <label for="tipo" class="block text-sm mb-1">Tipo</label>
+        <select id="tipo" required class="w-full border rounded-xl px-3 py-3 bg-white">
+          <option value="trabalho_fisico">Trabalho físico</option>
+          <option value="lazer">Lazer</option>
+        </select>
+      </div>
+
+      <div class="flex gap-2">
+        <button id="salvar" type="submit"
+          class="flex-1 bg-gray-900 text-white rounded-xl px-4 py-3 font-medium">
+          Salvar atividade
+        </button>
+        <button id="cancelar" type="button"
+          class="border rounded-xl px-4 py-3">Cancelar</button>
+      </div>
+    </form>
+
+    <footer class="mt-8 text-xs text-gray-400 text-center">
+      Rotina semanal
+    </footer>
+  </main>
+
+  <button id="novaFixa" type="button"
+    class="fixed bottom-5 left-4 right-4 max-w-2xl mx-auto bg-gray-900 text-white rounded-xl py-3.5 flex items-center justify-center gap-2 shadow-lg z-40"
+    aria-label="Adicionar atividade">
+    <i data-lucide="plus" class="w-5 h-5"></i>
+    Nova atividade
+  </button>
+</div>

@@ -1,0 +1,240 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Entrega Livre — Rastreamento</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+</head>
+<body class="bg-slate-950 text-white">
+<main class="max-w-5xl mx-auto p-4 space-y-4">
+  <header>
+    <p class="text-emerald-400 text-xs font-bold">PROTÓTIPO FIREBASE</p>
+    <h1 class="text-3xl font-black">Entrega Livre</h1>
+    <p id="conexao" class="text-sm text-amber-400">Conectando...</p>
+  </header>
+
+  <div class="grid grid-cols-3 gap-2">
+    <button onclick="perfil='cliente';ui()" class="p-3 rounded-xl bg-slate-800">Cliente</button>
+    <button onclick="perfil='moto1';ui()" class="p-3 rounded-xl bg-slate-800">Motoboy 1</button>
+    <button onclick="perfil='moto2';ui()" class="p-3 rounded-xl bg-slate-800">Motoboy 2</button>
+  </div>
+
+  <div class="bg-slate-900 rounded-2xl p-3">
+    <div class="flex justify-between items-center p-2">
+      <b>Mapa ao vivo</b>
+      <button onclick="map.setView([-23.5505,-46.6333],13)" class="text-sm text-emerald-400">Centralizar</button>
+    </div>
+    <div id="map" class="h-[50vh] min-h-80 rounded-xl"></div>
+    <p class="text-xs text-slate-400 p-2">As posições são compartilhadas pelo Firebase.</p>
+  </div>
+
+  <section id="painel" class="bg-slate-900 rounded-2xl p-4 space-y-3">
+    <h2 class="font-bold">Painel</h2>
+    <button id="gps" onclick="ativarGPS()" class="w-full p-3 rounded-lg bg-blue-600">Transmitir minha localização GPS</button>
+    <button onclick="simular()" class="w-full p-3 rounded-lg bg-slate-700">Mover motinha de demonstração</button>
+    <p id="gpsinfo" class="text-xs text-slate-400"></p>
+  </section>
+
+  <section id="formPedido" class="bg-slate-900 rounded-2xl p-4 space-y-3">
+    <h2 class="font-bold">Criar pedido de teste</h2>
+    <input id="origem" placeholder="Local de coleta" class="w-full p-3 rounded-lg bg-slate-800">
+    <input id="destino" placeholder="Local de entrega" class="w-full p-3 rounded-lg bg-slate-800">
+    <input id="valor" type="number" min="1" value="15" class="w-full p-3 rounded-lg bg-slate-800">
+    <button onclick="criarPedido()" class="w-full p-3 rounded-lg bg-emerald-400 text-slate-950 font-bold">Publicar pedido</button>
+  </section>
+
+  <section class="bg-slate-900 rounded-2xl p-4">
+    <h2 class="font-bold mb-3">Pedidos compartilhados</h2>
+    <div id="pedidos" class="space-y-3">Carregando...</div>
+  </section>
+</main>
+
+<script type="module">
+import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import {
+  getFirestore, collection, doc, setDoc, addDoc,
+  onSnapshot, updateDoc, serverTimestamp
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyD-xzRjMRVUpey19g745DvPjjpCApqSHVE",
+  authDomain: "myops-d7525.firebaseapp.com",
+  projectId: "myops-d7525",
+  storageBucket: "myops-d7525.firebasestorage.app",
+  messagingSenderId: "247824192162",
+  appId: "1:247824192162:web:77c91ab1e3df855dc7fdfb"
+};
+
+const app = getApps().length ? getApps()[0] : initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const $ = id => document.getElementById(id);
+const base = [-23.5505, -46.6333];
+
+let perfil = "cliente";
+let motos = {};
+let pedidos = [];
+let watchId = null;
+let unsubscribeMotos, unsubscribePedidos;
+
+const map = L.map("map").setView(base, 13);
+L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+  maxZoom: 19,
+  attribution: "&copy; OpenStreetMap"
+}).addTo(map);
+
+const iconMoto = L.divIcon({
+  className: "",
+  html: '<div style="background:#10b981;border:3px solid white;border-radius:50%;padding:7px;font-size:22px">🏍️</div>',
+  iconSize: [45,45], iconAnchor: [22,22]
+});
+const markers = {};
+
+function esc(s) {
+  return String(s ?? "").replace(/[&<>"']/g, c => ({
+    "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;"
+  })[c]);
+}
+
+function ui() {
+  $("formPedido").classList.toggle("hidden", perfil !== "cliente");
+  $("gps").classList.toggle("hidden", perfil === "cliente");
+  $("gpsinfo").textContent = perfil === "cliente" ? "" : "Ative o GPS para transmitir sua posição real.";
+  render();
+}
+
+function atualizarMapa(data) {
+  motos = data;
+  Object.entries(data).forEach(([id,m]) => {
+    if (typeof m.lat !== "number" || typeof m.lng !== "number") return;
+    const pos = [m.lat,m.lng];
+    if (!markers[id]) {
+      markers[id] = L.marker(pos,{icon:iconMoto}).addTo(map);
+    } else {
+      markers[id].setLatLng(pos);
+    }
+    markers[id].bindPopup(`<b>${esc(m.nome || id)}</b><br>${m.gps ? "GPS real" : "Simulação"}`);
+  });
+  $("conexao").textContent = "● Firebase conectado · posições sincronizadas";
+  $("conexao").className = "text-sm text-emerald-400";
+}
+
+function render() {
+  const visiveis = perfil === "cliente" ? pedidos :
+    pedidos.filter(p => p.status === "aberto" || p.motoboy === perfil);
+
+  $("pedidos").innerHTML = visiveis.length ? visiveis.map(p => {
+    let button = "";
+    if (perfil !== "cliente" && p.status === "aberto") {
+      button = `<button onclick="window.aceitar('${p.id}')" class="w-full p-2 mt-3 rounded-lg bg-emerald-400 text-slate-950 font-bold">Aceitar corrida</button>`;
+    } else if (p.motoboy === perfil && p.status === "aceito") {
+      button = `<button onclick="window.etapa('${p.id}','coletado')" class="w-full p-2 mt-3 rounded-lg bg-blue-600">Confirmar coleta</button>`;
+    } else if (p.motoboy === perfil && p.status === "coletado") {
+      button = `<button onclick="window.etapa('${p.id}','entregue')" class="w-full p-2 mt-3 rounded-lg bg-emerald-400 text-slate-950">Confirmar entrega</button>`;
+    }
+    return `<article class="bg-slate-800 rounded-xl p-3">
+      <b>Pedido #${esc(p.id.slice(0,6))}</b>
+      <p class="text-sm mt-2">${esc(p.origem)} → ${esc(p.destino)}</p>
+      <p class="text-emerald-400 font-bold mt-2">R$ ${Number(p.valor || 0).toFixed(2)}</p>
+      <p class="text-xs text-slate-400 mt-2">${esc(p.status)} · ${esc(p.motoboy || "Aguardando motoboy")}</p>
+      ${button}
+    </article>`;
+  }).join("") : '<p class="text-sm text-slate-400">Nenhum pedido disponível.</p>';
+}
+
+window.criarPedido = async () => {
+  const origem = $("origem").value.trim();
+  const destino = $("destino").value.trim();
+  const valor = Number($("valor").value);
+  if (!origem || !destino || valor <= 0) return alert("Preencha coleta, entrega e valor.");
+  try {
+    await addDoc(collection(db,"demo_entregas"), {
+      origem, destino, valor, status:"aberto", motoboy:null,
+      criado:serverTimestamp()
+    });
+    $("origem").value = "";
+    $("destino").value = "";
+  } catch(e) { alert("Erro ao criar pedido: " + e.message); }
+};
+
+window.aceitar = async id => {
+  if (!["moto1","moto2"].includes(perfil)) return;
+  if (pedidos.some(p => p.motoboy === perfil && ["aceito","coletado"].includes(p.status))) {
+    return alert("Você já tem uma entrega em andamento.");
+  }
+  try {
+    const p = pedidos.find(p => p.id === id);
+    if (!p || p.status !== "aberto") return alert("Pedido indisponível.");
+    await updateDoc(doc(db,"demo_entregas",id), {
+      status:"aceito", motoboy:perfil
+    });
+  } catch(e) { alert("Erro ao aceitar: " + e.message); }
+};
+
+window.etapa = async (id,status) => {
+  const p = pedidos.find(p => p.id === id);
+  if (!p || p.motoboy !== perfil) return;
+  try {
+    await updateDoc(doc(db,"demo_entregas",id),{status});
+  } catch(e) { alert("Erro ao atualizar: " + e.message); }
+};
+
+window.ativarGPS = () => {
+  if (!["moto1","moto2"].includes(perfil)) return;
+  if (!navigator.geolocation) return alert("GPS não suportado.");
+  if (watchId !== null) navigator.geolocation.clearWatch(watchId);
+
+  $("gpsinfo").textContent = "Solicitando permissão de GPS...";
+  watchId = navigator.geolocation.watchPosition(async pos => {
+    try {
+      await setDoc(doc(db,"demo_motoboys",perfil), {
+        nome: perfil === "moto1" ? "Motoboy 01" : "Motoboy 02",
+        lat: pos.coords.latitude,
+        lng: pos.coords.longitude,
+        gps:true,
+        atualizado:serverTimestamp()
+      },{merge:true});
+      $("gpsinfo").textContent = "GPS transmitindo · precisão " + Math.round(pos.coords.accuracy) + " m";
+    } catch(e) { $("gpsinfo").textContent = "Falha ao salvar GPS: " + e.message; }
+  }, err => {
+    $("gpsinfo").textContent = "GPS: " + err.message;
+  }, {enableHighAccuracy:true, maximumAge:2000, timeout:15000});
+};
+
+window.simular = async () => {
+  if (!["moto1","moto2"].includes(perfil)) return alert("Selecione um motoboy primeiro.");
+  const atual = motos[perfil] || {lat:base[0],lng:base[1]};
+  const lat = Number(atual.lat ?? base[0]) + (Math.random() - .5) * .002;
+  const lng = Number(atual.lng ?? base[1]) + (Math.random() - .5) * .002;
+  try {
+    await setDoc(doc(db,"demo_motoboys",perfil),{
+      nome:perfil === "moto1" ? "Motoboy 01" : "Motoboy 02",
+      lat,lng,gps:false,atualizado:serverTimestamp()
+    },{merge:true});
+  } catch(e) { alert("Erro ao mover motinha: " + e.message); }
+};
+
+unsubscribeMotos = onSnapshot(collection(db,"demo_motoboys"), snap => {
+  const data = {};
+  snap.forEach(d => data[d.id] = d.data());
+  atualizarMapa(data);
+}, err => {
+  $("conexao").textContent = "Erro Firebase: " + err.message;
+  $("conexao").className = "text-sm text-red-400";
+});
+
+unsubscribePedidos = onSnapshot(collection(db,"demo_entregas"), snap => {
+  pedidos = snap.docs.map(d => ({id:d.id,...d.data()}));
+  pedidos.sort((a,b) => (b.criado?.seconds || 0) - (a.criado?.seconds || 0));
+  render();
+}, err => {
+  $("pedidos").textContent = "Erro ao carregar pedidos: " + err.message;
+});
+
+ui();
+</script>
+</body>
+</html>

@@ -1,0 +1,161 @@
+#sidebar::-webkit-scrollbar {
+	width: 4px;
+}
+
+#sidebar::-webkit-scrollbar-track {
+	background: transparent;
+}
+
+#sidebar::-webkit-scrollbar-thumb {
+	background: rgba(255, 255, 255, .12);
+	border-radius: 999px;
+}
+
+#sidebar::-webkit-scrollbar-thumb:hover {
+	background: rgba(88, 100, 190, .8);
+}
+
+.sidebar-header,
+#header {
+	position: relative;
+	height: 72px;
+}
+
+/* RESPONSIVE */
+/* Desktop */
+@media (min-width: 600px) {
+#sidebar {
+		max-width: 288px;
+	}
+
+}
+@media (min-width: 1280px) {
+	#sidebar {
+		width: 288px;
+	}
+
+	#sidebar.collapsed {
+		width: 80px;
+	}
+
+	#sidebar.collapsed .sidebar-text {
+		display: none;
+	}
+
+	#sidebar.collapsed .user-card {
+		display: none;
+	}
+
+	#sidebar.collapsed .sidebar-item {
+		justify-content: center;
+	}
+
+	#sidebar.collapsed .sidebar-header {
+		justify-content: center;
+	}
+
+	#sidebar.collapsed .sidebar-logo {
+		display: none;
+	}
+}
+
+/* DROPDOWN */
+
+.sidebar-dropdown {
+	overflow: hidden;
+}
+
+.dropdown-menu {
+
+	max-height: 0;
+	opacity: 0;
+
+	overflow: hidden;
+
+	transition:
+		max-height .35s ease,
+		opacity .25s ease;
+
+	margin-left: 18px;
+
+}
+
+.sidebar-dropdown.open .dropdown-menu {
+
+	max-height: 500px;
+	opacity: 1;
+
+}
+
+.dropdown-arrow {
+
+	transition: .3s;
+
+}
+
+.sidebar-dropdown.open .dropdown-arrow {
+
+	transform: rotate(180deg);
+
+}
+
+.dropdown-item {
+
+	display: flex;
+	align-items: center;
+
+	height: 42px;
+
+	padding-left: 18px;
+
+	color: #94a3b8;
+
+	border-left: 2px solid rgba(255, 255, 255, .08);
+
+	transition: .25s;
+
+}
+
+.dropdown-item:hover {
+
+	color: #fff;
+	background: rgba(255, 255, 255, .04);
+
+}
+
+/* Logo grande */
+.sidebar-logo-full {
+	opacity: 1;
+	transform: scale(1);
+}
+
+/* Ícone escondido */
+.sidebar-logo-icon {
+	position: absolute;
+	opacity: 0;
+	transform: scale(.8);
+}
+
+/* Sidebar fechada */
+
+#sidebar.collapsed .sidebar-logo-full {
+	/* opacity: 0; */
+	transform: scale(.8);
+	/* pointer-events: none; */
+}
+
+#sidebar.collapsed .sidebar-logo-icon {
+	opacity: 1;
+	transform: scale(1);
+}
+
+@media (max-width: 1280px) {
+	#sidebar.collapsed {
+		height: 100%;
+		overflow-y: auto;
+	}
+		#sidebar {
+		height: 100%;
+		overflow-y: auto;
+	}
+}

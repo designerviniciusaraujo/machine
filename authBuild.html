@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Portal OMDA</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-black text-white">
+
+  <main class="min-h-screen flex items-center justify-center">
+
+    <div class="text-center space-y-6">
+
+      <h1 class="text-3xl font-bold">
+        Portal OMDA
+      </h1>
+
+      <!-- NÃO LOGADO -->
+      <div data-auth="guest" class="space-y-3">
+
+        <p class="text-gray-400">
+          Você não está logado.
+        </p>
+
+        <a
+          href="/login.html"
+          class="inline-block px-5 py-3 rounded-xl bg-blue-600 hover:bg-blue-700"
+        >
+          Entrar
+        </a>
+
+      </div>
+
+      <!-- LOGADO -->
+      <div data-auth="logged" class="hidden space-y-3">
+
+        <p class="text-green-400">
+          Você está logado.
+        </p>
+
+        <a
+          href="/perfil.html"
+          class="inline-block px-5 py-3 rounded-xl bg-white text-black"
+        >
+          Meu perfil
+        </a>
+
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- Auth -->
+  <script type="module">
+
+    import { observeAuth }
+      from "./js/auth/authState.js";
+
+    observeAuth(user => {
+
+      console.log("Estado:", user);
+
+      if (user) {
+
+        document
+          .querySelectorAll("[data-auth='logged']")
+          .forEach(el => el.classList.remove("hidden"));
+
+        document
+          .querySelectorAll("[data-auth='guest']")
+          .forEach(el => el.classList.add("hidden"));
+
+      } else {
+
+        document
+          .querySelectorAll("[data-auth='logged']")
+          .forEach(el => el.classList.add("hidden"));
+
+        document
+          .querySelectorAll("[data-auth='guest']")
+          .forEach(el => el.classList.remove("hidden"));
+
+      }
+
+    });
+
+  </script>
+
+</body>
+
+</html>

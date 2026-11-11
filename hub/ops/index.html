@@ -1,0 +1,1587 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+   <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Omda Fansub - Painel</title>
+      <link rel="stylesheet" href="assets/css/tema.css">
+      <link rel="stylesheet" href="assets/css/loader.css">
+      <!-- <link rel="stylesheet" href="assets/css/table.css"> -->
+      <style>
+         /* RESPONSIVE */
+         /* Desktop */
+         @media (min-width: 1280px) {
+         #sidebar {
+         width: 288px;
+         }
+         #sidebar.collapsed {
+         width: 80px;
+         }
+         #sidebar.collapsed .sidebar-text {
+         display: none;
+         }
+         #sidebar.collapsed .user-card {
+         display: none;
+         }
+         #sidebar.collapsed .sidebar-item {
+         justify-content: center;
+         }
+         #sidebar.collapsed .sidebar-header {
+         justify-content: center;
+         }
+         #sidebar.collapsed .sidebar-logo {
+         display: none;
+         }
+         
+         }
+      </style>
+   </head>
+   <body class="bg-[#0f0f0f] text-primary">
+      <div id="app-loader"
+    class="fixed inset-0 z-[9999] flex items-center justify-center bg-[#0f0f0f]  duration-300">
+
+    <div class="w-full max-w-sm px-8">
+
+        <div class="flex justify-center mb-8">
+            <img
+                src="assets/images/ft-logo.png"
+                alt="OMDA"
+                class="h-14 object-contain">
+        </div>
+
+        <div class="h-1.5 w-full overflow-hidden rounded-full bg-white/10">
+            <div
+                id="loader-progress"
+                class="h-full w-0 rounded-full bg-[#5864be] transition-all duration-200">
+            </div>
+        </div>
+
+        <p class="mt-4 text-center text-sm text-zinc-500 tracking-wide">
+            Carregando...
+        </p>
+
+    </div>
+
+</div>
+      <div class="min-h-screen lg:flex">
+         <!-- SIDEBAR -->
+         <aside
+            id="sidebar"
+            class="
+            
+            fixed xl:sticky
+xl:top-0
+xl:self-start
+xl:h-screen
+            w-[90%]
+            bg-[#171717] border border-white/1
+            border-theme
+            border-r
+            -translate-x-full
+            xl:translate-x-0
+            transition-all
+            duration-300
+            "
+            >
+            <!-- HEADER -->
+            <div class="sidebar-header flex items-center justify-between p-4 border-b border-theme  ">
+               <span class="sidebar-logo text-lg font-bold">
+                <div class="flex-1 flex justify-center block">
+                     <a class="">
+                    <img src="assets/images/ft-logo.png" alt="Logo">
+                    </a>
+                </div>
+               </span>
+               <button
+                  onclick="toggleSidebar()"
+                  class="rounded-lg p-2 hover:bg-slate-800 transition"
+                  >
+               ☰
+               </button>
+            </div>
+
+            <div class="user-card">
+         <a href="#"
+class="block p-4 rounded-2xl bg-[linear-gradient(145deg,var(--card),var(--card2))]">
+
+    <div class="flex flex-col items-center text-center">
+
+        <img
+            src="assets/capa/avatar.png"
+            class="w-16 h-16 rounded-2xl border border-white/10 object-cover">
+
+        <h3 class="mt-3 font-semibold text-white">
+            Gennosuke
+        </h3>
+
+        <span class="mt-1 px-2 py-1 text-xs rounded-full bg-[#5864be]/20 text-[#93a0ff]">
+            User
+        </span>
+
+        <div class="w-full mt-4 grid grid-cols-2 gap-2 text-xs">
+
+            <div class="bg-black/10 rounded-xl p-2">
+                <div class="text-green-400 font-semibold">
+                    2.22
+                </div>
+                <div class="text-zinc-400">
+                    Ratio
+                </div>
+            </div>
+
+            <div class="bg-black/10 rounded-xl p-2">
+                <div class="text-yellow-400 font-semibold">
+                    19.57
+                </div>
+                <div class="text-zinc-400">
+                    Otabills
+                </div>
+            </div>
+
+            <div class="bg-black/10 rounded-xl p-2">
+                <div class="text-blue-400 font-semibold">
+                    4.3 TB
+                </div>
+                <div class="text-zinc-400">
+                    Upload
+                </div>
+            </div>
+
+            <div class="bg-black/10 rounded-xl p-2">
+                <div class="text-red-400 font-semibold">
+                    1.9 TB
+                </div>
+                <div class="text-zinc-400">
+                    Download
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</a>
+            </div>
+   
+            <!-- MENU -->
+            <nav class="p-3 space-y-2">
+               <a href="index.html"
+                  class="sidebar-item flex items-center gap-3 p-3 rounded-xl hover:bg-slate-800 transition">
+               <span><i data-lucide="home"></i></span>
+               <span class="sidebar-text">Home</span>
+               </a>
+               <a href="torrents.html"
+                  class="sidebar-item flex items-center gap-3 p-3 rounded-xl hover:bg-slate-800 transition">
+               <span><i data-lucide="download"></i></span>
+               <span class="sidebar-text">Torrents</span>
+               </a>
+                 <a href="uploads.html"
+                  class="sidebar-item flex items-center gap-3 p-3 rounded-xl hover:bg-slate-800 transition">
+               <span><i data-lucide="upload"></i></span>
+               <span class="sidebar-text">Uploads</span>
+               </a>
+               <a href="usuarios.html"
+                  class="sidebar-item flex items-center gap-3 p-3 rounded-xl hover:bg-slate-800 transition">
+               <span><i data-lucide="users"></i></span>
+               <span class="sidebar-text">Usuários</span>
+               </a>
+               <a href="perfil.html"
+                  class="sidebar-item flex items-center gap-3 p-3 rounded-xl hover:bg-slate-800 transition">
+               <span><i data-lucide="user"></i></span>
+               <span class="sidebar-text">Perfil</span>
+               </a>
+               <a href="configuracoes.html"
+                  class="sidebar-item flex items-center gap-3 p-3 rounded-xl hover:bg-slate-800 transition">
+               <span><i data-lucide="settings"></i></span>
+               <span class="sidebar-text">Configurações</span>
+               </a>
+            </nav>
+         </aside>
+
+
+
+         
+
+         <!-- CONTENT -->
+         <main class="  flex-1 p-4 xl:p-8">
+            <header class="  border-theme   ">
+               <div class="flex items-center justify-between h-16 px-4">
+                  <!-- Menu mobile -->
+                  <button
+                     onclick="toggleSidebar()"
+                     class="xl:hidden"
+                     >
+                  <i data-lucide="menu"></i>
+                  </button>
+                <div class="flex-1 flex justify-center block">
+                     <a class="">
+                    <img
+                        src="assets/images/ft-logo.png"
+                        alt="Logo"
+                        
+                        >
+                    </a>
+                </div>
+                   
+                    <!-- Menu Desktop -->
+
+    <nav class=" hidden xl:flex items-center gap-8  ">
+ 
+         <a href="#" class="hover:text-[#5864be]">
+            Navegue
+        </a>
+        <a href="#" class="hover:text-[#5864be]">
+            Upload
+        </a>
+
+        <a href="#" class="hover:text-[#5864be]">
+            Requests
+        </a>
+
+        <a href="#" class="hover:text-[#5864be]">
+            Top 100
+        </a>
+
+    </nav>
+                  <!-- Desktop empurra -->
+                  <!-- <div class="flex-1 hidden xl:block ml-auto"></div> -->
+                  <!-- Busca desktop -->
+                  <div class=" hidden xl:block relative w-96 ml-6">
+                     <input
+                        class="input"
+                        placeholder="Buscar torrents, animes, filmes..."
+                        >
+                  </div>
+                   <div class="flex-1  hidden  items-center gap-6 text-sm">
+
+        <div>
+            <div class="text-green-400 font-semibold">
+                3.4 TB
+            </div>
+
+            <div class="text-xs opacity-60">
+                Download
+            </div>
+        </div>
+
+        <div>
+            <div class="text-blue-400 font-semibold">
+                1.9 TB
+            </div>
+
+            <div class="text-xs opacity-60">
+                Upload
+            </div>
+        </div>
+
+        <div>
+            <div class="text-[#5864be] font-semibold">
+                1.82
+            </div>
+
+            <div class="text-xs opacity-60">
+                Ratio
+            </div>
+        </div>
+
+    </div>
+                  <!-- Botões -->
+                  <div class="  flex items-center gap-3 ml-6 mr-6">
+                     
+                    <button id="fullscreenToggle" class="fullscreen-btn">
+    <i id="iconMaximize" data-lucide="maximize-2"></i>
+    <i id="iconMinimize" data-lucide="minimize-2" style="display:none;"></i>
+</button>
+                        <button>
+                     <i data-lucide="bell"></i>
+                     </button>
+                  </div>
+                    <!-- User -->
+ 
+                     <div class="user-content-box hidden  items-center gap-3 mb-3">
+
+        <img src="assets/capa/avatar.png" class="w-16 h-16 rounded-2xl border border-white/10 object-cover">
+
+        <div>
+          <h4 class="font-medium">CharX</h4>
+          <p class="text-xs text-zinc-500">
+            há 2 horas
+          </p>
+        </div>
+
+      </div>
+               </div>
+               
+               <!-- Busca mobile -->
+               <div class="xl:hidden pt-0">
+                  <input
+                     class="input"
+                     placeholder="Buscar torrents..."
+                     >
+               </div>
+            </header>
+
+            <section
+               class="
+               hidden
+               relative
+               overflow-hidden
+               rounded-2xl
+               h-[320px]
+               xl:h-[500px]
+               "
+               >
+               <!-- Background -->
+               <img
+                  src="assets/images/banner.png"
+                  alt="Banner"
+                  class="
+                  absolute
+                  inset-0
+                  w-full
+                  h-full
+                  object-cover
+                  "
+                  >
+               <!-- Overlay -->
+               <div
+                  class="
+                  absolute
+                  inset-0
+                  bg-gradient-to-r
+                  from-black/90
+                  via-black/60
+                  to-transparent
+                  "
+                  ></div>
+               <!-- Content -->
+               <div
+                  class="
+                  relative
+                  z-10
+                  h-full
+                  flex
+                  items-end
+                  p-6
+                  xl:p-12
+                  "
+                  >
+                  <div class="max-w-2xl">
+                     <span
+                        class="
+                        inline-flex
+                        px-3 py-1
+                        rounded-full
+                        text-xs
+                        bg-purple-600
+                        "
+                        >
+                     Destaque
+                     </span>
+                     <h1
+                        class="
+                        mt-4
+                        text-3xl
+                        xl:text-6xl
+                        font-bold
+                        "
+                        >
+                        Solo Leveling
+                     </h1>
+                     <p
+                        class="
+                        mt-4
+                        text-sm
+                        xl:text-lg
+                        opacity-80
+                        "
+                        >
+                        Um dos animes mais populares do momento,
+                        disponível em alta qualidade.
+                     </p>
+                     <div
+                        class="
+                        mt-6
+                        flex
+                        flex-wrap
+                        gap-3
+                        "
+                        >
+                        <button
+                           class="
+                           px-5 py-3
+                           rounded-xl
+                           bg-purple-600
+                           "
+                           >
+                        Assistir
+                        </button>
+                        <button
+                           class="
+                           px-5 py-3
+                           rounded-xl
+                           border
+                           border-theme
+                           "
+                           >
+                        Detalhes
+                        </button>
+                     </div>
+                  </div>
+               </div>
+            </section>
+            <div class="mb-6 mt-6">
+
+    <h1 class="text-2xl font-bold">
+         Olá, Gennosuke
+    </h1>
+
+    <p class="text-sm text-zinc-500 mt-1">
+        Bem-vindo de volta à OMDA Tracker.
+    </p>
+
+</div>
+            <div class=" grid grid-cols-2 lg:grid-cols-4 gap-5 mt-8">
+               <div class="bg-[#171717] rounded-[24px] p-6 border border-white/10">
+                  <h4 class="text-zinc-400 text-sm font-medium">
+                     Usuários
+                  </h4>
+                  <h2 class="text-white text-3xl font-bold mt-2">
+                     12.540
+                  </h2>
+                  <p class="text-green-400 text-sm mt-2">
+                     +214 novos usuários
+                  </p>
+               </div>
+               <div class="bg-[#171717] rounded-[24px] p-6 border border-white/10">
+                  <h4 class="text-zinc-400 text-sm font-medium">
+                     Downloads
+                  </h4>
+                  <h2 class="text-white text-3xl font-bold mt-2">
+                     84.2K
+                  </h2>
+                  <p class="text-zinc-400 text-sm mt-2">
+                     Últimos 30 dias
+                  </p>
+               </div>
+               <div class="bg-[#171717] rounded-[24px] p-6 border border-white/10">
+                  <h4 class="text-zinc-400 text-sm font-medium">
+                     Arquivos
+                  </h4>
+                  <h2 class="text-white text-3xl font-bold mt-2">
+                     3.421
+                  </h2>
+                  <p class="text-zinc-400 text-sm mt-2">
+                     Torrents ativos
+                  </p>
+               </div>
+               <div class="bg-[#171717] rounded-[24px] p-6 border border-white/10">
+                  <h4 class="text-zinc-400 text-sm font-medium">
+                     Storage
+                  </h4>
+                  <h2 class="text-white text-3xl font-bold mt-2">
+                     18.7 TB
+                  </h2>
+                  <p class="text-zinc-400 text-sm mt-2">
+                     72% utilizado
+                  </p>
+               </div>
+            </div>
+
+
+
+            <div class="max-w-7xl mx-auto ">
+
+    <!-- GRID -->
+
+    <div class="grid lg:grid-cols-3 gap-6 mt-8">
+
+        <!-- NOTÍCIAS -->
+
+        <div class="lg:col-span-2 bg-[#171717] rounded-[24px]   border border-white/10">
+
+            <div class="p-5 border-b border-white/10">
+
+                <h2 class="font-bold text-lg">
+                      Notícias
+                </h2>
+
+            </div>
+
+            <div class="p-5 space-y-4">
+
+                <div class="bg-black/10 rounded-2xl p-4 hover:bg-white/5 transition">
+
+                    <div class="flex justify-between">
+
+                        <div>
+
+                            <h3 class="font-semibold text-[#93a0ff]">
+                                Arquivos corrompidos/duplicados
+                            </h3>
+
+                            <p class="text-zinc-400 text-sm mt-1">
+                                por qwertyuiop
+                            </p>
+
+                        </div>
+
+                        <span class="text-zinc-500 text-sm">
+                            12 Abr
+                        </span>
+
+                    </div>
+
+                </div>
+
+                <div class="bg-black/10 rounded-2xl p-4">
+                    <h3 class="font-semibold text-[#93a0ff]">
+                        Servidor em baixo - O que aconteceu?
+                    </h3>
+
+                    <p class="text-zinc-400 text-sm mt-1">
+                        por Kitamura
+                    </p>
+                </div>
+
+                <div class="bg-black/10 rounded-2xl p-4">
+                    <h3 class="font-semibold text-[#93a0ff]">
+                        Uma Nova Era: Preservação de Fansubs
+                    </h3>
+
+                    <p class="text-zinc-400 text-sm mt-1">
+                        por Kitamura
+                    </p>
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- ATIVIDADES -->
+
+        <div class="bg-[#171717] rounded-[24px]   border border-white/10">
+
+            <div class="p-5 border-b border-white/10">
+
+                <h2 class="font-bold">
+                      Fórum
+                </h2>
+
+            </div>
+
+            <div class="p-4 space-y-4">
+
+                <div class="border-l-2 border-[#5864be] pl-4">
+
+                    <p class="font-medium">
+                        #Mrleandr
+                    </p>
+
+                    <p class="text-[#93a0ff] text-sm">
+                        Convites Gerais
+                    </p>
+
+                </div>
+
+                <div class="border-l-2 border-[#5864be] pl-4">
+
+                    <p class="font-medium">
+                        #roverde
+                    </p>
+
+                    <p class="text-[#93a0ff] text-sm">
+                        IA Subs
+                    </p>
+
+                </div>
+
+                <div class="border-l-2 border-[#5864be] pl-4">
+
+                    <p class="font-medium">
+                        #flamer
+                    </p>
+
+                    <p class="text-[#93a0ff] text-sm">
+                        Músicas Viciantes
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- SHOUTBOX -->
+
+        <div class="lg:col-span-2 bg-[#171717] rounded-[24px]   border border-white/10">
+
+            <div class="p-5 border-b border-white/10">
+
+                <h2 class="font-bold">
+                      Chat Global
+                </h2>
+
+            </div>
+
+            <div class="p-5 space-y-5 max-h-[500px] overflow-y-auto">
+
+                <div class="flex gap-3">
+
+                    <img
+                    src="https://i.pravatar.cc/60?img=1"
+                    class="w-12 h-12 rounded-xl">
+
+                    <div>
+
+                        <div class="font-semibold text-orange-400">
+                            daniel085
+                        </div>
+
+                        <p class="text-zinc-300">
+                            Noctua é bom, mas pesa bastante dependendo do gabinete...
+                        </p>
+
+                    </div>
+
+                </div>
+
+                <div class="flex gap-3">
+
+                    <img
+                    src="assets/capa/avatar.png"
+                    class="w-12 h-12 rounded-xl">
+
+                    <div>
+
+                        <div class="font-semibold text-[#93a0ff]">
+                            Gennosuke
+                        </div>
+
+                        
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- ADOTE -->
+
+        <div class="bg-[#171717] rounded-[24px]   border border-white/10">
+
+            <div class="p-5 border-b border-white/10">
+
+                <h2 class="font-bold">
+                    Adote um Torrent
+                </h2>
+
+            </div>
+
+            <div class="p-4 space-y-4">
+
+                <div class="bg-black/10 rounded-2xl p-4">
+
+                    <h3 class="font-medium">
+                        Kuroko no Basket 3
+                    </h3>
+
+                    <p class="text-sm text-zinc-400">
+                        Grupo MMS
+                    </p>
+
+                    <button class="mt-3 w-full py-2 rounded-xl bg-[#5864be]">
+                        Adotar
+                    </button>
+
+                </div>
+
+                <div class="bg-black/10 rounded-2xl p-4">
+
+                    <h3 class="font-medium">
+                        Gintama
+                    </h3>
+
+                    <p class="text-sm text-zinc-400">
+                        Grupo ACRE
+                    </p>
+
+                    <button class="mt-3 w-full py-2 rounded-xl bg-[#5864be]">
+                        Adotar
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+            
+           
+            <div class="mt-6 bg-[#171717] rounded-[28px] overflow-hidden border border-white/10 shadow-2xl">
+               <!-- HEADER -->
+               <div class="px-6 py-5 border-b border-white/10 flex items-center justify-between">
+                  <div>
+                     <h2 class="text-xl font-bold text-white">
+                        Últimos Torrents
+                     </h2>
+                     <p class="text-sm text-zinc-400">
+                        1.254 torrents  
+                     </p>
+                  </div>
+                  <button class="px-5 py-3 rounded-xl bg-[#5864be] text-white font-medium hover:opacity-90">
+                  Atualizar
+                  </button>
+               </div>
+               <!-- TABLE -->
+               <div class="overflow-x-auto mt-5">
+                  <table class="w-full">
+                     <thead>
+                        <tr class="bg-[#252525] border-b border-white/10">
+                           <th class="px-5 py-4 text-left text-sm font-semibold text-zinc-400">
+                              Nome
+                           </th>
+                           <th class="px-4 py-4 text-center text-sm font-semibold text-zinc-400">
+                              Tipo
+                           </th>
+                           <th class="px-4 py-4 text-center text-sm font-semibold text-zinc-400">
+                              ↓
+                           </th>
+                           <th class="px-4 py-4 text-center text-sm font-semibold text-green-400">
+                              S
+                           </th>
+                           <th class="px-4 py-4 text-center text-sm font-semibold text-orange-400">
+                              L
+                           </th>
+                           <th class="px-4 py-4 text-center text-sm font-semibold text-zinc-400">
+                              C
+                           </th>
+                           <th class="px-4 py-4 text-center text-sm font-semibold text-zinc-400">
+                              Tamanho
+                           </th>
+                           <th class="px-4 py-4 text-center text-sm font-semibold text-zinc-400">
+                              Grupo
+                           </th>
+                           <th class="px-4 py-4 text-center text-sm font-semibold text-zinc-400">
+                              Uploader
+                           </th>
+                        </tr>
+                     </thead>
+                     <tbody>
+                        <!-- ITEM -->
+                        <tr class="border-b border-white/5 hover:bg-white/5 transition">
+                           <td class="px-5 py-4">
+                              <div class="flex items-center gap-3">
+                                 <div class="w-10 h-10 rounded-xl bg-[#5864be]/20 flex items-center justify-center">
+                                      <img src="assets/images/free.gif" alt="" srcset="">
+                                 </div>
+                                 <div>
+                                    <p class="font-semibold text-white">
+                                     Jin-Roh [BD][988p][HEVC][AAC]
+                                    </p>
+                                    <p class="text-xs text-zinc-500">
+                                       Filme • HEVC • AAC
+                                    </p>
+                                 </div>
+                              </div>
+                           </td>
+                           <td class="text-center text-zinc-300">
+                              Filme
+                           </td>
+                           <td class="text-center">
+                              <button class="w-9 h-9 rounded-lg bg-[#5864be] text-white hover:opacity-90">
+                              ↓
+                              </button>
+                           </td>
+                           <td class="text-center font-bold text-green-400">
+                              7
+                           </td>
+                           <td class="text-center font-bold text-orange-400">
+                              1
+                           </td>
+                           <td class="text-center text-zinc-300">
+                              7
+                           </td>
+                           <td class="text-center text-zinc-300">
+                              662.81 MB
+                           </td>
+                           <td class="text-center text-[#93a0ff] font-medium">
+                              ANSK
+                           </td>
+                           <td class="text-center text-zinc-300">
+                              MarchinPossum
+                           </td>
+                        </tr>
+                        <!-- ITEM -->
+                        <tr class="border-b border-white/5 hover:bg-white/5 transition">
+                           <td class="px-5 py-4">
+                              <div class="flex items-center gap-3">
+                                 <div class="w-10 h-10 rounded-xl bg-[#5864be]/20 flex items-center justify-center">
+                                      <img src="assets/images/free.gif" alt="" srcset="">
+                                 </div>
+                                 <div>
+                                    <p class="font-semibold text-white">
+                                       Digimon Adventure: Bokura no War Game
+                                    </p>
+                                    <p class="text-xs text-zinc-500">
+                                       Filme • 1080p • H264
+                                    </p>
+                                 </div>
+                              </div>
+                           </td>
+                           <td class="text-center text-zinc-300">
+                              Filme
+                           </td>
+                           <td class="text-center">
+                              <button class="w-9 h-9 rounded-lg bg-[#5864be] text-white">
+                              ↓
+                              </button>
+                           </td>
+                           <td class="text-center font-bold text-green-400">
+                              10
+                           </td>
+                           <td class="text-center font-bold text-orange-400">
+                              0
+                           </td>
+                           <td class="text-center text-zinc-300">
+                              28
+                           </td>
+                           <td class="text-center text-zinc-300">
+                              1.4 GB
+                           </td>
+                           <td class="text-center text-[#93a0ff] font-medium">
+                              FK
+                           </td>
+                           <td class="text-center text-zinc-300">
+                              cinzento007
+                           </td>
+                        </tr>
+                        <!-- ITEM -->
+                        <tr class="hover:bg-white/5 transition">
+                           <td class="px-5 py-4">
+                              <div class="flex items-center gap-3">
+                                 <div class="w-10 h-10 rounded-xl bg-[#5864be]/20 flex items-center justify-center">
+                                      <img src="assets/images/free.gif" alt="" srcset="">
+                                 </div>
+                                 <div>
+                                    <p class="font-semibold text-white">
+                                       Demon Slayer Hashira Training Arc
+                                    </p>
+                                    <p class="text-xs text-zinc-500">
+                                       Anime • 4K • H265
+                                    </p>
+                                 </div>
+                              </div>
+                           </td>
+                           <td class="text-center text-zinc-300">
+                              Anime
+                           </td>
+                           <td class="text-center">
+                              <button class="w-9 h-9 rounded-lg bg-[#5864be] text-white">
+                              ↓
+                              </button>
+                           </td>
+                           <td class="text-center font-bold text-green-400">
+                              201
+                           </td>
+                           <td class="text-center font-bold text-orange-400">
+                              12
+                           </td>
+                           <td class="text-center text-zinc-300">
+                              631
+                           </td>
+                           <td class="text-center text-zinc-300">
+                              12.4 GB
+                           </td>
+                           <td class="text-center text-[#93a0ff] font-medium">
+                              Fênix
+                           </td>
+                           <td class="text-center text-zinc-300">
+                              Admin
+                           </td>
+                        </tr>
+                     </tbody>
+                  </table>
+               </div>
+            </div>
+ <div class="mt-6 bg-[#171717] rounded-[28px] overflow-hidden border border-white/10 shadow-2xl">
+               <!-- HEADER -->
+               <div class="px-6 py-5 border-b border-white/10 flex items-center justify-between">
+                  <div>
+                     <h2 class="text-xl font-bold text-white">
+                        Gold Torrents
+                     </h2>
+                     <p class="text-sm text-zinc-400">
+                        254 torrents  
+                     </p>
+                  </div>
+                  <button class="px-5 py-3 rounded-xl bg-[#5864be] text-white font-medium hover:opacity-90">
+                  Atualizar
+                  </button>
+               </div>
+               <!-- TABLE -->
+               <div class="overflow-x-auto mt-5">
+                  <table class="w-full">
+                     <thead>
+                        <tr class="bg-[#252525] border-b border-white/10">
+                           <th class="px-5 py-4 text-left text-sm font-semibold text-zinc-400">
+                              Nome
+                           </th>
+                           <th class="px-4 py-4 text-center text-sm font-semibold text-zinc-400">
+                              Tipo
+                           </th>
+                           <th class="px-4 py-4 text-center text-sm font-semibold text-zinc-400">
+                              ↓
+                           </th>
+                           <th class="px-4 py-4 text-center text-sm font-semibold text-green-400">
+                              S
+                           </th>
+                           <th class="px-4 py-4 text-center text-sm font-semibold text-orange-400">
+                              L
+                           </th>
+                           <th class="px-4 py-4 text-center text-sm font-semibold text-zinc-400">
+                              C
+                           </th>
+                           <th class="px-4 py-4 text-center text-sm font-semibold text-zinc-400">
+                              Tamanho
+                           </th>
+                           <th class="px-4 py-4 text-center text-sm font-semibold text-zinc-400">
+                              Grupo
+                           </th>
+                           <th class="px-4 py-4 text-center text-sm font-semibold text-zinc-400">
+                              Uploader
+                           </th>
+                        </tr>
+                     </thead>
+                     <tbody>
+                        <!-- ITEM -->
+                        <tr class="border-b border-white/5 hover:bg-white/5 transition">
+                           <td class="px-5 py-4">
+                              <div class="flex items-center gap-3">
+                                 <div class="w-10 h-10 rounded-xl bg-[#5864be]/20 flex items-center justify-center">
+                                      <img src="assets/images/free.gif" alt="" srcset="">
+                                 </div>
+                                 <div>
+                                    <p class="font-semibold text-white">
+                                     Jin-Roh [BD][988p][HEVC][AAC]
+                                    </p>
+                                    <p class="text-xs text-zinc-500">
+                                       Filme • HEVC • AAC
+                                    </p>
+                                 </div>
+                              </div>
+                           </td>
+                           <td class="text-center text-zinc-300">
+                              Filme
+                           </td>
+                           <td class="text-center">
+                              <button class="w-9 h-9 rounded-lg bg-[#5864be] text-white hover:opacity-90">
+                              ↓
+                              </button>
+                           </td>
+                           <td class="text-center font-bold text-green-400">
+                              7
+                           </td>
+                           <td class="text-center font-bold text-orange-400">
+                              1
+                           </td>
+                           <td class="text-center text-zinc-300">
+                              7
+                           </td>
+                           <td class="text-center text-zinc-300">
+                              662.81 MB
+                           </td>
+                           <td class="text-center text-[#93a0ff] font-medium">
+                              ANSK
+                           </td>
+                           <td class="text-center text-zinc-300">
+                              MarchinPossum
+                           </td>
+                        </tr>
+                        <!-- ITEM -->
+                        <tr class="border-b border-white/5 hover:bg-white/5 transition">
+                           <td class="px-5 py-4">
+                              <div class="flex items-center gap-3">
+                                 <div class="w-10 h-10 rounded-xl bg-[#5864be]/20 flex items-center justify-center">
+                                      <img src="assets/images/free.gif" alt="" srcset="">
+                                 </div>
+                                 <div>
+                                    <p class="font-semibold text-white">
+                                       Digimon Adventure: Bokura no War Game
+                                    </p>
+                                    <p class="text-xs text-zinc-500">
+                                       Filme • 1080p • H264
+                                    </p>
+                                 </div>
+                              </div>
+                           </td>
+                           <td class="text-center text-zinc-300">
+                              Filme
+                           </td>
+                           <td class="text-center">
+                              <button class="w-9 h-9 rounded-lg bg-[#5864be] text-white">
+                              ↓
+                              </button>
+                           </td>
+                           <td class="text-center font-bold text-green-400">
+                              10
+                           </td>
+                           <td class="text-center font-bold text-orange-400">
+                              0
+                           </td>
+                           <td class="text-center text-zinc-300">
+                              28
+                           </td>
+                           <td class="text-center text-zinc-300">
+                              1.4 GB
+                           </td>
+                           <td class="text-center text-[#93a0ff] font-medium">
+                              FK
+                           </td>
+                           <td class="text-center text-zinc-300">
+                              cinzento007
+                           </td>
+                        </tr>
+                        <!-- ITEM -->
+                        <tr class="hover:bg-white/5 transition">
+                           <td class="px-5 py-4">
+                              <div class="flex items-center gap-3">
+                                 <div class="w-10 h-10 rounded-xl bg-[#5864be]/20 flex items-center justify-center">
+                                      <img src="assets/images/free.gif" alt="" srcset="">
+                                 </div>
+                                 <div>
+                                    <p class="font-semibold text-white">
+                                       Demon Slayer Hashira Training Arc
+                                    </p>
+                                    <p class="text-xs text-zinc-500">
+                                       Anime • 4K • H265
+                                    </p>
+                                 </div>
+                              </div>
+                           </td>
+                           <td class="text-center text-zinc-300">
+                              Anime
+                           </td>
+                           <td class="text-center">
+                              <button class="w-9 h-9 rounded-lg bg-[#5864be] text-white">
+                              ↓
+                              </button>
+                           </td>
+                           <td class="text-center font-bold text-green-400">
+                              201
+                           </td>
+                           <td class="text-center font-bold text-orange-400">
+                              12
+                           </td>
+                           <td class="text-center text-zinc-300">
+                              631
+                           </td>
+                           <td class="text-center text-zinc-300">
+                              12.4 GB
+                           </td>
+                           <td class="text-center text-[#93a0ff] font-medium">
+                              Fênix
+                           </td>
+                           <td class="text-center text-zinc-300">
+                              Admin
+                           </td>
+                        </tr>
+                     </tbody>
+                  </table>
+               </div>
+            </div>
+
+            
+            <div class="bg-white rounded-[28px] shadow-xl overflow-hidden border border-slate-200 hidden">
+               <!-- Header -->
+               <div class="px-6 py-5 border-b border-slate-200 flex items-center justify-between">
+                  <div>
+                     <h2 class="text-xl font-bold text-slate-800">
+                        Resultados da Busca
+                     </h2>
+                     <p class="text-sm text-slate-500">
+                        1.254 torrents encontrados
+                     </p>
+                  </div>
+                  <button class="px-5 py-3 rounded-xl bg-[#5864be] text-white font-medium hover:opacity-90">
+                  Atualizar
+                  </button>
+               </div>
+               <div class="m-3">
+                  <div class="overflow-x-auto">
+                     <table class="w-full">
+                        <thead>
+                           <tr class="bg-slate-50 border-b border-slate-200">
+                              <th class="px-5 py-4 text-left text-sm font-semibold text-slate-600">
+                                 Nome
+                              </th>
+                              <th class="px-4 py-4 text-center text-sm font-semibold text-slate-600">
+                                 Tipo
+                              </th>
+                              <th class="px-4 py-4 text-center text-sm font-semibold text-slate-600">
+                                 ↓
+                              </th>
+                              <th class="px-4 py-4 text-center text-sm font-semibold text-green-600">
+                                 S
+                              </th>
+                              <th class="px-4 py-4 text-center text-sm font-semibold text-orange-500">
+                                 L
+                              </th>
+                              <th class="px-4 py-4 text-center text-sm font-semibold text-slate-600">
+                                 C
+                              </th>
+                              <th class="px-4 py-4 text-center text-sm font-semibold text-slate-600">
+                                 Tamanho
+                              </th>
+                              <th class="px-4 py-4 text-center text-sm font-semibold text-slate-600">
+                                 Grupo
+                              </th>
+                              <th class="px-4 py-4 text-center text-sm font-semibold text-slate-600">
+                                 Uploader
+                              </th>
+                           </tr>
+                        </thead>
+                        <tbody>
+                           <tr class="border-b border-slate-100 hover:bg-slate-50 transition">
+                              <td class="px-5 py-4">
+                                 <div class="flex items-center gap-3">
+                                    <div class="w-10 h-10 rounded-xl bg-[#5864be]/10 flex items-center justify-center">
+                                       🎬
+                                    </div>
+                                    <div>
+                                       <p class="font-semibold text-slate-800">
+                                          Jin-Roh [BD][988p][HEVC][AAC]
+                                       </p>
+                                       <p class="text-xs text-slate-500">
+                                          Filme • HEVC • AAC
+                                       </p>
+                                    </div>
+                                 </div>
+                              </td>
+                              <td class="text-center text-slate-700">
+                                 Filme
+                              </td>
+                              <td class="text-center">
+                                 <button class="w-9 h-9 rounded-lg bg-[#5864be] text-white">
+                                 ↓
+                                 </button>
+                              </td>
+                              <td class="text-center font-bold text-green-600">
+                                 7
+                              </td>
+                              <td class="text-center font-bold text-orange-500">
+                                 1
+                              </td>
+                              <td class="text-center text-slate-700">
+                                 7
+                              </td>
+                              <td class="text-center text-slate-700">
+                                 662.81 MB
+                              </td>
+                              <td class="text-center text-[#5864be] font-medium">
+                                 ANSK
+                              </td>
+                              <td class="text-center text-slate-700">
+                                 MarchinPossum
+                              </td>
+                           </tr>
+                           <tr class="border-b border-slate-100 hover:bg-slate-50 transition">
+                              <td class="px-5 py-4">
+                                 <div class="flex items-center gap-3">
+                                    <div class="w-10 h-10 rounded-xl bg-[#5864be]/10 flex items-center justify-center">
+                                       📺
+                                    </div>
+                                    <div>
+                                       <p class="font-semibold text-slate-800">
+                                          Digimon Adventure: Bokura no War Game
+                                       </p>
+                                       <p class="text-xs text-slate-500">
+                                          Filme • 1080p • H264
+                                       </p>
+                                    </div>
+                                 </div>
+                              </td>
+                              <td class="text-center text-slate-700">
+                                 Filme
+                              </td>
+                              <td class="text-center">
+                                 <button class="w-9 h-9 rounded-lg bg-[#5864be] text-white">
+                                 ↓
+                                 </button>
+                              </td>
+                              <td class="text-center font-bold text-green-600">
+                                 10
+                              </td>
+                              <td class="text-center font-bold text-orange-500">
+                                 0
+                              </td>
+                              <td class="text-center text-slate-700">
+                                 28
+                              </td>
+                              <td class="text-center text-slate-700">
+                                 1.4 GB
+                              </td>
+                              <td class="text-center text-[#5864be] font-medium">
+                                 FK
+                              </td>
+                              <td class="text-center text-slate-700">
+                                 cinzento007
+                              </td>
+                           </tr>
+                           <tr class="border-b border-slate-100 hover:bg-slate-50 transition">
+                              <td class="px-5 py-4">
+                                 <div class="flex items-center gap-3">
+                                    <div class="w-10 h-10 rounded-xl bg-[#5864be]/10 flex items-center justify-center">
+                                       ⭐
+                                    </div>
+                                    <div>
+                                       <p class="font-semibold text-slate-800">
+                                          Demon Slayer Hashira Training Arc
+                                       </p>
+                                       <p class="text-xs text-slate-500">
+                                          Anime • 4K • H265
+                                       </p>
+                                    </div>
+                                 </div>
+                              </td>
+                              <td class="text-center text-slate-700">
+                                 Anime
+                              </td>
+                              <td class="text-center">
+                                 <button class="w-9 h-9 rounded-lg bg-[#5864be] text-white">
+                                 ↓
+                                 </button>
+                              </td>
+                              <td class="text-center font-bold text-green-600">
+                                 201
+                              </td>
+                              <td class="text-center font-bold text-orange-500">
+                                 12
+                              </td>
+                              <td class="text-center text-slate-700">
+                                 631
+                              </td>
+                              <td class="text-center text-slate-700">
+                                 12.4 GB
+                              </td>
+                              <td class="text-center text-[#5864be] font-medium">
+                                 Fênix
+                              </td>
+                              <td class="text-center text-slate-700">
+                                 Admin
+                              </td>
+                           </tr>
+                        </tbody>
+                     </table>
+                  </div>
+               </div>
+            </div>
+            </main>
+         
+      </div>
+      <section>
+
+   <!-- NEWSLETTER -->
+
+<div class=" bg-[#5864be] p-8 mb-8">
+
+    <div class="grid lg:grid-cols-12 gap-8 items-center">
+
+        <div class="lg:col-span-5">
+
+            <span class="inline-flex px-3 py-1 rounded-full bg-white/20 text-white text-sm">
+                Newsletter
+            </span>
+
+            <h2 class="text-3xl font-bold text-white mt-4">
+                Assine nossa Newsletter
+            </h2>
+
+            <p class="text-white/80 mt-3">
+                Receba novidades da OMDA, novos torrents, eventos da comunidade e anúncios importantes.
+            </p>
+
+        </div>
+
+        <div class="lg:col-span-7">
+
+            <form class="flex flex-col md:flex-row gap-3">
+
+                <input
+                    type="email"
+                    placeholder="Digite seu melhor e-mail"
+                    class="flex-1 h-14 px-5 rounded-2xl bg-white text-black placeholder:text-zinc-500 outline-none">
+
+                <button
+                    class="h-14 px-8 rounded-2xl bg-[#171717] text-white font-semibold hover:opacity-90 transition">
+
+                    Assinar
+
+                </button>
+
+            </form>
+
+            <p class="text-white/70 text-xs mt-3">
+                Sem spam. Apenas atualizações relevantes da plataforma.
+            </p>
+
+        </div>
+
+    </div>
+
+</div>
+
+</section>
+  <footer >
+
+    <div class=" 
+              
+                bg-[linear-gradient(145deg,var(--card),var(--card2))]
+                overflow-hidden">
+
+        <!-- HEADER -->
+
+       
+
+        <!-- GRID -->
+
+        <div class="grid md:grid-cols-3 gap-8 p-8">
+
+            <!-- CONTATO -->
+
+            <div class="">
+
+                <h3 class="font-semibold text-lg mb-5">
+                    Contato
+                </h3>
+
+                <div class="space-y-4">
+
+                    <div>
+                        <span class="text-zinc-500 text-sm">
+                            Administração
+                        </span>
+
+                        <div class="text-white">
+                            geno@omda.com.br
+                        </div>
+                    </div>
+
+                    <div>
+                        <span class="text-zinc-500 text-sm">
+                            Doações
+                        </span>
+
+                        <div class="text-white">
+                            donate@omda.com.br
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- INSTITUCIONAL -->
+
+            <div class="">
+
+                <h3 class="font-semibold text-lg mb-5">
+                    Navegação
+                </h3>
+
+                <ul class="space-y-3">
+
+                    <li>
+                        <a href="#" class="text-zinc-300 hover:text-white">
+                            Quem Somos
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="#" class="text-zinc-300 hover:text-white">
+                            Notícias
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="#" class="text-zinc-300 hover:text-white">
+                            Regras
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="#" class="text-zinc-300 hover:text-white">
+                            Doações
+                        </a>
+                    </li>
+
+                </ul>
+
+            </div>
+
+            <!-- STAFF -->
+
+            <div class="">
+
+                <h3 class="font-semibold text-lg mb-5">
+                    Administração
+                </h3>
+
+                <div class="space-y-4">
+
+                    <div class="flex items-center gap-3">
+
+                       
+
+                        <div>
+
+                            <div class="font-medium">
+                                Gennosuke
+                            </div>
+
+                            <div class="text-sm text-zinc-500">
+                                Founder
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="flex items-center gap-3">
+
+                        
+                        <div>
+
+                            <div class="font-medium">
+                                Rukie
+                            </div>
+
+                            <div class="text-sm text-zinc-500">
+                                Administrator
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+       <div class="border-t border-white/10 mt-10">
+
+    <div class="flex flex-col lg:flex-row items-center justify-between gap-6 py-8">
+
+        <!-- SOCIAL -->
+
+        <div class="flex items-center gap-3">
+
+            <a href="#"
+               class="w-11 h-11 rounded-xl bg-black/10 hover:bg-[#5864be] transition flex items-center justify-center">
+                <i class="fa fa-discord"></i>
+            </a>
+
+            <a href="#"
+               class="w-11 h-11 rounded-xl bg-black/10 hover:bg-[#5864be] transition flex items-center justify-center">
+                <i class="fa fa-telegram"></i>
+            </a>
+
+            <a href="#"
+               class="w-11 h-11 rounded-xl bg-black/10 hover:bg-[#5864be] transition flex items-center justify-center">
+                <i class="fa fa-github"></i>
+            </a>
+
+        </div>
+
+        <!-- COPYRIGHT -->
+
+        <div class="text-center">
+
+            <p class="text-sm text-zinc-400">
+                © 2026 OMDA Tracker
+            </p>
+
+            <p class="text-xs text-zinc-500 mt-1">
+                Preservando fansubs desde 2017
+            </p>
+
+        </div>
+
+        <!-- DEV -->
+
+        <a
+            href="https://wa.me/5512981021517?text=Olá%20vim%20do%20site%20da%20Tracker"
+            target="_blank"
+            class="text-[#5864be] font-semibold hover:text-white transition">
+
+            DEV: THAISMARIANO
+
+        </a>
+
+    </div>
+
+</div>
+
+    </div>
+
+</footer>
+         
+      
+     
+      <script src="assets/js/tema.js"></script>
+      <script src="assets/js/loader.js"></script>
+       <script> 
+         function toggleSidebar() {
+         
+             const sidebar = document.getElementById('sidebar');
+         
+             // Mobile
+             if (window.innerWidth < 1280) {
+                 sidebar.classList.toggle('-translate-x-full');
+                 return;
+             }
+         
+             // Desktop
+             sidebar.classList.toggle('collapsed');
+            document.querySelector('.user-content-box').classList.toggle('xl:flex')
+         }
+      </script>
+      <script src="https://unpkg.com/lucide@latest"></script>
+      <script>
+         lucide.createIcons();
+      </script>
+      <script src="https://cdn.tailwindcss.com"></script>
+
+      <script>
+         const btn = document.getElementById("fullscreenToggle");
+
+const iconMaximize = document.getElementById("iconMaximize");
+const iconMinimize = document.getElementById("iconMinimize");
+
+btn.addEventListener("click", async () => {
+    if (!document.fullscreenElement) {
+        await document.documentElement.requestFullscreen();
+    } else {
+        await document.exitFullscreen();
+    }
+});
+
+document.addEventListener("fullscreenchange", () => {
+    if (document.fullscreenElement) {
+        iconMaximize.style.display = "none";
+        iconMinimize.style.display = "block";
+    } else {
+        iconMaximize.style.display = "block";
+        iconMinimize.style.display = "none";
+    }
+});
+      </script>
+   </body>
+</html>

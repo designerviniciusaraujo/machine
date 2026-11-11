@@ -1,0 +1,241 @@
+ 
+/* ========================================
+   HERO SWIPER
+======================================== */
+
+.heroSwiper{
+   width:100%;
+    height:100%;
+    position:relative;
+    overflow:hidden;
+     
+}
+#content{
+    height:100%;
+}
+
+.heroSwiper,
+.heroSwiper .swiper-wrapper,
+.heroSwiper .swiper-slide{
+    height:100%;
+}
+.heroSwiper .swiper-wrapper{
+    width:100%;
+    height:100%;
+}
+
+.heroSwiper .swiper-slide{
+    position:relative;
+    overflow:hidden;
+}
+
+.heroSwiper .hero-image{
+    position:absolute;
+    inset:0;
+    width:100%;
+    height:100%;
+    object-fit:cover;
+  filter:brightness(.92);
+    transform:scale(1);
+    transition:transform 10s linear;
+}
+
+.heroSwiper .swiper-slide-active .hero-image{
+    transform:scale(1.08);
+}
+      /*==========================
+      IMAGEM
+      ===========================*/
+      .hero-image{
+      /* position:absolute; */
+      inset:0;
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      transform:scale(1);
+      transition:transform 10s linear;
+      }
+      .swiper-slide-active .hero-image{
+      transform:scale(1.08);
+      }
+      /*==========================
+      LUZ
+      ===========================*/
+      .hero-light{
+      position:absolute;
+      inset:0;
+      background:
+      radial-gradient(
+      circle at 75% 30%,
+      rgba(255,255,255,.15),
+      transparent 40%
+      );
+      mix-blend-mode:screen;
+      z-index:2;
+      }
+      /*==========================
+      TOPO
+      ===========================*/
+      .hero-overlay-top{
+      position:absolute;
+      inset:0;
+      background:
+      linear-gradient(
+      to bottom,
+      rgba(0,0,0,.45),
+      transparent 25%
+      );
+      z-index:3;
+      }
+      /*==========================
+      LATERAIS
+      ===========================*/
+      .hero-overlay-side{
+      position:absolute;
+      inset:0;
+      background:
+      linear-gradient(
+      90deg,
+      rgba(0,0,0,.45),
+      rgba(0,0,0,.15) 20%,
+      transparent 45%,
+      transparent 65%,
+      rgba(0,0,0,.20)
+      );
+      z-index:3;
+      }
+      /*==========================
+      FUNDO
+      ===========================*/
+      .hero-overlay-bottom{
+      position:absolute;
+      inset:0;
+      background:
+      linear-gradient(
+      to top,
+      rgba(9,9,11,1),
+      rgba(9,9,11,.88) 12%,
+      rgba(9,9,11,.55) 22%,
+      rgba(9,9,11,.15) 35%,
+      transparent 55%
+      );
+      z-index:4;
+      }
+      /*==========================
+      CONTEÚDO
+      ===========================*/
+      .hero-content{
+    position:absolute;
+    left:7%;
+    right:7%;
+    bottom:8%;
+
+    width:650px;
+    max-width:90%;
+
+    color:#fff;
+    z-index:20;
+}
+      .badge{
+      display:inline-block;
+      padding:8px 14px;
+      border-radius:50px;
+      background:#5864be;
+      margin-bottom:20px;
+      font-size:13px;
+      font-weight:700;
+      }
+      .hero-title{
+      font-size:76px;
+      font-weight:900;
+      line-height:.9;
+      text-shadow:
+      0 10px 30px rgba(0,0,0,.7);
+      }
+      .hero-meta{
+      display:flex;
+      gap:12px;
+      flex-wrap:wrap;
+      margin-top:20px;
+      }
+      .hero-meta span{
+      padding:8px 14px;
+      background:rgba(255,255,255,.08);
+      border-radius:30px;
+      font-size:14px;
+      }
+      .hero-description{
+      margin-top:25px;
+      font-size:19px;
+      line-height:1.7;
+      color:#ececec;
+      text-shadow:
+      0 5px 20px rgba(0,0,0,.8);
+      }
+      .buttons{
+      display:flex;
+      gap:15px;
+      margin-top:35px;
+      }
+      .btn{
+      padding:16px 30px;
+      border:none;
+      border-radius:14px;
+      cursor:pointer;
+      font-size:15px;
+      font-weight:700;
+      transition:.35s;
+      }
+      .primary{
+      background:#5864be;
+      color:white;
+      }
+      .primary:hover{
+      transform:translateY(-4px);
+      }
+      .secondary{
+      background:rgba(255,255,255,.12);
+      color:white;
+      }
+      .secondary:hover{
+      background:rgba(255,255,255,.18);
+      }
+      @media(max-width:900px){
+        div#heroBanners {
+    padding: 16px;
+    border-radius: 28px;
+    height: 355px;
+}
+      .hero-content{
+      left:30px;
+      right:30px;
+      bottom:35px;
+      width:auto;
+      }
+      .hero-title{
+      font-size:44px;
+      }
+      .hero-description{
+      font-size:16px;
+      }
+      }
+      .hero-timeline{
+    position:absolute;
+    left:0;
+    right:0;
+    bottom:0;
+
+    height:4px;
+
+    background:rgba(255,255,255,.15);
+
+    overflow:hidden;
+
+    z-index:50;
+}
+      .timeline-progress{
+      width:0%;
+      height:100%;
+      background:#5864be;
+      }
+ 

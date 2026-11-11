@@ -1,0 +1,240 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aluguel de Caçambas | Solicite seu orçamento</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-white text-neutral-900 antialiased">
+  <header class="border-b border-neutral-200">
+    <div class="mx-auto flex max-w-5xl items-center justify-between px-5 py-4">
+      <a href="#" class="text-lg font-bold tracking-tight">SUA MARCA</a>
+      <a href="#pedido" class="text-sm font-semibold underline underline-offset-4">
+        Solicitar orçamento
+      </a>
+    </div>
+  </header>
+
+  <main>
+    <section class="mx-auto max-w-5xl px-5 pb-12 pt-16 md:pb-20 md:pt-24">
+      <p class="mb-4 text-sm font-semibold uppercase tracking-wider text-neutral-500">
+        Aluguel de caçambas
+      </p>
+      <h1 class="max-w-3xl text-4xl font-bold leading-tight tracking-tight md:text-6xl">
+        Sua obra gera entulho. A gente ajuda você a resolver.
+      </h1>
+      <p class="mt-5 max-w-xl text-lg leading-relaxed text-neutral-600">
+        Informe o que precisa e onde será a entrega. Consulte as condições
+        e receba um orçamento para sua obra ou reforma.
+      </p>
+      <a href="#pedido"
+        class="mt-8 inline-flex rounded-lg bg-neutral-900 px-6 py-4 font-semibold text-white hover:bg-neutral-700">
+        Solicitar orçamento
+      </a>
+      <p class="mt-3 text-sm text-neutral-500">
+        Sem compromisso. Disponibilidade e valor confirmados no atendimento.
+      </p>
+    </section>
+
+    <section class="border-y border-neutral-200 bg-neutral-50">
+      <div class="mx-auto max-w-5xl px-5 py-12">
+        <h2 class="text-2xl font-bold tracking-tight">
+          Para qual serviço você precisa de uma caçamba?
+        </h2>
+        <p class="mt-2 text-neutral-600">
+          Escolha a opção que melhor descreve sua necessidade.
+        </p>
+
+        <div class="mt-6 grid gap-3 md:grid-cols-3">
+          <button type="button" data-servico="Reforma"
+            class="opcao rounded-lg border border-neutral-300 bg-white p-5 text-left hover:border-neutral-900">
+            <span class="block font-semibold">Reforma</span>
+            <span class="mt-2 block text-sm text-neutral-600">
+              Pisos, tijolos e resíduos de obra.
+            </span>
+          </button>
+
+          <button type="button" data-servico="Construção"
+            class="opcao rounded-lg border border-neutral-300 bg-white p-5 text-left hover:border-neutral-900">
+            <span class="block font-semibold">Construção</span>
+            <span class="mt-2 block text-sm text-neutral-600">
+              Entulho gerado durante a obra.
+            </span>
+          </button>
+
+          <button type="button" data-servico="Limpeza de terreno"
+            class="opcao rounded-lg border border-neutral-300 bg-white p-5 text-left hover:border-neutral-900">
+            <span class="block font-semibold">Limpeza de terreno</span>
+            <span class="mt-2 block text-sm text-neutral-600">
+              Resíduos de limpeza e jardinagem, sob consulta.
+            </span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <section id="pedido" class="mx-auto max-w-3xl px-5 py-14 md:py-20">
+      <p class="text-sm font-semibold uppercase tracking-wider text-neutral-500">
+        Próximo passo
+      </p>
+      <h2 class="mt-2 text-3xl font-bold tracking-tight">
+        Onde será o serviço?
+      </h2>
+      <p class="mt-3 text-neutral-600">
+        Com esses dados, podemos verificar atendimento, disponibilidade e preço.
+      </p>
+
+      <form id="formPedido" class="mt-8 space-y-5">
+        <input type="hidden" id="servico" name="servico">
+
+        <div>
+          <label for="cidade" class="mb-2 block text-sm font-semibold">Cidade</label>
+          <select id="cidade" name="cidade" required
+            class="w-full rounded-lg border border-neutral-300 bg-white px-4 py-3">
+            <option value="">Selecione a cidade</option>
+            <option>Ubatuba</option>
+            <option>Caraguatatuba</option>
+            <option>Taubaté</option>
+            <option>Outra cidade</option>
+          </select>
+        </div>
+
+        <div>
+          <label for="cep" class="mb-2 block text-sm font-semibold">CEP da entrega</label>
+          <input id="cep" name="cep" inputmode="numeric" maxlength="9"
+            placeholder="00000-000" required
+            class="w-full rounded-lg border border-neutral-300 px-4 py-3">
+        </div>
+
+        <div>
+          <label for="endereco" class="mb-2 block text-sm font-semibold">
+            Endereço ou bairro
+          </label>
+          <input id="endereco" name="endereco" required
+            placeholder="Rua, número e bairro"
+            class="w-full rounded-lg border border-neutral-300 px-4 py-3">
+        </div>
+
+        <div>
+          <label for="data" class="mb-2 block text-sm font-semibold">
+            Quando você precisa?
+          </label>
+          <input type="date" id="data" name="data"
+            class="w-full rounded-lg border border-neutral-300 px-4 py-3">
+        </div>
+
+        <div>
+          <label for="nome" class="mb-2 block text-sm font-semibold">Seu nome</label>
+          <input id="nome" name="nome" autocomplete="name" required
+            placeholder="Nome completo"
+            class="w-full rounded-lg border border-neutral-300 px-4 py-3">
+        </div>
+
+        <div>
+          <label for="telefone" class="mb-2 block text-sm font-semibold">
+            WhatsApp
+          </label>
+          <input id="telefone" name="telefone" type="tel" autocomplete="tel"
+            required placeholder="(00) 00000-0000"
+            class="w-full rounded-lg border border-neutral-300 px-4 py-3">
+        </div>
+
+        <label class="flex items-start gap-3 text-sm text-neutral-600">
+          <input type="checkbox" id="privacidade" required class="mt-1">
+          <span>
+            Autorizo o uso dos meus dados para atendimento desta solicitação,
+            conforme a política de privacidade.
+          </span>
+        </label>
+
+        <button type="submit"
+          class="w-full rounded-lg bg-neutral-900 px-6 py-4 font-semibold text-white hover:bg-neutral-700">
+          Solicitar meu orçamento
+        </button>
+
+        <p id="mensagem" role="status" class="text-sm text-neutral-600"></p>
+        <p class="text-xs leading-relaxed text-neutral-500">
+          Este é um protótipo. O pedido ainda não é enviado nem representa
+          uma reserva confirmada.
+        </p>
+      </form>
+    </section>
+
+    <section class="border-t border-neutral-200">
+      <div class="mx-auto max-w-5xl px-5 py-12">
+        <h2 class="text-2xl font-bold">Antes de contratar</h2>
+        <div class="mt-6 space-y-5">
+          <div>
+            <h3 class="font-semibold">Quanto custa?</h3>
+            <p class="mt-1 text-neutral-600">
+              O valor depende da localização, do serviço e das condições de
+              atendimento. Solicite seu orçamento.
+            </p>
+          </div>
+          <div>
+            <h3 class="font-semibold">Quando será entregue?</h3>
+            <p class="mt-1 text-neutral-600">
+              A data é confirmada após a consulta de disponibilidade com o fornecedor.
+            </p>
+          </div>
+          <div>
+            <h3 class="font-semibold">Posso descartar qualquer material?</h3>
+            <p class="mt-1 text-neutral-600">
+              Não. Informe o tipo de resíduo antes de contratar para confirmar
+              o que é aceito e como deve ser destinado.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="border-t border-neutral-200">
+    <div class="mx-auto max-w-5xl px-5 py-6 text-sm text-neutral-500">
+      SUA MARCA · Atendimento sujeito à confirmação de disponibilidade e condições.
+    </div>
+  </footer>
+
+  <script>
+    const opcoes = document.querySelectorAll('.opcao');
+    const servico = document.querySelector('#servico');
+
+    opcoes.forEach(botao => {
+      botao.addEventListener('click', () => {
+        servico.value = botao.dataset.servico;
+        opcoes.forEach(item => {
+          item.classList.remove('border-neutral-900', 'ring-2', 'ring-neutral-900');
+          item.setAttribute('aria-pressed', 'false');
+        });
+        botao.classList.add('border-neutral-900', 'ring-2', 'ring-neutral-900');
+        botao.setAttribute('aria-pressed', 'true');
+      });
+    });
+
+    document.querySelector('#cep').addEventListener('input', event => {
+      let valor = event.target.value.replace(/\D/g, '').slice(0, 8);
+      if (valor.length > 5) valor = valor.slice(0, 5) + '-' + valor.slice(5);
+      event.target.value = valor;
+    });
+
+    document.querySelector('#formPedido').addEventListener('submit', event => {
+      event.preventDefault();
+
+      if (!servico.value) {
+        document.querySelector('#mensagem').textContent =
+          'Selecione o tipo de serviço antes de continuar.';
+        document.querySelector('.opcao').focus();
+        return;
+      }
+
+      const dados = Object.fromEntries(new FormData(event.target).entries());
+      document.querySelector('#mensagem').textContent =
+        'Teste concluído. Nenhum pedido foi enviado. ' +
+        'Serviço: ' + dados.servico + ' · Cidade: ' + dados.cidade +
+        '. Próxima etapa: conectar ao Firebase.';
+    });
+  </script>
+</body>
+</html>

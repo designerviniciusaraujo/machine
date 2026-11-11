@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#ffffff">
+<title>Currículo</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+</head>
+
+<body class="bg-white text-neutral-900">
+<header class="mx-auto flex max-w-3xl items-center justify-between gap-3 px-4 py-4">
+  <button type="button" onclick="history.back()" class="text-sm text-neutral-600">← Voltar</button>
+  <button type="button" id="downloadPdf" class="text-sm font-medium">↓ Baixar PDF</button>
+</header>
+
+<main class="mx-auto max-w-3xl px-5 py-6 sm:px-10">
+  <p id="status" class="text-sm text-neutral-500">Carregando currículo...</p>
+  <article id="resume" class="hidden"></article>
+</main>
+
+<script type="module">
+import { initializeApp, getApps, getApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
+import { getFirestore, doc, getDoc, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+
+const config = {
+  apiKey: "AIzaSyD-xzRjMRVUpey19g745DvPjjpCApqSHVE",
+  authDomain: "myops-d7525.firebaseapp.com",
+  projectId: "myops-d7525",
+  storageBucket: "myops-d7525.firebasestorage.app",
+  messagingSenderId: "247824192162",
+  appId: "1:247824192162:web:77c91ab1e3df855dc7fdfb"
+};
+
+const app = getApps().length ? getApp() : initializeApp(config);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+/* Mesma fonte de dados do módulo do currículo mestre */
+const CV_PERFIL_ID = "vinicius-araujo";
+const perfilRef = doc(db, "professionalProfiles", CV_PERFIL_ID);
+
+const statusEl = document.getElementById("status");
+const resume = document.getElementById("resume");
+
+const esc = value => String(value ?? "").replace(/[&<>"']/g, char => ({
+  "&": "&amp;",
+  "<": "&lt;",
+  ">": "&gt;",
+  '"': "&quot;",
+  "'": "&#39;"
+}[char]));
+
+const first = (...values) =>
+  values.find(value => value !== undefined && value !== null && String(value).trim() !== "");
+
+function section(title, body) {
+  if (!body) return "";
+  return `
+    <section class="mb-7 break-inside-avoid">
+      <h2 class="mb-3 border-b border-neutral-300 pb-2 text-base font-bold">${title}</h2>
+      ${body}
+    </section>`;
+}
+
+function formatPeriod(start, end, current = false) {
+  return `${esc(start || "")}${start && (end || current) ? " — " : ""}${current ? "Atual" : esc(end || "")}`;
+}
+
+function formatDate(value) {
+  if (!value) return "";
+  if (typeof value === "string") {
+    const match = value.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+    if (match) return `${match[3]}/${match[2]}/${match[1]}`;
+  }
+  return String(value);
+}
+
+function renderHistory(items) {
+  if (!items.length) {
+    return `<p class="text-sm text-neutral-500">Nenhuma experiência profissional cadastrada.</p>`;
+  }
+
+  return items.map(item => {
+    const role = first(item.cargo, "Cargo não informado");
+    const start = formatDate(first(item.dataDe, ""));
+    const end = formatDate(first(item.dataAte, ""));
+    const current = Boolean(item.cargoAtual);
+
+    const functions = Array.isArray(item.funcoes)
+      ? item.funcoes
+      : String(item.funcoes || "").split(/\n/).filter(Boolean);
+
+    return `
+      <article class="mb-5 break-inside-avoid">
+        <h3 class="font-semibold">${esc(role)}</h3>
+        <p class="mt-1 text-sm text-neutral-500">${formatPeriod(start, end, current)}</p>
+        ${functions.length ? `
+          <ul class="mt-2 space-y-1">
+            ${functions.map(fn => `
+              <li class="flex gap-2 text-sm leading-6">
+                <span>•</span><span>${esc(fn)}</span>
+              </li>`).join("")}
+          </ul>` : ""}
+      </article>`;
+  }).join("");
+}
+
+function renderAcademic(items) {
+  if (!items.length) {
+    return `<p class="text-sm text-neutral-500">Nenhuma formação acadêmica cadastrada.</p>`;
+  }
+
+  return items.map(item => {
+    const course = first(
+      item.curso, item.formacao, item.formação,
+      item.nome, item.titulo, item.título, "Formação"
+    );
+
+    const institution = first(
+      item.instituicao, item.instituição,
+      item.instituicaoEnsino, item.instituicaoDeEnsino,
+      item.escola, item.faculdade, ""
+    );
+
+    const level = first(item.nivel, item.nível, item.tipo, item.grau, item.modalidade, "");
+    const start = formatDate(first(item.dataDe, item.dataInicio, item.inicio, item.anoInicio, ""));
+    const end = item.emAndamento
+      ? "Em andamento"
+      : formatDate(first(
+          item.dataAte, item.dataFim, item.conclusao,
+          item.conclusão, item.anoConclusao, item.anoFim, ""
+        ));
+
+    const description = first(item.descricao, item.descrição, item.detalhes, "");
+
+    return `
+      <article class="mb-5 break-inside-avoid">
+        <h3 class="font-semibold">${esc(course)}</h3>
+        ${institution ? `<p class="mt-1 text-sm">${esc(institution)}</p>` : ""}
+        ${level ? `<p class="mt-1 text-sm text-neutral-600">${esc(level)}</p>` : ""}
+        ${(start || end) ? `<p class="mt-1 text-sm text-neutral-500">${formatPeriod(start, end)}</p>` : ""}
+        ${description ? `<p class="mt-2 whitespace-pre-line text-sm leading-6">${esc(description)}</p>` : ""}
+      </article>`;
+  }).join("");
+}
+
+async function carregarCurriculo(user) {
+  try {
+    statusEl.textContent = "Carregando currículo...";
+
+    const [perfilSnap, historiasSnap, academicosSnap] = await Promise.all([
+      getDoc(perfilRef),
+      getDocs(collection(db, "historias")),
+      getDocs(collection(db, "academicos"))
+    ]);
+
+    const profile = perfilSnap.exists() ? perfilSnap.data() : {};
+
+    const history = historiasSnap.docs
+      .map(d => ({ id: d.id, ...d.data() }))
+      .sort((a, b) => String(b.dataDe || "").localeCompare(String(a.dataDe || "")));
+
+    const academics = academicosSnap.docs
+      .map(d => ({ id: d.id, ...d.data() }))
+      .sort((a, b) => String(b.dataDe || b.dataInicio || b.anoInicio || "")
+        .localeCompare(String(a.dataDe || a.dataInicio || a.anoInicio || "")));
+
+    const skills = Array.isArray(profile.skills)
+      ? profile.skills
+      : String(profile.skills || "").split(",").map(s => s.trim()).filter(Boolean);
+
+    const links = [
+      ["linkedin", "LinkedIn"],
+      ["portfolio", "Portfólio"],
+      ["github", "GitHub"]
+    ]
+    .filter(([key]) => profile[key])
+    .map(([key, label]) => `
+      <a href="${esc(profile[key])}" target="_blank" rel="noopener noreferrer" class="underline">${label}</a>
+    `).join(" · ");
+
+    const contact = [
+      profile.email || user.email,
+      profile.phone || profile.telefone,
+      profile.location
+    ].filter(Boolean).map(esc).join(" · ");
+
+    const workModes = {
+      remoto: "Remoto",
+      hibrido: "Híbrido",
+      presencial: "Presencial",
+      qualquer: "Qualquer modalidade"
+    };
+
+    resume.innerHTML = `
+      <header class="mb-8 border-b-2 border-neutral-900 pb-6">
+        <h1 class="text-3xl font-bold tracking-tight">${esc(profile.name || user.displayName || "Nome profissional")}</h1>
+        ${profile.title ? `<p class="mt-2 text-lg">${esc(profile.title)}</p>` : ""}
+        ${contact ? `<p class="mt-3 text-sm text-neutral-600">${contact}</p>` : ""}
+        ${links ? `<div class="mt-3 flex flex-wrap gap-3 text-sm">${links}</div>` : ""}
+      </header>
+
+      ${section("Resumo profissional", profile.summary
+        ? `<p class="whitespace-pre-line text-sm leading-7">${esc(profile.summary)}</p>` : "")}
+
+      ${section("Competências", skills.length
+        ? `<p class="text-sm leading-7">${skills.map(esc).join(" · ")}</p>` : "")}
+
+      ${section("Experiências profissionais", renderHistory(history))}
+
+      ${section("Experiência complementar", profile.experience
+        ? `<p class="whitespace-pre-line text-sm leading-7">${esc(profile.experience)}</p>` : "")}
+
+      ${section("Formação acadêmica", renderAcademic(academics))}
+
+      ${section("Objetivo profissional", profile.targetRoles
+        ? `<p class="whitespace-pre-line text-sm leading-7">${esc(profile.targetRoles)}</p>` : "")}
+
+      ${section("Modalidade de trabalho", profile.workMode
+        ? `<p class="text-sm">${esc(workModes[profile.workMode] || profile.workMode)}</p>` : "")}
+    `;
+
+    resume.classList.remove("hidden");
+    statusEl.classList.add("hidden");
+  } catch (error) {
+    console.error("Erro ao carregar currículo:", error);
+    statusEl.textContent = "Erro ao carregar currículo. Verifique as permissões do Firestore.";
+  }
+}
+
+onAuthStateChanged(auth, user => {
+  if (!user) {
+    resume.classList.add("hidden");
+    statusEl.classList.remove("hidden");
+    statusEl.textContent = "Faça login para visualizar o currículo.";
+    return;
+  }
+
+  carregarCurriculo(user);
+});
+
+document.getElementById("downloadPdf").addEventListener("click", async () => {
+  if (resume.classList.contains("hidden")) return;
+
+  const button = document.getElementById("downloadPdf");
+  button.disabled = true;
+  button.textContent = "Gerando PDF...";
+
+  try {
+    if (window.html2pdf) {
+      await window.html2pdf().set({
+        margin: [12, 12, 12, 12],
+        filename: "curriculo.pdf",
+        image: { type: "jpeg", quality: 0.98 },
+        html2canvas: { scale: 2, useCORS: true },
+        jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
+        pagebreak: { mode: ["css", "legacy"] }
+      }).from(resume).save();
+    } else {
+      window.print();
+    }
+  } catch (error) {
+    console.error("Erro ao gerar PDF:", error);
+    window.print();
+  } finally {
+    button.disabled = false;
+    button.textContent = "↓ Baixar PDF";
+  }
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,386 @@
+#sidebar::-webkit-scrollbar {
+	width: 4px;
+}
+
+#sidebar::-webkit-scrollbar-track {
+	background: transparent;
+}
+
+#sidebar::-webkit-scrollbar-thumb {
+	background: rgba(255, 255, 255, .12);
+	border-radius: 999px;
+}
+
+#sidebar::-webkit-scrollbar-thumb:hover {
+	background: rgba(88, 100, 190, .8);
+}
+
+.sidebar-header,
+#header {
+	position: relative;
+	height: 72px;
+}
+
+
+/* RESPONSIVE */
+/* Desktop */
+@media (min-width: 600px) {
+#sidebar {
+		max-width: 288px;
+	}
+
+}
+@media (min-width: 1280px) {
+	#sidebar {
+		width: 288px;
+	}
+
+	#sidebar.collapsed {
+		width: 80px;
+		display: none;
+
+	}
+
+	#sidebar.collapsed .sidebar-text {
+		display: none;
+	}
+
+	#sidebar.collapsed .user-card {
+		display: none;
+	}
+
+	#sidebar.collapsed .sidebar-item {
+		justify-content: center;
+	}
+
+	#sidebar.collapsed .sidebar-header {
+		justify-content: center;
+	}
+
+	#sidebar.collapsed .sidebar-logo {
+		display: none;
+	}
+	#sidebar.collapsed nav {
+		display: none;
+	}
+	.sidebar-header,
+#header {
+position: absolute;
+    height: 85px;
+    z-index: 99;
+    width: 100%;
+}
+.sidebar-header,
+#header a{
+ color: #fff;
+}
+.sidebar-header,
+#header svg{
+ color: #fff;
+}
+}
+
+/* DROPDOWN */
+
+.sidebar-dropdown {
+	overflow: hidden;
+}
+
+.dropdown-menu {
+
+	max-height: 0;
+	opacity: 0;
+
+	overflow: hidden;
+
+	transition:
+		max-height .35s ease,
+		opacity .25s ease;
+
+	margin-left: 18px;
+
+}
+
+.sidebar-dropdown.open .dropdown-menu {
+
+	max-height: 500px;
+	opacity: 1;
+
+}
+
+.dropdown-arrow {
+
+	transition: .3s;
+
+}
+
+.sidebar-dropdown.open .dropdown-arrow {
+
+	transform: rotate(180deg);
+
+}
+
+.dropdown-item {
+
+	display: flex;
+	align-items: center;
+
+	height: 42px;
+
+	padding-left: 18px;
+
+	color: #94a3b8;
+
+	border-left: 2px solid rgba(255, 255, 255, .08);
+
+	transition: .25s;
+
+}
+
+.dropdown-item:hover {
+
+	color: #fff;
+	background: rgba(255, 255, 255, .04);
+
+}
+
+/* Logo grande */
+.sidebar-logo-full {
+	opacity: 1;
+	transform: scale(1);
+}
+
+/* Ícone escondido */
+.sidebar-logo-icon {
+	position: absolute;
+	opacity: 0;
+	transform: scale(.8);
+}
+
+/* Sidebar fechada */
+
+#sidebar.collapsed .sidebar-logo-full {
+	/* opacity: 0; */
+	transform: scale(.8);
+	/* pointer-events: none; */
+}
+
+#sidebar.collapsed .sidebar-logo-icon {
+	opacity: 1;
+	transform: scale(1);
+}
+body{
+    background:#eee;
+    font-family:Inter,sans-serif;
+}
+
+/* ===========================
+   HERO
+=========================== */
+
+.hero{
+    position:relative;
+    overflow:hidden;
+    border-radius:28px;
+
+    box-shadow:
+        0 15px 40px rgba(0,0,0,.10);
+}
+
+/* ===========================
+   SWIPER
+=========================== */
+
+.heroSwiper{
+    overflow:hidden;
+}
+
+.swiper-slide{
+    transition:background-color .8s ease;
+}
+
+/* ===========================
+   PERSONAGEM
+=========================== */
+
+.character{
+
+    position:absolute;
+    right:0;
+    bottom:0;
+
+    max-height:92%;
+
+    opacity:0;
+
+    transform:
+        translateY(50px)
+        scale(.94);
+
+    transition:
+        transform .7s cubic-bezier(.22,1,.36,1),
+        opacity .45s ease;
+
+    will-change:
+        transform,
+        opacity;
+
+    filter:
+        drop-shadow(0 30px 35px rgba(0,0,0,.25));
+
+}
+
+.swiper-slide-active .character{
+
+    opacity:1;
+
+    transform:
+        translateY(0)
+        scale(1);
+
+    transition-delay:.25s;
+
+}
+
+/* ===========================
+   GLOW
+=========================== */
+
+.glow{
+
+    position:absolute;
+
+    right:-70px;
+    bottom:-80px;
+
+    width:320px;
+    height:320px;
+
+    border-radius:50%;
+
+    filter:blur(80px);
+
+    opacity:.28;
+
+    pointer-events:none;
+
+}
+
+/* ===========================
+   PROGRESS BAR
+=========================== */
+
+.progress{
+
+    position:absolute;
+
+    left:50%;
+    bottom:18px;
+
+    transform:translateX(-50%);
+
+    width:90px;
+    height:4px;
+
+    border-radius:999px;
+
+    background:rgba(255,255,255,.18);
+
+    overflow:hidden;
+
+    z-index:100;
+
+}
+
+.progress span{
+
+    display:block;
+
+    width:0;
+    height:100%;
+
+    border-radius:999px;
+
+    background:#fff;
+
+}
+
+.animateProgress{
+
+    animation:progress 5s linear forwards;
+
+}
+
+@keyframes progress{
+
+    from{
+        width:0%;
+    }
+
+    to{
+        width:100%;
+    }
+
+}
+
+/* ===========================
+   MOBILE
+=========================== */
+
+@media (max-width:640px){
+
+    .hero{
+        border-radius:22px;
+    }
+
+    .character{
+
+        max-height:82%;
+
+        right:-20px;
+
+    }
+
+    .glow{
+
+        width:220px;
+        height:220px;
+
+    }
+
+}
+@media (max-width: 1280px) {
+	#sidebar.collapsed {
+		height: 100%;
+		overflow-y: auto;
+	}
+		#sidebar {
+		height: 100%;
+		overflow-y: auto;
+	}
+
+	 
+
+
+}
+
+
+@media (max-width: 501px) {
+	
+	  #heroBanners {
+display: none !important;
+     }
+
+
+}
+
+@media (min-width: 500px) {
+	
+	 .m-hero {
+display: none !important;
+     }
+ #heroBanners {
+display: inherit !important;
+     }
+
+}

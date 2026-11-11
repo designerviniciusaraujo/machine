@@ -1,0 +1,928 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+   <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Omda - Criar Usuários</title>
+      <link rel="stylesheet" href="assets/css/tema.css">
+      <link rel="stylesheet" href="assets/css/loader.css">
+      <!-- <link rel="stylesheet" href="assets/css/table.css"> -->
+      <style>
+         /* RESPONSIVE */
+         /* Desktop */
+         @media (min-width: 1280px) {
+         #sidebar {
+         width: 288px;
+         }
+         #sidebar.collapsed {
+         width: 80px;
+         }
+         #sidebar.collapsed .sidebar-text {
+         display: none;
+         }
+         #sidebar.collapsed .user-card {
+         display: none;
+         }
+         #sidebar.collapsed .sidebar-item {
+         justify-content: center;
+         }
+         #sidebar.collapsed .sidebar-header {
+         justify-content: center;
+         }
+         #sidebar.collapsed .sidebar-logo {
+         display: none;
+         }
+         }
+      </style>
+   </head>
+   <body class="bg-[#0f0f0f] text-primary">
+      <div class="min-h-screen lg:flex">
+         <!-- SIDEBAR -->
+         <aside
+            id="sidebar"
+            class="collapsed fixed xl:relative left-0 top-0 z-50 h-screen w-[90%] bg-[#171717] border border-white/1 border-theme border-r xl:translate-x-0 transition-all duration-300 -translate-x-full
+            "
+            >
+            <!-- HEADER -->
+            <div class="sidebar-header flex items-center justify-between p-4 border-b border-theme  ">
+               <span class="sidebar-logo text-lg font-bold">
+                <div class="flex-1 flex justify-center block">
+                     <a class="">
+                    <img src="assets/images/ft-logo.png" alt="Logo">
+                    </a>
+                </div>
+               </span>
+               <button
+                  onclick="toggleSidebar()"
+                  class="rounded-lg p-2 hover:bg-slate-800 transition"
+                  >
+               ☰
+               </button>
+            </div>
+
+            <div class="user-card">
+         <a href="#"
+class="block p-4 rounded-2xl bg-[linear-gradient(145deg,var(--card),var(--card2))]">
+
+    <div class="flex flex-col items-center text-center">
+
+        <img
+            src="assets/capa/avatar.png"
+            class="w-16 h-16 rounded-2xl border border-white/10 object-cover">
+
+        <h3 class="mt-3 font-semibold text-white">
+            Gennosuke
+        </h3>
+
+        <span class="mt-1 px-2 py-1 text-xs rounded-full bg-[#5864be]/20 text-[#93a0ff]">
+            User
+        </span>
+
+        <div class="w-full mt-4 grid grid-cols-2 gap-2 text-xs">
+
+            <div class="bg-black/10 rounded-xl p-2">
+                <div class="text-green-400 font-semibold">
+                    2.22
+                </div>
+                <div class="text-zinc-400">
+                    Ratio
+                </div>
+            </div>
+
+            <div class="bg-black/10 rounded-xl p-2">
+                <div class="text-yellow-400 font-semibold">
+                    19.57
+                </div>
+                <div class="text-zinc-400">
+                    Otabills
+                </div>
+            </div>
+
+            <div class="bg-black/10 rounded-xl p-2">
+                <div class="text-blue-400 font-semibold">
+                    4.3 TB
+                </div>
+                <div class="text-zinc-400">
+                    Upload
+                </div>
+            </div>
+
+            <div class="bg-black/10 rounded-xl p-2">
+                <div class="text-red-400 font-semibold">
+                    1.9 TB
+                </div>
+                <div class="text-zinc-400">
+                    Download
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</a>
+            </div>
+   
+            <!-- MENU -->
+            <nav class="p-3 space-y-2">
+               <a href="index.html"
+                  class="sidebar-item flex items-center gap-3 p-3 rounded-xl hover:bg-slate-800 transition">
+               <span><i data-lucide="home"></i></span>
+               <span class="sidebar-text">Home</span>
+               </a>
+               <a href="torrents.html"
+                  class="sidebar-item flex items-center gap-3 p-3 rounded-xl hover:bg-slate-800 transition">
+               <span><i data-lucide="download"></i></span>
+               <span class="sidebar-text">Torrents</span>
+               </a>
+               <a href="usuarios.html"
+                  class="sidebar-item flex items-center gap-3 p-3 rounded-xl hover:bg-slate-800 transition">
+               <span><i data-lucide="users"></i></span>
+               <span class="sidebar-text">Usuários</span>
+               </a>
+               <a href="perfil.html"
+                  class="sidebar-item flex items-center gap-3 p-3 rounded-xl hover:bg-slate-800 transition">
+               <span><i data-lucide="user"></i></span>
+               <span class="sidebar-text">Perfil</span>
+               </a>
+               <a href="configuracoes.html"
+                  class="sidebar-item flex items-center gap-3 p-3 rounded-xl hover:bg-slate-800 transition">
+               <span><i data-lucide="settings"></i></span>
+               <span class="sidebar-text">Configurações</span>
+               </a>
+            </nav>
+         </aside>
+
+
+
+         
+
+         <!-- CONTENT -->
+         <main class="  flex-1 p-4 xl:p-8">
+            <header class="  border-theme ">
+               <div class="flex items-center justify-between h-16 px-4">
+                  <!-- Menu mobile -->
+                  <button
+                     onclick="toggleSidebar()"
+                     class="xl:hidden"
+                     >
+                  <i data-lucide="menu"></i>
+                  </button>
+                <div class="flex-1 flex justify-center block">
+                     <a class="">
+                    <img
+                        src="assets/images/ft-logo.png"
+                        alt="Logo"
+                        
+                        >
+                    </a>
+                </div>
+                   
+                    <!-- Menu Desktop -->
+
+    <nav class=" hidden xl:flex items-center gap-8  ">
+ 
+         <a href="#" class="hover:text-[#5864be]">
+            Navegue
+        </a>
+        <a href="#" class="hover:text-[#5864be]">
+            Upload
+        </a>
+
+        <a href="#" class="hover:text-[#5864be]">
+            Requests
+        </a>
+
+        <a href="#" class="hover:text-[#5864be]">
+            Top 100
+        </a>
+
+    </nav>
+                  <!-- Desktop empurra -->
+                  <!-- <div class="flex-1 hidden xl:block ml-auto"></div> -->
+                  <!-- Busca desktop -->
+                  <div class=" hidden xl:block relative w-96 ml-6">
+                     <input
+                        class="input"
+                        placeholder="Buscar torrents, animes, filmes..."
+                        >
+                  </div>
+                   <div class="flex-1  hidden  items-center gap-6 text-sm">
+
+        <div>
+            <div class="text-green-400 font-semibold">
+                3.4 TB
+            </div>
+
+            <div class="text-xs opacity-60">
+                Download
+            </div>
+        </div>
+
+        <div>
+            <div class="text-blue-400 font-semibold">
+                1.9 TB
+            </div>
+
+            <div class="text-xs opacity-60">
+                Upload
+            </div>
+        </div>
+
+        <div>
+            <div class="text-[#5864be] font-semibold">
+                1.82
+            </div>
+
+            <div class="text-xs opacity-60">
+                Ratio
+            </div>
+        </div>
+
+    </div>
+                  <!-- Botões -->
+                  <div class="  flex items-center gap-3 ml-6 mr-6">
+                     <button>
+                     <i data-lucide="bell"></i>
+                     </button>
+                  </div>
+                    <!-- Stats -->
+ 
+                     <div class="hidden xl:flex items-center gap-3 mb-3">
+
+        <img src="assets/capa/avatar.png" class="w-16 h-16 rounded-2xl border border-white/10 object-cover">
+
+        <div>
+          <h4 class="font-medium">CharX</h4>
+          <p class="text-xs text-zinc-500">
+            há 2 horas
+          </p>
+        </div>
+
+      </div>
+               </div>
+               
+               <!-- Busca mobile -->
+               <div class="xl:hidden pt-0">
+                  <input
+                     class="input"
+                     placeholder="Buscar torrents..."
+                     >
+               </div>
+            </header>
+
+
+            <form id="userForm">
+
+    <input type="hidden" id="userId">
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+        <!-- COLUNA ESQUERDA -->
+
+        <div class="lg:col-span-2 space-y-6 bg-[#171717] rounded-[24px] border border-white/10 mt-8 p-8">
+
+            <!-- DADOS DA CONTA -->
+
+            <div class="card">
+
+                <h2 class="text-xl font-bold mb-6">
+                    Cadastro Usuário
+                </h2>
+
+                <div class="grid md:grid-cols-2 gap-4">
+
+                    <div>
+                        <label class="block text-sm text-zinc-400 mb-2">
+                            Username
+                        </label>
+
+                        <input
+                            id="username"
+                            type="text"
+                            class="input"
+                            placeholder="Nome de usuário">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm text-zinc-400 mb-2">
+                            Nome
+                        </label>
+
+                        <input
+                            id="name"
+                            type="text"
+                            class="input"
+                            placeholder="Seu nome completo">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm text-zinc-400 mb-2">
+                            E-mail
+                        </label>
+
+                        <input
+                            id="email"
+                            type="email"
+                            class="input"
+                            placeholder="usuario@email.com">
+                    </div>
+
+                   <div>
+                    <div>
+    <label class="block text-sm text-zinc-400 mb-2">
+        Permissão
+    </label>
+
+    <select
+        id="role"
+        class="input">
+
+        <option value="user">
+            Usuário
+        </option>
+
+        <option value="uploader">
+            Uploader
+        </option>
+
+        <option value="moderator">
+            Moderador
+        </option>
+
+        <option value="admin">
+            Administrador
+        </option>
+
+        <option value="sysops">
+            SysOps
+        </option>
+
+    </select>
+</div>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- SEGURANÇA -->
+
+            <div class="card">
+
+                <h2 class="text-xl font-bold mb-6">
+                    Segurança
+                </h2>
+
+                <div class="grid md:grid-cols-2 gap-4">
+
+                    <div>
+                        <label class="block text-sm text-zinc-400 mb-2">
+                            Senha
+                        </label>
+
+                        <input
+                            id="password"
+                            type="password"
+                            class="input">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm text-zinc-400 mb-2">
+                            Confirmar Senha
+                        </label>
+
+                        <input
+                            id="confirmPassword"
+                            type="password"
+                            class="input">
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- PERFIL -->
+
+            <div class="card">
+
+                <h2 class="text-xl font-bold mb-6">
+                    Perfil
+                </h2>
+
+                <textarea
+                    id="bio"
+                    rows="6"
+                    class="input resize-none"
+                    placeholder="Informações sobre o usuário..."></textarea>
+
+            </div>
+
+        </div>
+
+        <!-- COLUNA DIREITA -->
+
+        <div class="space-y-6 bg-[#171717] rounded-[24px] border border-white/10 mt-8 p-8">
+
+            <!-- AVATAR -->
+
+            <div class="card">
+
+                <h2 class="text-xl font-bold mb-6">
+                    Avatar
+                </h2>
+
+                <div class="
+                    rounded-[28px]
+                    border-2 border-dashed border-[#5864be]/30
+                    bg-[linear-gradient(145deg,var(--card),var(--card2))]
+                    p-8
+                    text-center
+                    hover:border-[#5864be]
+                    transition-all
+                ">
+
+                    <img
+                        id="avatarPreview"
+                        src="https://i.imgur.com/Up2O503.jpeg"
+                        class="
+                        w-24 h-24
+                        mx-auto
+                        mb-5
+                        rounded-3xl
+                        object-cover
+                        border border-white/10">
+
+                    <h3 class="font-semibold mb-2">
+                        Avatar do Usuário
+                    </h3>
+
+                    <p class="text-sm text-zinc-500 mb-6">
+                        JPG, PNG ou WEBP até 2MB
+                    </p>
+
+                    <label class="
+                        inline-flex
+                        items-center
+                        justify-center
+                        h-11
+                        px-6
+                        rounded-2xl
+                        bg-[#5864be]
+                        text-white
+                        cursor-pointer
+                    ">
+
+                        Selecionar Imagem
+
+                        <input
+                            id="avatarInput"
+                            type="file"
+                            accept=".jpg,.jpeg,.png,.webp"
+                            class="hidden">
+
+                    </label>
+
+                </div>
+
+            </div>
+
+            <!-- STATUS -->
+
+            <div class="card">
+
+                <h2 class="text-xl font-bold mb-6">
+                    Status
+                </h2>
+
+                <div>
+
+                    <label class="block text-sm text-zinc-400 mb-2">
+                        Situação
+                    </label>
+
+                    <select
+                        id="status"
+                        class="input">
+
+                        <option value="active">
+                            Ativo
+                        </option>
+
+                        <option value="suspended">
+                            Suspenso
+                        </option>
+
+                        <option value="banned">
+                            Banido
+                        </option>
+
+                    </select>
+
+                </div>
+
+            </div>
+
+            <!-- AÇÕES -->
+
+            <div class="card">
+
+                <button
+                    type="submit"
+                    class="
+                    w-full
+                    h-12
+                    rounded-2xl
+                    bg-[#5864be]
+                    text-white
+                    font-medium
+                    hover:opacity-90
+                    transition
+                ">
+                    Criar Usuário
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</form>
+
+<div class="rounded-[28px] border border-white/10 bg-[#171717] mt-8 overflow-hidden">
+
+    <!-- HEADER -->
+
+    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 p-6 border-b border-white/10 ">
+
+        <div>
+            <h2 class="text-2xl font-bold">
+                Usuários
+            </h2>
+
+            <p class="text-sm text-zinc-500">
+                Gerencie os membros da plataforma
+            </p>
+        </div>
+
+        <button onclick="location.href='cadastro.html'" class="h-12 px-5 rounded-xl bg-[#5864be] text-white font-medium hover:opacity-90 transition">
+
+            + Novo Usuário
+
+        </button>
+
+    </div>
+<div
+    id="userPreview"
+    class="hidden mt-8 p-6 rounded-[24px] bg-[#171717] border border-white/10">
+</div>
+    <!-- LISTA -->
+
+    <div id="usersList" class="p-4 space-y-3">
+
+        <!-- ITEM -->
+
+        
+
+        <!-- ITEM -->
+
+        
+
+        <!-- ITEM -->
+
+        <div class="flex flex-col lg:flex-row lg:items-center gap-4 p-4 rounded-2xl bg-black/5 border border-white/10">
+
+            <div class="flex items-center gap-4 flex-1">
+
+                <div class="w-14 h-14 rounded-2xl bg-[#5864be] text-white font-bold flex items-center justify-center">
+                    M
+                </div>
+
+                <div>
+
+                    <h3 class="font-semibold">
+                        mariasilva
+                    </h3>
+
+                    <p class="text-sm text-zinc-500">
+                        maria@omda.com
+                    </p>
+
+                </div>
+
+            </div>
+
+            <div>
+                <span class="text-xs text-zinc-500">
+                    Plano
+                </span>
+                <p>Premium</p>
+            </div>
+
+            <div>
+                <span class="text-xs text-zinc-500">
+                    Downloads
+                </span>
+                <p>1.024</p>
+            </div>
+
+            <div>
+                <span class="inline-flex items-center px-3 py-1 rounded-full text-xs bg-zinc-500/10 text-zinc-400">
+                    Offline
+                </span>
+            </div>
+
+            <div class="flex gap-2">
+
+                <button class="h-10 px-4 rounded-xl bg-white/5 border border-white/10">
+                    Editar
+                </button>
+
+                <button class="h-10 px-4 rounded-xl bg-red-500/10 text-red-400">
+                    Banir
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+         </main>
+         
+      </div>
+            <section class="mt-12">
+
+   <!-- NEWSLETTER -->
+
+<div class=" bg-[#5864be] p-8 mb-8">
+
+    <div class="grid lg:grid-cols-12 gap-8 items-center">
+
+        <div class="lg:col-span-5">
+
+            <span class="inline-flex px-3 py-1 rounded-full bg-white/20 text-white text-sm">
+                Newsletter
+            </span>
+
+            <h2 class="text-3xl font-bold text-white mt-4">
+                Assine nossa Newsletter
+            </h2>
+
+            <p class="text-white/80 mt-3">
+                Receba novidades da OMDA, novos torrents, eventos da comunidade e anúncios importantes.
+            </p>
+
+        </div>
+
+        <div class="lg:col-span-7">
+
+            <form class="flex flex-col md:flex-row gap-3">
+
+                <input
+                    type="email"
+                    placeholder="Digite seu melhor e-mail"
+                    class="flex-1 h-14 px-5 rounded-2xl bg-white text-black placeholder:text-zinc-500 outline-none">
+
+                <button
+                    class="h-14 px-8 rounded-2xl bg-[#171717] text-white font-semibold hover:opacity-90 transition">
+
+                    Assinar
+
+                </button>
+
+            </form>
+
+            <p class="text-white/70 text-xs mt-3">
+                Sem spam. Apenas atualizações relevantes da plataforma.
+            </p>
+
+        </div>
+
+    </div>
+
+</div>
+
+</section>
+  <footer class="mt-12">
+
+    <div class=" 
+              
+                bg-[linear-gradient(145deg,var(--card),var(--card2))]
+                overflow-hidden">
+
+        <!-- HEADER -->
+
+       
+
+        <!-- GRID -->
+
+        <div class="grid md:grid-cols-3 gap-8 p-8">
+
+            <!-- CONTATO -->
+
+            <div class="">
+
+                <h3 class="font-semibold text-lg mb-5">
+                    Contato
+                </h3>
+
+                <div class="space-y-4">
+
+                    <div>
+                        <span class="text-zinc-500 text-sm">
+                            Administração
+                        </span>
+
+                        <div class="text-white">
+                            geno@omda.com.br
+                        </div>
+                    </div>
+
+                    <div>
+                        <span class="text-zinc-500 text-sm">
+                            Doações
+                        </span>
+
+                        <div class="text-white">
+                            donate@omda.com.br
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- INSTITUCIONAL -->
+
+            <div class="">
+
+                <h3 class="font-semibold text-lg mb-5">
+                    Navegação
+                </h3>
+
+                <ul class="space-y-3">
+
+                    <li>
+                        <a href="#" class="text-zinc-300 hover:text-white">
+                            Quem Somos
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="#" class="text-zinc-300 hover:text-white">
+                            Notícias
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="#" class="text-zinc-300 hover:text-white">
+                            Regras
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="#" class="text-zinc-300 hover:text-white">
+                            Doações
+                        </a>
+                    </li>
+
+                </ul>
+
+            </div>
+
+            <!-- STAFF -->
+
+            <div class="">
+
+                <h3 class="font-semibold text-lg mb-5">
+                    Administração
+                </h3>
+
+                <div class="space-y-4">
+
+                    <div class="flex items-center gap-3">
+
+                       
+
+                        <div>
+
+                            <div class="font-medium">
+                                Gennosuke
+                            </div>
+
+                            <div class="text-sm text-zinc-500">
+                                Founder
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="flex items-center gap-3">
+
+                        
+                        <div>
+
+                            <div class="font-medium">
+                                Rukie
+                            </div>
+
+                            <div class="text-sm text-zinc-500">
+                                Administrator
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+       <div class="border-t border-white/10 mt-10">
+
+    <div class="flex flex-col lg:flex-row items-center justify-between gap-6 py-8">
+
+        <!-- SOCIAL -->
+
+        <div class="flex items-center gap-3">
+
+            <a href="#"
+               class="w-11 h-11 rounded-xl bg-black/10 hover:bg-[#5864be] transition flex items-center justify-center">
+                <i class="fa fa-discord"></i>
+            </a>
+
+            <a href="#"
+               class="w-11 h-11 rounded-xl bg-black/10 hover:bg-[#5864be] transition flex items-center justify-center">
+                <i class="fa fa-telegram"></i>
+            </a>
+
+            <a href="#"
+               class="w-11 h-11 rounded-xl bg-black/10 hover:bg-[#5864be] transition flex items-center justify-center">
+                <i class="fa fa-github"></i>
+            </a>
+
+        </div>
+
+        <!-- COPYRIGHT -->
+
+        <div class="text-center">
+
+            <p class="text-sm text-zinc-400">
+                © 2026 OMDA Tracker
+            </p>
+
+            <p class="text-xs text-zinc-500 mt-1">
+                Preservando fansubs desde 2017
+            </p>
+
+        </div>
+
+        <!-- DEV -->
+
+        <a
+            href="https://wa.me/5512981021517?text=Olá%20vim%20do%20site%20da%20Tracker"
+            target="_blank"
+            class="text-[#5864be] font-semibold hover:text-white transition">
+
+            DEV: THAISMARIANO
+
+        </a>
+
+    </div>
+
+</div>
+
+    </div>
+
+</footer>
+       <script type="module" src="services/userServices.js"></script>
+      <script src="assets/js/tema.js"></script>
+      <script src="assets/js/loader.js"></script>
+      <script>
+         function toggleSidebar() {
+         
+             const sidebar = document.getElementById('sidebar');
+         
+             // Mobile
+             if (window.innerWidth < 1280) {
+                 sidebar.classList.toggle('-translate-x-full');
+                 return;
+             }
+         
+             // Desktop
+             sidebar.classList.toggle('collapsed');
+         }
+      </script>
+      <script src="https://unpkg.com/lucide@latest"></script>
+      <script>
+         lucide.createIcons();
+      </script>
+      <script src="https://cdn.tailwindcss.com"></script>
+   </body>
+</html>

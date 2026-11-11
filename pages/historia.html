@@ -1,0 +1,180 @@
+
+<section class="p-4 md:p-8 space-y-6 text-white">
+
+  <header>
+    <h1 class="text-2xl font-bold">Currículo</h1>
+    <p class="text-sm text-zinc-400">Experiência profissional e formação acadêmica</p>
+  </header>
+
+  <!-- ABAS -->
+  <nav class="flex gap-2 border-b border-white/10 pb-3">
+    <button type="button" data-cv-tab="profissional"
+      class="rounded-xl bg-orange-600 px-4 py-3 text-sm font-semibold text-white">
+      Profissional
+    </button>
+
+    <button type="button" data-cv-tab="academico"
+      class="rounded-xl bg-zinc-800 px-4 py-3 text-sm font-semibold text-zinc-300">
+      Acadêmico
+    </button>
+  </nav>
+
+  <!-- ABA PROFISSIONAL: IDS ORIGINAIS PRESERVADOS -->
+  <section data-cv-panel="profissional" class="space-y-6">
+
+    <div class="flex items-center justify-between gap-4">
+      <div>
+        <h2 class="text-xl font-bold">Histórico profissional</h2>
+        <p class="text-sm text-zinc-400">Cargos, períodos e funções</p>
+      </div>
+
+      <button type="button" onclick="novaHistoria()"
+        class="rounded-xl bg-orange-600 px-4 py-3 text-sm font-semibold">
+        + Novo
+      </button>
+    </div>
+
+    <form id="historiaForm"
+      class="hidden space-y-4 rounded-2xl border border-white/10 bg-zinc-900 p-5">
+
+      <input type="hidden" id="historiaId">
+
+      <input id="cargo" required maxlength="120"
+        placeholder="Cargo"
+        class="w-full rounded-xl bg-zinc-800 p-3 outline-none focus:ring-2 focus:ring-orange-500">
+
+      <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+        <label class="text-sm text-zinc-400">
+          De
+          <input id="dataDe" type="date" required
+            class="mt-2 w-full rounded-xl bg-zinc-800 p-3 text-white">
+        </label>
+
+        <label class="text-sm text-zinc-400">
+          Até
+          <input id="dataAte" type="date"
+            class="mt-2 w-full rounded-xl bg-zinc-800 p-3 text-white">
+        </label>
+      </div>
+
+      <label class="flex items-center gap-2 text-sm text-zinc-300">
+        <input id="cargoAtual" type="checkbox" class="accent-orange-500">
+        Trabalho atualmente neste cargo
+      </label>
+
+      <textarea id="funcoes" required maxlength="5000" rows="5"
+        placeholder="Funções e responsabilidades..."
+        class="w-full rounded-xl bg-zinc-800 p-3 outline-none focus:ring-2 focus:ring-orange-500"></textarea>
+
+      <div class="flex gap-3">
+        <button type="submit"
+          class="flex-1 rounded-xl bg-orange-600 p-3 font-semibold hover:bg-orange-700">
+          Salvar registro
+        </button>
+
+        <button type="button" onclick="cancelarHistoria()"
+          class="rounded-xl bg-zinc-700 px-4 py-3">
+          Cancelar
+        </button>
+      </div>
+    </form>
+
+    <div id="listaHistorias" class="space-y-3">
+      <p class="text-sm text-zinc-400">Carregando histórico...</p>
+    </div>
+
+  </section>
+
+  <!-- ABA ACADÊMICA: IDS NOVOS, SEM COLISÃO COM OS ORIGINAIS -->
+  <section data-cv-panel="academico" class="hidden space-y-6">
+
+    <div class="flex items-center justify-between gap-4">
+      <div>
+        <h2 class="text-xl font-bold">Formação acadêmica</h2>
+        <p class="text-sm text-zinc-400">Escolaridade, cursos e certificações</p>
+      </div>
+
+      <button type="button" onclick="novoAcademico()"
+        class="rounded-xl bg-orange-600 px-4 py-3 text-sm font-semibold">
+        + Novo
+      </button>
+    </div>
+
+    <form id="academicoForm"
+      class="hidden space-y-4 rounded-2xl border border-white/10 bg-zinc-900 p-5">
+
+      <input type="hidden" id="academicoId">
+
+      <input id="academicoCurso" required maxlength="180"
+        placeholder="Nome do curso ou formação"
+        class="w-full rounded-xl bg-zinc-800 p-3 outline-none focus:ring-2 focus:ring-orange-500">
+
+      <input id="academicoInstituicao" required maxlength="180"
+        placeholder="Instituição de ensino"
+        class="w-full rounded-xl bg-zinc-800 p-3 outline-none focus:ring-2 focus:ring-orange-500">
+
+      <label class="block text-sm text-zinc-400">
+        Tipo de formação
+        <select id="academicoTipo" required
+          class="mt-2 w-full rounded-xl bg-zinc-800 p-3 text-white">
+          <option value="">Selecione</option>
+          <option value="Ensino fundamental">Ensino fundamental</option>
+          <option value="Ensino médio">Ensino médio</option>
+          <option value="Técnico">Técnico</option>
+          <option value="Graduação">Graduação</option>
+          <option value="Pós-graduação">Pós-graduação</option>
+          <option value="Curso livre">Curso livre</option>
+          <option value="Certificação">Certificação</option>
+          <option value="Bootcamp">Bootcamp</option>
+          <option value="Outro">Outro</option>
+        </select>
+      </label>
+
+      <label class="block text-sm text-zinc-400">
+        Situação
+        <select id="academicoStatus" required
+          class="mt-2 w-full rounded-xl bg-zinc-800 p-3 text-white">
+          <option value="Em andamento">Em andamento</option>
+          <option value="Concluído">Concluído</option>
+          <option value="Interrompido">Interrompido</option>
+        </select>
+      </label>
+
+      <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+        <label class="text-sm text-zinc-400">
+          De
+          <input id="academicoDe" type="date"
+            class="mt-2 w-full rounded-xl bg-zinc-800 p-3 text-white">
+        </label>
+
+        <label class="text-sm text-zinc-400">
+          Até
+          <input id="academicoAte" type="date"
+            class="mt-2 w-full rounded-xl bg-zinc-800 p-3 text-white">
+        </label>
+      </div>
+
+      <textarea id="academicoDescricao" maxlength="5000" rows="5"
+        placeholder="Descrição, conteúdos estudados e conhecimentos adquiridos..."
+        class="w-full rounded-xl bg-zinc-800 p-3 outline-none focus:ring-2 focus:ring-orange-500"></textarea>
+
+      <div class="flex gap-3">
+        <button type="submit"
+          class="flex-1 rounded-xl bg-orange-600 p-3 font-semibold hover:bg-orange-700">
+          Salvar formação
+        </button>
+
+        <button type="button" onclick="cancelarAcademico()"
+          class="rounded-xl bg-zinc-700 px-4 py-3">
+          Cancelar
+        </button>
+      </div>
+    </form>
+
+    <div id="listaAcademica" class="space-y-3">
+      <p class="text-sm text-zinc-400">Carregando formação acadêmica...</p>
+    </div>
+
+  </section>
+
+</section>

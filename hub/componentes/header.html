@@ -1,0 +1,171 @@
+<style>
+  .minimal .user-content-box, .minimal #logo{
+  display: none;
+  }
+  
+</style>
+ 
+  <!-- <header class="md:absolute md:top-0 md:left-0 md:w-full md:z-40 "> -->
+  <div id="headerContainer" class="absolute">
+     
+    <div class="text-left">
+      <!-- <div id="userMenuName" class="font-semibold text-sm">
+        </div> -->
+      <div id="userMenuMail" class="text-xs text-zinc-500 hidden">
+      </div>
+    </div>
+    </button>
+  </div>
+ 
+  <div class="flex items-center justify-between h-20 px-4">
+    <!-- Menu mobile -->
+    <button
+      onclick="toggleSidebar()"
+      class="xl:hidden flex "
+      >
+    <i data-lucide="menu"></i>
+    </button>
+
+    <div id="logo" class="flex-1  justify-center flex items-center xl:hidden">
+      <a class="">
+      <img
+        class="h-12 "
+        src="assets/images/ft-logo-dark.png"
+        alt="Logo"
+        >
+      </a>
+    </div>
+    <!-- Menu Desktop -->
+    <nav id="horizontal-nav" class="hidden xl:flex  items-center gap-8  ">
+      
+
+      <a href="/" class="relative hover:text-[#5864be]">
+      Portal OMDA 
+      <span class="absolute -top-3 right-5
+        rounded-full
+        bg-emerald-500/20 border border-emerald-500/40
+        text-emerald-400
+        px-1 py-0
+        text-[8px] font-semibold
+        leading-3">
+      Novo
+      </span> 
+      </a>
+     <a href="/up.html"  
+   class="sidebar-item flex items-center gap-3 p-3 rounded-xl hover:bg-slate-800 transition">
+    <span><i data-lucide="cloud-upload" class="text-blue-500"></i></span>
+    <span class="sidebar-text">Enviar  </span>
+</a>
+  <a href="/down.html"  
+   class="sidebar-item flex items-center gap-3 p-3 rounded-xl hover:bg-slate-800 transition">
+    <span><i data-lucide="download-cloud" class="text-green-500"></i></span>
+    <span class="sidebar-text">Baixar  </span>
+</a>
+      <a href="#" class="hover:text-[#5864be] hidden">
+      Top 100
+      </a>
+    </nav>
+     
+    <div class="hidden items-center gap-6 text-sm">
+      <div>
+        <div class="text-green-400 font-semibold">
+          3.4 TB
+        </div>
+        <div class="text-xs opacity-60">
+          Download
+        </div>
+      </div>
+      <div>
+        <div class="text-blue-400 font-semibold">
+          1.9 TB
+        </div>
+        <div class="text-xs opacity-60">
+          Upload
+        </div>
+      </div>
+      <div>
+        <div class="text-[#5864be] font-semibold">
+          1.82
+        </div>
+        <div class="text-xs opacity-60">
+          Ratio
+        </div>
+      </div>
+    </div>
+    <!-- Botões -->
+    <div class=" flex items-center justify-center gap-3 md:ml-6 md:mr-6">
+      <button id="fullscreenToggle" class="fullscreen-btn hidden">
+      <i id="iconMaximize" data-lucide="maximize-2"></i>
+      <i id="iconMinimize" data-lucide="minimize-2" style="display:none;"></i>
+      </button>
+      <button onclick="toggleTheme()  " class="theme-button">
+    <i id="themeIcon" data-lucide="moon"></i>
+</button>
+      <div class="relative">
+
+    <!-- Botão notificações -->
+    <button id="notificationBtn"
+        class="relative p-2 rounded-xl hover:bg-slate-800 transition text-slate-300">
+
+        <i data-lucide="bell"></i>
+
+        <!-- contador -->
+        <span id="notificationCount"
+            class="hidden absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full px-2">
+            0
+        </span>
+
+    </button>
+
+
+    <!-- Dropdown -->
+    <div id="notificationDropdown"
+        class="hidden absolute right-0 mt-3 w-80 
+        g-[#171717] rounded-[24px] p-4 xl:p-6 border border-white/10
+        z-50
+        max-h-[calc(100vh-100px)]
+        overflow-y-auto">
+
+
+        <h3 class="font-bold mb-3 text-white">
+            Notificações
+        </h3>
+
+
+        <div id="notificationList" class="space-y-3">
+
+            <!-- notificações entram aqui -->
+
+        </div>
+
+
+    </div>
+
+</div>
+    </div>
+    <!-- User -->
+  <div
+    id="userMenuBtn"
+    class="hidden xl:flex items-center gap-3 px-2 py-2 rounded-2xl cursor-pointer transition-all duration-200 hover:bg-white/5 hover:scale-[1.02] active:scale-95">
+
+    <img
+        src="assets/capa/avatar.png"
+        class="hidden w-12 h-12 rounded-full border border-white/10 object-cover">
+
+    <i
+        data-lucide="chevrons-right"
+        class="w-4 h-4 text-slate-500 transition-transform duration-200">
+    </i>
+
+</div>
+  </div>
+  <!-- Busca mobile -->
+  <div class="hidden pt-0 mt-3 ">
+    <input
+      class="input"
+      placeholder="Buscar torrents..."
+      >
+  </div>
+ <script>
+ 
+  </script>

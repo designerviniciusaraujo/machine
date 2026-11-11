@@ -1,0 +1,66 @@
+
+<div id="status-app" class="min-h-screen bg-white text-gray-900 antialiased">
+  <main class="max-w-2xl mx-auto px-4 py-6 pb-12">
+
+    <header class="mb-6">
+      <h1 class="text-2xl font-semibold tracking-tight">Status</h1>
+      <p class="text-sm text-gray-500 mt-1">Hoje, agora e horas registradas.</p>
+    </header>
+
+    <section class="border border-gray-200 rounded-2xl p-5 mb-4">
+      <p class="text-sm text-gray-500">Hoje</p>
+      <p id="status-data" class="text-lg font-semibold mt-1">—</p>
+      <div class="flex items-center gap-2 mt-4">
+        <span class="w-2 h-2 rounded-full bg-green-500"></span>
+        <p id="status-agora" class="text-sm text-gray-600">Consultando horário...</p>
+      </div>
+    </section>
+
+    <section class="bg-gray-900 text-white rounded-2xl p-5 mb-4">
+      <p class="text-sm text-gray-400">Total de horas trabalhadas hoje</p>
+      <p id="status-total" class="text-4xl font-semibold tracking-tight mt-2">0h</p>
+      <p id="status-registros" class="text-xs text-gray-400 mt-2">Calculando registros...</p>
+    </section>
+
+    <section class="space-y-3">
+      <h2 class="text-sm font-semibold text-gray-700">Por período</h2>
+
+      <article class="border border-gray-200 rounded-xl p-4 flex items-center gap-3">
+        <div class="bg-amber-50 text-amber-700 rounded-xl p-3">
+          <i data-lucide="sunrise" class="w-5 h-5"></i>
+        </div>
+        <div class="flex-1">
+          <p class="font-medium">Manhã</p>
+          <p class="text-xs text-gray-500">05h às 12h</p>
+        </div>
+        <p id="status-manha" class="text-lg font-semibold">0h</p>
+      </article>
+
+      <article class="border border-gray-200 rounded-xl p-4 flex items-center gap-3">
+        <div class="bg-orange-50 text-orange-700 rounded-xl p-3">
+          <i data-lucide="sun" class="w-5 h-5"></i>
+        </div>
+        <div class="flex-1">
+          <p class="font-medium">Tarde</p>
+          <p class="text-xs text-gray-500">12h às 18h</p>
+        </div>
+        <p id="status-tarde" class="text-lg font-semibold">0h</p>
+      </article>
+
+      <article class="border border-gray-200 rounded-xl p-4 flex items-center gap-3">
+        <div class="bg-indigo-50 text-indigo-700 rounded-xl p-3">
+          <i data-lucide="moon" class="w-5 h-5"></i>
+        </div>
+        <div class="flex-1">
+          <p class="font-medium">Noite</p>
+          <p class="text-xs text-gray-500">18h às 05h</p>
+        </div>
+        <p id="status-noite" class="text-lg font-semibold">0h</p>
+      </article>
+    </section>
+
+    <p id="status-mensagem" class="text-xs text-gray-400 text-center mt-6" role="status">
+      Carregando dados...
+    </p>
+  </main>
+</div>

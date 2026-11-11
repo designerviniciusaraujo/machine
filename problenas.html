@@ -1,0 +1,671 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Problemas Reais</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    body {
+      font-family: Inter, system-ui, sans-serif;
+      background: #09090b;
+      color: #fafafa;
+    }
+
+    input, select {
+      outline: none;
+    }
+
+    input:focus, select:focus {
+      border-color: #71717a !important;
+    }
+
+    button:disabled {
+      opacity: .5;
+      cursor: not-allowed;
+    }
+  </style>
+</head>
+
+<body class="min-h-screen">
+
+<main class="max-w-xl mx-auto px-5 py-8">
+
+  <!-- VOLTAR -->
+  <button onclick="history.back()"
+    class="flex items-center gap-2 text-sm text-zinc-400 hover:text-white mb-8">
+    <i data-lucide="arrow-left" class="w-4 h-4"></i>
+    Voltar
+  </button>
+
+  <!-- CABEÇALHO -->
+  <header class="mb-9">
+
+    <div class="flex items-center gap-2 text-zinc-500 text-xs uppercase tracking-widest mb-5">
+      <i data-lucide="activity" class="w-4 h-4"></i>
+      Inteligência pessoal
+    </div>
+
+    <h1 class="text-3xl font-semibold tracking-tight">
+      Problemas reais
+    </h1>
+
+    <p class="text-zinc-500 text-sm mt-2">
+      Identifique, acompanhe e registre a resolução dos problemas.
+    </p>
+
+  </header>
+
+  <!-- INDICADORES -->
+  <section class="grid grid-cols-3 gap-3 mb-8">
+
+    <div class="bg-zinc-900 border border-zinc-800 rounded-xl p-4">
+      <p class="text-xs text-zinc-500 mb-2">Total</p>
+      <p id="total" class="text-2xl font-semibold">0</p>
+    </div>
+
+    <div class="bg-zinc-900 border border-zinc-800 rounded-xl p-4">
+      <p class="text-xs text-zinc-500 mb-2">Pendentes</p>
+      <p id="pendentes" class="text-2xl font-semibold">0</p>
+    </div>
+
+    <div class="bg-zinc-900 border border-zinc-800 rounded-xl p-4">
+      <p class="text-xs text-zinc-500 mb-2">Resolvidos</p>
+      <p id="resolvidos" class="text-2xl font-semibold">0</p>
+    </div>
+
+  </section>
+
+  <!-- NOVO PROBLEMA -->
+  <button onclick="abrirEditor()"
+    class="w-full flex items-center justify-center gap-2 bg-white text-black rounded-xl py-3 text-sm font-semibold mb-7">
+    <i data-lucide="plus" class="w-4 h-4"></i>
+    Registrar problema
+  </button>
+
+  <!-- FILTROS -->
+  <div class="flex gap-2 mb-5">
+
+    <button onclick="filtrar('todos')" data-filtro="todos"
+      class="filtro px-4 py-2 rounded-lg text-xs bg-white text-black">
+      Todos
+    </button>
+
+    <button onclick="filtrar('pendente')" data-filtro="pendente"
+      class="filtro px-4 py-2 rounded-lg text-xs bg-zinc-900 text-zinc-400">
+      Pendentes
+    </button>
+
+    <button onclick="filtrar('resolvido')" data-filtro="resolvido"
+      class="filtro px-4 py-2 rounded-lg text-xs bg-zinc-900 text-zinc-400">
+      Resolvidos
+    </button>
+
+  </div>
+
+  <!-- LISTA -->
+  <section id="lista" class="space-y-3"></section>
+
+  <div id="vazio" class="hidden text-center py-12">
+    <i data-lucide="inbox" class="w-8 h-8 text-zinc-600 mx-auto mb-3"></i>
+    <p class="text-sm text-zinc-500">Nenhum problema encontrado.</p>
+  </div>
+
+  <!-- EDITOR -->
+  <section id="editor"
+    class="hidden mt-8 border border-zinc-800 rounded-2xl p-5">
+
+    <div class="flex justify-between items-center mb-6">
+
+      <h2 id="editorTitulo" class="font-medium">
+        Novo problema
+      </h2>
+
+      <button onclick="fecharEditor()" class="text-zinc-500">
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
+
+    </div>
+
+    <form id="form">
+
+      <input type="hidden" id="id">
+
+      <label class="block text-xs text-zinc-500 mb-2">
+        Nome do problema
+      </label>
+
+      <input
+        id="nome"
+        maxlength="120"
+        required
+        placeholder="Ex: Falta de emprego"
+        class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-3 text-sm mb-5">
+
+      <label class="block text-xs text-zinc-500 mb-2">
+        Tipo do problema
+      </label>
+
+      <select id="tipo" required
+        class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-3 text-sm mb-6">
+
+        <option value="">Selecione um tipo</option>
+        <option value="Pessoal">Pessoal</option>
+        <option value="Profissional">Profissional</option>
+        <option value="Financeiro">Financeiro</option>
+        <option value="Familiar">Familiar</option>
+        <option value="Relacionamento">Relacionamento</option>
+        <option value="Saúde">Saúde</option>
+        <option value="Técnico">Técnico</option>
+        <option value="Social">Social</option>
+        <option value="Outro">Outro</option>
+
+      </select>
+
+      <div class="flex gap-2">
+
+        <button type="button"
+          onclick="fecharEditor()"
+          class="flex-1 bg-zinc-800 rounded-xl py-3 text-sm">
+          Cancelar
+        </button>
+
+        <button type="submit" id="salvar"
+          class="flex-1 bg-white text-black rounded-xl py-3 text-sm font-semibold">
+          Salvar
+        </button>
+
+      </div>
+
+    </form>
+
+  </section>
+
+  <p id="status" class="text-xs text-zinc-500 text-center mt-8">
+    Conectando ao Firebase...
+  </p>
+
+</main>
+
+<script type="module">
+
+import { initializeApp }
+  from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+
+import {
+  getFirestore,
+  collection,
+  getDocs,
+  addDoc,
+  updateDoc,
+  deleteDoc,
+  doc
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+// ======================================
+// CONFIGURAÇÃO FIREBASE
+// INSIRA AS MESMAS CREDENCIAIS
+// DO SEU PROJETO ANTERIOR
+// ======================================
+
+const firebaseConfig = {
+  apiKey: "AIzaSyD-xzRjMRVUpey19g745DvPjjpCApqSHVE",
+  authDomain: "myops-d7525.firebaseapp.com",
+  projectId: "myops-d7525",
+  storageBucket: "myops-d7525.firebasestorage.app",
+  messagingSenderId: "247824192162",
+  appId: "1:247824192162:web:77c91ab1e3df855dc7fdfb"
+};
+
+// ======================================
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+const referencia = collection(db, "problemasReais");
+
+let problemas = [];
+let carregado = false;
+let filtroAtual = "todos";
+
+const lista = document.getElementById("lista");
+const editor = document.getElementById("editor");
+const form = document.getElementById("form");
+const status = document.getElementById("status");
+
+function dataAtual() {
+  return new Date().toISOString();
+}
+
+function formatarData(data) {
+  if (!data) return "—";
+
+  const d = new Date(data);
+
+  if (isNaN(d.getTime())) return "—";
+
+  return d.toLocaleDateString("pt-BR", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric"
+  });
+}
+
+// ======================================
+// CARREGAR
+// ======================================
+
+async function carregar() {
+
+  status.textContent = "Carregando registros...";
+
+  try {
+
+    const snapshot = await getDocs(referencia);
+
+    problemas = snapshot.docs.map(item => ({
+      id: item.id,
+      ...item.data()
+    }));
+
+    problemas.sort((a, b) =>
+      new Date(b.criadoEm || 0) - new Date(a.criadoEm || 0)
+    );
+
+    carregado = true;
+
+    status.textContent = "Conectado ao Firebase.";
+
+    atualizar();
+
+  } catch (erro) {
+
+    console.error(erro);
+
+    status.textContent =
+      "Erro ao carregar. Verifique as credenciais e regras do Firestore.";
+
+  }
+
+}
+
+// ======================================
+// RENDERIZAR
+// ======================================
+
+function atualizar() {
+
+  lista.innerHTML = "";
+
+  const total = problemas.length;
+
+  const pendentes = problemas.filter(
+    p => p.status !== "resolvido"
+  ).length;
+
+  const resolvidos = problemas.filter(
+    p => p.status === "resolvido"
+  ).length;
+
+  document.getElementById("total").textContent = total;
+  document.getElementById("pendentes").textContent = pendentes;
+  document.getElementById("resolvidos").textContent = resolvidos;
+
+  const filtrados = problemas.filter(p => {
+
+    if (filtroAtual === "todos") return true;
+
+    if (filtroAtual === "pendente")
+      return p.status !== "resolvido";
+
+    if (filtroAtual === "resolvido")
+      return p.status === "resolvido";
+
+    return true;
+
+  });
+
+  document.getElementById("vazio").classList.toggle(
+    "hidden",
+    filtrados.length > 0
+  );
+
+  filtrados.forEach(problema => {
+
+    const resolvido = problema.status === "resolvido";
+
+    const card = document.createElement("article");
+
+    card.className =
+      "border border-zinc-800 bg-zinc-900/40 rounded-2xl p-5";
+
+    // TOPO
+    const topo = document.createElement("div");
+    topo.className = "flex justify-between items-center gap-3 mb-4";
+
+    const tipo = document.createElement("span");
+    tipo.className =
+      "text-xs bg-zinc-800 text-zinc-400 px-3 py-1.5 rounded-lg";
+
+    tipo.textContent = problema.tipo || "Outro";
+
+    const statusBadge = document.createElement("span");
+
+    statusBadge.className = resolvido
+      ? "text-xs text-emerald-400"
+      : "text-xs text-amber-400";
+
+    statusBadge.textContent = resolvido
+      ? "● Resolvido"
+      : "● Pendente";
+
+    topo.append(tipo, statusBadge);
+
+    // NOME
+    const nome = document.createElement("h3");
+
+    nome.className = resolvido
+      ? "text-base font-medium text-zinc-400 line-through"
+      : "text-base font-medium";
+
+    nome.textContent = problema.nome || "Sem nome";
+
+    // DATAS
+    const datas = document.createElement("div");
+
+    datas.className =
+      "grid grid-cols-2 gap-3 mt-5 pt-4 border-t border-zinc-800";
+
+    const criacao = document.createElement("div");
+
+    const criacaoLabel = document.createElement("p");
+    criacaoLabel.className = "text-xs text-zinc-600 mb-1";
+    criacaoLabel.textContent = "Criado em";
+
+    const criacaoValor = document.createElement("p");
+    criacaoValor.className = "text-xs text-zinc-400";
+    criacaoValor.textContent = formatarData(problema.criadoEm);
+
+    criacao.append(criacaoLabel, criacaoValor);
+
+    const resolucao = document.createElement("div");
+
+    const resolucaoLabel = document.createElement("p");
+    resolucaoLabel.className = "text-xs text-zinc-600 mb-1";
+    resolucaoLabel.textContent = "Resolvido em";
+
+    const resolucaoValor = document.createElement("p");
+    resolucaoValor.className = "text-xs text-zinc-400";
+    resolucaoValor.textContent = resolvido
+      ? formatarData(problema.resolvidoEm)
+      : "Ainda não resolvido";
+
+    resolucao.append(resolucaoLabel, resolucaoValor);
+
+    datas.append(criacao, resolucao);
+
+    // AÇÕES
+    const acoes = document.createElement("div");
+
+    acoes.className =
+      "flex flex-wrap items-center gap-3 mt-5 pt-4 border-t border-zinc-800";
+
+    const concluir = document.createElement("button");
+
+    concluir.className = resolvido
+      ? "text-xs text-amber-400 flex items-center gap-1"
+      : "text-xs text-emerald-400 flex items-center gap-1";
+
+    concluir.innerHTML = resolvido
+      ? '<i data-lucide="rotate-ccw" class="w-4 h-4"></i> Reabrir'
+      : '<i data-lucide="check-circle" class="w-4 h-4"></i> Marcar resolvido';
+
+    concluir.onclick = () => alternarStatus(problema);
+
+    const editar = document.createElement("button");
+
+    editar.className =
+      "text-xs text-zinc-400 flex items-center gap-1";
+
+    editar.innerHTML =
+      '<i data-lucide="pencil" class="w-4 h-4"></i> Editar';
+
+    editar.onclick = () => abrirEditor(problema);
+
+    const excluir = document.createElement("button");
+
+    excluir.className =
+      "text-xs text-zinc-500 flex items-center gap-1";
+
+    excluir.innerHTML =
+      '<i data-lucide="trash-2" class="w-4 h-4"></i> Excluir';
+
+    excluir.onclick = () => remover(problema.id);
+
+    acoes.append(concluir, editar, excluir);
+
+    card.append(topo, nome, datas, acoes);
+
+    lista.appendChild(card);
+
+  });
+
+  lucide.createIcons();
+
+}
+
+// ======================================
+// FILTROS
+// ======================================
+
+window.filtrar = function(tipo) {
+
+  filtroAtual = tipo;
+
+  document.querySelectorAll(".filtro").forEach(botao => {
+
+    const ativo = botao.dataset.filtro === tipo;
+
+    botao.className = ativo
+      ? "filtro px-4 py-2 rounded-lg text-xs bg-white text-black"
+      : "filtro px-4 py-2 rounded-lg text-xs bg-zinc-900 text-zinc-400";
+
+  });
+
+  atualizar();
+
+};
+
+// ======================================
+// EDITOR
+// ======================================
+
+window.abrirEditor = function(problema = null) {
+
+  if (!carregado) return;
+
+  form.reset();
+
+  document.getElementById("id").value =
+    problema?.id || "";
+
+  document.getElementById("nome").value =
+    problema?.nome || "";
+
+  document.getElementById("tipo").value =
+    problema?.tipo || "";
+
+  document.getElementById("editorTitulo").textContent =
+    problema ? "Editar problema" : "Novo problema";
+
+  editor.classList.remove("hidden");
+
+  editor.scrollIntoView({
+    behavior: "smooth",
+    block: "center"
+  });
+
+  document.getElementById("nome").focus();
+
+};
+
+window.fecharEditor = function() {
+
+  editor.classList.add("hidden");
+
+  form.reset();
+
+};
+
+// ======================================
+// SALVAR
+// ======================================
+
+form.addEventListener("submit", async (e) => {
+
+  e.preventDefault();
+
+  if (!carregado) return;
+
+  const id = document.getElementById("id").value;
+
+  const dados = {
+    nome: document.getElementById("nome").value.trim(),
+    tipo: document.getElementById("tipo").value
+  };
+
+  if (!dados.nome || !dados.tipo) return;
+
+  const botao = document.getElementById("salvar");
+
+  botao.disabled = true;
+  botao.textContent = "Salvando...";
+
+  try {
+
+    if (id) {
+
+      // Preserva as datas e o status existentes
+      await updateDoc(
+        doc(db, "problemasReais", id),
+        dados
+      );
+
+    } else {
+
+      // Novo problema: registra a data de criação
+      await addDoc(referencia, {
+        ...dados,
+        status: "pendente",
+        criadoEm: dataAtual(),
+        resolvidoEm: null
+      });
+
+    }
+
+    fecharEditor();
+
+    await carregar();
+
+  } catch (erro) {
+
+    console.error(erro);
+
+    status.textContent = "Erro ao salvar problema.";
+
+  } finally {
+
+    botao.disabled = false;
+    botao.textContent = "Salvar";
+
+  }
+
+});
+
+// ======================================
+// RESOLVER / REABRIR
+// ======================================
+
+async function alternarStatus(problema) {
+
+  if (!carregado) return;
+
+  const resolvido = problema.status === "resolvido";
+
+  const novoStatus = resolvido
+    ? "pendente"
+    : "resolvido";
+
+  const novaData = resolvido
+    ? null
+    : dataAtual();
+
+  try {
+
+    status.textContent = "Atualizando problema...";
+
+    await updateDoc(
+      doc(db, "problemasReais", problema.id),
+      {
+        status: novoStatus,
+        resolvidoEm: novaData
+      }
+    );
+
+    await carregar();
+
+  } catch (erro) {
+
+    console.error(erro);
+
+    status.textContent = "Erro ao atualizar status.";
+
+  }
+
+}
+
+// ======================================
+// EXCLUIR
+// ======================================
+
+async function remover(id) {
+
+  if (!carregado) return;
+
+  if (!confirm("Deseja excluir definitivamente este problema?"))
+    return;
+
+  try {
+
+    status.textContent = "Excluindo...";
+
+    await deleteDoc(
+      doc(db, "problemasReais", id)
+    );
+
+    await carregar();
+
+  } catch (erro) {
+
+    console.error(erro);
+
+    status.textContent = "Erro ao excluir problema.";
+
+  }
+
+}
+
+// ======================================
+// INICIAR
+// ======================================
+
+carregar();
+
+</script>
+
+</body>
+</html>

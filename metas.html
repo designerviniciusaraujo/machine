@@ -1,0 +1,288 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Metas</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lucide@latest"></script>
+<style>
+body{background:#09090b;color:#fafafa;font-family:Arial,sans-serif}
+input,select{background:#18181b;border:1px solid #27272a;border-radius:10px;padding:11px;width:100%;color:#fff;outline:none}
+button{transition:.15s}
+.cat{font-size:11px;padding:5px 9px;border-radius:20px;font-weight:600}
+.progress{height:4px;background:#27272a;border-radius:9px;overflow:hidden}
+.progress div{height:100%;border-radius:9px}
+</style>
+</head>
+<body class="min-h-screen">
+<main class="max-w-xl mx-auto p-4 pb-12">
+  <button onclick="history.back()"
+  class="flex items-center gap-2 text-sm text-zinc-400 hover:text-white py-2">
+  <i data-lucide="arrow-left" class="w-4 h-4"></i>
+  Voltar
+</button>
+  <header class="flex justify-between items-center py-4 mb-5">
+    <div>
+      <h1 class="text-2xl font-bold tracking-tight">Metas<span class="text-zinc-500">.</span></h1>
+      <p class="text-xs text-zinc-500 mt-1">Direção, tempo e progresso.</p>
+    </div>
+    <button onclick="novo()" class="bg-white text-black rounded-xl px-4 py-3 text-sm font-semibold flex gap-2 items-center">
+      <i data-lucide="plus" class="w-4 h-4"></i> Nova
+    </button>
+  </header>
+
+  <section class="grid grid-cols-3 gap-2 mb-6">
+    <div class="bg-zinc-900 rounded-xl p-3">
+      <p class="text-xs text-zinc-500">Total</p>
+      <p id="total" class="text-xl font-bold mt-1">0</p>
+    </div>
+    <div class="bg-zinc-900 rounded-xl p-3">
+      <p class="text-xs text-zinc-500">Ativas</p>
+      <p id="ativas" class="text-xl font-bold mt-1">0</p>
+    </div>
+    <div class="bg-zinc-900 rounded-xl p-3">
+      <p class="text-xs text-zinc-500">Concluídas</p>
+      <p id="feitas" class="text-xl font-bold mt-1">0</p>
+    </div>
+  </section>
+
+  <form id="form" class="hidden bg-zinc-900 border border-zinc-800 rounded-2xl p-4 mb-6 space-y-3">
+    <h2 id="tituloForm" class="font-semibold">Nova meta</h2>
+    <input id="nome" placeholder="Qual é a meta?" required maxlength="120">
+    <select id="tipo">
+      <option value="espiritual">Espiritual</option>
+      <option value="saude">Saúde</option>
+      <option value="trabalho">Trabalho</option>
+      <option value="pessoal">Pessoal</option>
+    </select>
+    <div class="grid grid-cols-2 gap-3">
+      <label class="text-xs text-zinc-500">De
+        <input id="inicio" type="date" required class="mt-2">
+      </label>
+      <label class="text-xs text-zinc-500">Até
+        <input id="fim" type="date" required class="mt-2">
+      </label>
+    </div>
+    <label class="block text-xs text-zinc-500">Realização: <span id="valorPct">0</span>%
+      <input id="pct" type="range" min="0" max="100" value="0" class="mt-2 accent-white">
+    </label>
+    <div class="flex gap-2 pt-1">
+      <button type="submit" class="flex-1 bg-white text-black rounded-xl py-3 font-semibold text-sm">Salvar meta</button>
+      <button type="button" onclick="fechar()" class="px-4 rounded-xl bg-zinc-800 text-sm">Cancelar</button>
+    </div>
+  </form>
+
+  <nav class="flex gap-2 overflow-x-auto pb-4" id="filtros">
+    <button data-f="todas" class="filter rounded-full bg-white text-black px-4 py-2 text-xs">Todas</button>
+    <button data-f="espiritual" class="filter rounded-full bg-zinc-900 px-4 py-2 text-xs">Espiritual</button>
+    <button data-f="saude" class="filter rounded-full bg-zinc-900 px-4 py-2 text-xs">Saúde</button>
+    <button data-f="trabalho" class="filter rounded-full bg-zinc-900 px-4 py-2 text-xs">Trabalho</button>
+    <button data-f="pessoal" class="filter rounded-full bg-zinc-900 px-4 py-2 text-xs">Pessoal</button>
+  </nav>
+
+  <section id="lista" class="space-y-3"></section>
+  <p id="vazio" class="hidden text-center text-sm text-zinc-500 py-12">Nenhuma meta por aqui.</p>
+  <p id="mensagem" class="text-xs text-zinc-500 text-center mt-6"></p>
+</main>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
+import {
+  getFirestore, collection, addDoc, getDocs, doc,
+  updateDoc, deleteDoc, query, orderBy
+} from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
+
+/* 1. COLOQUE SUAS CREDENCIAIS FIREBASE AQUI */
+const firebaseConfig = {
+ 
+apiKey: "AIzaSyD-xzRjMRVUpey19g745DvPjjpCApqSHVE",
+  authDomain: "myops-d7525.firebaseapp.com",
+  projectId: "myops-d7525",
+  storageBucket: "myops-d7525.firebasestorage.app",
+  messagingSenderId: "247824192162",
+  appId: "1:247824192162:web:77c91ab1e3df855dc7fdfb"
+};
+
+/* 2. CATEGORIAS E CORES */
+const categorias = {
+  espiritual: { nome:"Espiritual", cor:"#a78bfa" },
+  saude:      { nome:"Saúde",      cor:"#34d399" },
+  trabalho:   { nome:"Trabalho",   cor:"#60a5fa" },
+  pessoal:    { nome:"Pessoal",    cor:"#fbbf24" }
+};
+
+const $ = id => document.getElementById(id);
+let db, metas = [], filtro = "todas", editando = null;
+const configurado = !Object.values(firebaseConfig).some(v => v.startsWith("SUA_") || v.startsWith("SEU_"));
+
+if (configurado) {
+  try {
+    const app = initializeApp(firebaseConfig);
+    db = getFirestore(app);
+    await carregar();
+  } catch (e) {
+    $("mensagem").textContent = "Erro Firebase: " + e.message;
+  }
+} else {
+  $("mensagem").textContent = "Adicione as credenciais Firebase no código para começar.";
+}
+
+async function carregar() {
+  try {
+    const snap = await getDocs(query(collection(db,"metas"),orderBy("criadoEm","desc")));
+    metas = snap.docs.map(d => ({id:d.id,...d.data()}));
+    render();
+    $("mensagem").textContent = "";
+  } catch(e) {
+    $("mensagem").textContent = "Não foi possível carregar. Verifique o Firestore e as regras de acesso.";
+  }
+}
+
+window.novo = () => {
+  editando = null;
+  $("form").reset();
+  $("pct").value = 0;
+  $("valorPct").textContent = "0";
+  $("tituloForm").textContent = "Nova meta";
+  $("form").classList.remove("hidden");
+  $("inicio").value = new Date().toLocaleDateString("en-CA");
+  $("fim").value = "";
+  $("form").scrollIntoView({behavior:"smooth",block:"start"});
+};
+
+window.fechar = () => $("form").classList.add("hidden");
+$("pct").addEventListener("input", () => $("valorPct").textContent = $("pct").value);
+
+$("form").addEventListener("submit", async e => {
+  e.preventDefault();
+  if (!db) return alert("Configure suas credenciais Firebase primeiro.");
+  const inicio = $("inicio").value, fim = $("fim").value;
+  if (fim < inicio) return alert("A data final deve ser igual ou posterior à inicial.");
+
+  const dados = {
+    nome: $("nome").value.trim(),
+    tipo: $("tipo").value,
+    inicio, fim,
+    progresso: Number($("pct").value),
+    concluida: Number($("pct").value) === 100
+  };
+  if (!dados.nome) return;
+
+  try {
+    if (editando) {
+      await updateDoc(doc(db,"metas",editando),dados);
+    } else {
+      await addDoc(collection(db,"metas"),{...dados,criadoEm:Date.now()});
+    }
+    fechar();
+    await carregar();
+  } catch(err) {
+    alert("Erro ao salvar. Verifique as regras do Firestore.");
+  }
+});
+
+window.editar = id => {
+  const m = metas.find(x => x.id === id);
+  if (!m) return;
+  editando = id;
+  $("nome").value = m.nome;
+  $("tipo").value = m.tipo;
+  $("inicio").value = m.inicio;
+  $("fim").value = m.fim;
+  $("pct").value = m.progresso || 0;
+  $("valorPct").textContent = $("pct").value;
+  $("tituloForm").textContent = "Editar meta";
+  $("form").classList.remove("hidden");
+  $("form").scrollIntoView({behavior:"smooth",block:"start"});
+};
+
+window.excluir = async id => {
+  if (!confirm("Excluir esta meta?")) return;
+  try {
+    await deleteDoc(doc(db,"metas",id));
+    await carregar();
+  } catch(e) { alert("Não foi possível excluir."); }
+};
+
+window.concluir = async id => {
+  try {
+    await updateDoc(doc(db,"metas",id),{progresso:100,concluida:true});
+    await carregar();
+  } catch(e) { alert("Não foi possível atualizar."); }
+};
+
+$("filtros").addEventListener("click",e => {
+  const b = e.target.closest("[data-f]");
+  if (!b) return;
+  filtro = b.dataset.f;
+  document.querySelectorAll(".filter").forEach(el => {
+    el.className = "filter rounded-full px-4 py-2 text-xs " +
+      (el.dataset.f === filtro ? "bg-white text-black" : "bg-zinc-900 text-zinc-400");
+  });
+  render();
+});
+
+function data(s) {
+  if (!s) return "—";
+  return new Date(s+"T12:00:00").toLocaleDateString("pt-BR");
+}
+
+function render() {
+  $("total").textContent = metas.length;
+  $("ativas").textContent = metas.filter(m => (m.progresso||0)<100).length;
+  $("feitas").textContent = metas.filter(m => (m.progresso||0)===100).length;
+  const itens = metas.filter(m => filtro === "todas" || m.tipo === filtro);
+  $("vazio").classList.toggle("hidden",itens.length>0);
+  $("lista").innerHTML = itens.map(m => {
+    const c = categorias[m.tipo] || categorias.pessoal;
+    const ini = new Date((m.inicio||"2000-01-01")+"T00:00:00").getTime();
+    const fim = new Date((m.fim||m.inicio||"2000-01-01")+"T23:59:59").getTime();
+    const agora = Date.now();
+    const tempo = fim <= ini ? (agora >= fim ? 100 : 0) :
+      Math.max(0,Math.min(100,Math.round((agora-ini)/(fim-ini)*100)));
+    const pct = Math.max(0,Math.min(100,Number(m.progresso)||0));
+    const restante = Math.max(0,Math.ceil((fim-agora)/86400000));
+    const status = pct===100 ? "Concluída" : agora<ini ? "Agendada" : agora>fim ? "Prazo encerrado" : "Em andamento";
+    return `
+    <article class="bg-zinc-900 border border-zinc-800 rounded-2xl p-4">
+      <div class="flex items-start gap-3">
+        <div class="w-1 self-stretch rounded-full" style="background:${c.cor}"></div>
+        <div class="flex-1 min-w-0">
+          <div class="flex justify-between gap-2 items-start">
+            <h3 class="font-semibold break-words">${esc(m.nome)}</h3>
+            <span class="cat shrink-0" style="color:${c.cor};background:${c.cor}18">${c.nome}</span>
+          </div>
+          <p class="text-xs text-zinc-500 mt-2">${data(m.inicio)} → ${data(m.fim)}</p>
+          <div class="flex justify-between text-xs mt-4 mb-2">
+            <span class="text-zinc-400">Tempo decorrido</span><span>${tempo}%</span>
+          </div>
+          <div class="progress"><div style="width:${tempo}%;background:${c.cor};opacity:.55"></div></div>
+          <div class="flex justify-between text-xs mt-4 mb-2">
+            <span class="text-zinc-400">Realização</span><span>${pct}%</span>
+          </div>
+          <div class="progress"><div style="width:${pct}%;background:${c.cor}"></div></div>
+          <div class="flex justify-between items-center gap-2 mt-4">
+            <span class="text-xs text-zinc-500">${pct===100?"Meta concluída":restante===0?"Prazo encerrado":restante+" dias restantes"} · ${status}</span>
+            <div class="flex gap-3 text-zinc-400">
+              ${pct<100?`<button title="Concluir" onclick="concluir('${m.id}')"><i data-lucide="check" class="w-4 h-4"></i></button>`:""}
+              <button title="Editar" onclick="editar('${m.id}')"><i data-lucide="pencil" class="w-4 h-4"></i></button>
+              <button title="Excluir" onclick="excluir('${m.id}')"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </article>`;
+  }).join("");
+  lucide.createIcons();
+}
+
+function esc(s) {
+  return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+}
+
+render();
+</script>
+</body>
+</html>
