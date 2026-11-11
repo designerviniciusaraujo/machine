@@ -1,0 +1,103 @@
+# VINICIUS ARAUJO
+**WEB DESIGNER E DESENVOLVEDOR**
+
+WhatsApp: (12) 98178-4387  
+Email: vadevapps@gmail.com
+
+---
+
+## INFORMAÇÕES
+
+**BRASILEIRO.**
+
+Me chamo Vinicius Araujo, sou Designer e Desenvolvedor Front-End. Trabalhei por 4 anos, criando e desenvolvendo lojas para e-commerce e integrando recursos front-end para novas aplicações.
+
+Em paralelo atuo como freelancer na criação de UIs e no desenvolvimento de aplicações na camada front-end, Web Sites, Lojas Online, Landing Pages, Sites Institucionais e campanhas de marketing digital para agências do Brasil e do exterior.
+
+---
+
+## HABILIDADES
+
+- PHOTOSHOP
+- ADOBE XD
+- FIGMA
+- HTML5
+- CSS3
+- JAVASCRIPT
+- WORDPRESS
+- REACT
+- REACT NATIVE
+
+---
+
+## FORMAÇÃO
+
+**2009** — ENSINO MÉDIO COMPLETO
+
+**2012** — DESIGN GRÁFICO EXTENSÃO - FMU
+
+**2019** — LÓGICA DE PROGRAMAÇÃO - DRC TREINAMENTOS
+
+**2021** — DESIGN DE EXPERIÊNCIA DO USUÁRIO - FIAP
+
+**2021** — JAVASCRIPT AVANÇADO - ALURA
+
+---
+
+## EXPERIÊNCIAS
+
+### 2020 / 2021 - PRODESP
+
+**Cargo:**
+
+Designer UI e Desenvolvedor de recursos front-end para o novo Portal Poupa Tempo e Detran.
+
+**Tecnologias:**
+
+HTML5, CSS3, JAVASCRIPT, BOOTSTRAP, GIT, NODE, GULP
+
+### 2016 / 2019 - FASTCOMMERCE
+
+**Cargo:**
+
+Integrador de recursos para e-commerce, e Designer de Web Sites responsivos.
+
+**Tecnologias:**
+
+HTML5, CSS3, BOOTSTRAP, WAVE, JAVASCRIPT, AMP, NODE, GRUNT
+
+### 2019 / 2020 - RIOSLUM STUDIO
+
+**Cargo:**
+
+Designer UI, desenvolvedor de aplicações para Wordpress e Sites single page.
+
+**Tecnologias:**
+
+HTML5, CSS3, JAVASCRIPT, WORDPRESS
+
+### 2015 - HOME BRASIL
+
+**Cargo:**
+
+Designer de web sites e integrador de lojas para e-commerce e sites Wordpress, Google Analytics.
+
+**Tecnologias:**
+
+PHOTOSHOP, ILUSTRATOR, HTML5, CSS3, JAVASCRIPT, BOOTSTRAP, OPEN CART, WORDPRESS
+
+### 2013 - ARENA GRÁFICA DIGITAL
+
+**Cargo:**
+
+Designer Gráfico e Arte Finalista, de peças publicitárias e comunicação visual.
+
+**Tecnologias:**
+
+PHOTOSHOP, ILUSTRATOR, ADOBE PREMIERE
+
+---
+
+## PORTFÓLIO
+
+WWW.VINICIUSARAUJO.TK
