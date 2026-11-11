@@ -1,74 +1,110 @@
 
-<div id="curriculo-app" class="min-h-screen bg-neutral-950 text-white">
+<div id="curriculo-app" class="min-h-screen" style="background:var(--bg-theme); color:var(--text);">
+
   <main class="max-w-3xl mx-auto p-4 pb-12 space-y-6">
 
+    <!-- HEADER -->
     <header class="flex items-center justify-between gap-3">
       <div>
-        <h1 class="text-2xl font-bold tracking-tight">Currículo<span class="text-neutral-500">.</span></h1>
-        <p class="text-xs text-neutral-500 mt-1">Seu perfil profissional completo.</p>
+        <h1 class="text-2xl font-bold tracking-tight">
+          Currículo<span style="color:var(--text-muted)">.</span>
+        </h1>
+        <p class="text-xs mt-1" style="color:var(--text-muted)">
+          Seu perfil profissional completo.
+        </p>
       </div>
+
       <button id="curriculo-atualizar" type="button"
-        class="rounded-xl border border-neutral-800 p-3 text-neutral-300">
+        class="rounded-xl border p-3"
+        style="border-color:var(--border); color:var(--text)">
         <i data-lucide="refresh-cw" class="w-4 h-4"></i>
       </button>
+
       <a href="/curriculopreview.html"
-  class="rounded-xl bg-white text-black px-4 py-3 text-xs font-semibold flex items-center gap-2">
-  <i data-lucide="eye" class="w-4 h-4"></i>
-  Preview
-</a>
+        class="rounded-xl px-4 py-3 text-xs font-semibold flex items-center gap-2"
+        style="background:var(--text); color:var(--bg-theme)">
+        <i data-lucide="eye" class="w-4 h-4"></i>
+        Preview
+      </a>
     </header>
 
-    <section class="rounded-2xl border border-neutral-800 bg-neutral-900 p-4">
+
+    <!-- COMPLETUDE -->
+    <section class="rounded-2xl border p-4"
+      style="background:var(--card); border-color:var(--border)">
+
       <div class="flex justify-between items-center gap-3">
         <div>
-          <p class="text-xs text-neutral-500">Completude do currículo</p>
+          <p class="text-xs" style="color:var(--text-muted)">
+            Completude do currículo
+          </p>
           <p id="curriculo-percentual" class="text-3xl font-bold mt-1">—</p>
         </div>
-        <span id="curriculo-status" class="text-xs text-neutral-400">Analisando...</span>
+
+        <span id="curriculo-status" class="text-xs"
+          style="color:var(--text-muted)">
+          Analisando...
+        </span>
       </div>
-      <div class="h-1.5 rounded-full bg-neutral-800 overflow-hidden mt-4">
-        <div id="curriculo-barra" class="h-full rounded-full bg-blue-500" style="width:0%"></div>
+
+      <div class="h-1.5 rounded-full overflow-hidden mt-4"
+        style="background:var(--border)">
+        <div id="curriculo-barra"
+          class="h-full rounded-full bg-blue-500"
+          style="width:0%">
+        </div>
       </div>
-      <p id="curriculo-mensagem" class="text-xs text-neutral-500 mt-3">Carregando dados...</p>
+
+      <p id="curriculo-mensagem" class="text-xs mt-3"
+        style="color:var(--text-muted)">
+        Carregando dados...
+      </p>
     </section>
 
+
+    <!-- FORMULÁRIO -->
     <form id="curriculo-form" class="space-y-4">
+
       <div class="flex items-center justify-between">
         <h2 class="text-sm font-semibold">Dados profissionais</h2>
-        <span class="text-xs text-neutral-500">Editável</span>
+        <span class="text-xs" style="color:var(--text-muted)">Editável</span>
       </div>
 
       <div class="grid sm:grid-cols-2 gap-3">
-        <label class="text-xs text-neutral-400 space-y-2 block">
+
+        <label class="text-xs space-y-2 block" style="color:var(--text-muted)">
           Nome completo
           <input id="cv-name" name="name" maxlength="120" autocomplete="name"
-            placeholder="Seu nome"
-            class="cv-input">
+            placeholder="Seu nome" class="cv-input">
         </label>
-        <label class="text-xs text-neutral-400 space-y-2 block">
+
+        <label class="text-xs space-y-2 block" style="color:var(--text-muted)">
           Título profissional
           <input id="cv-title" name="title" maxlength="120"
             placeholder="Ex.: Desenvolvedor Web Front-end"
             class="cv-input">
         </label>
+
       </div>
 
-      <label class="text-xs text-neutral-400 space-y-2 block">
+      <label class="text-xs space-y-2 block" style="color:var(--text-muted)">
         Resumo profissional
         <textarea id="cv-summary" name="summary" rows="4" maxlength="3000"
           placeholder="Apresente sua experiência, competências e objetivos."
           class="cv-input"></textarea>
       </label>
 
-      <label class="text-xs text-neutral-400 space-y-2 block">
+      <label class="text-xs space-y-2 block" style="color:var(--text-muted)">
         Competências
         <textarea id="cv-skills" name="skills" rows="3"
           placeholder="HTML, CSS, JavaScript, React, UX..."
           class="cv-input"></textarea>
-        <span class="text-neutral-600">Separe as competências por vírgulas.</span>
+        <span style="color:var(--text-muted)">
+          Separe as competências por vírgulas.
+        </span>
       </label>
 
-      <label class="text-xs text-neutral-400 space-y-2 block">
+      <label class="text-xs space-y-2 block" style="color:var(--text-muted)">
         Cargos desejados
         <input id="cv-targetRoles" name="targetRoles"
           placeholder="Desenvolvedor Front-end, Web Designer..."
@@ -76,7 +112,8 @@
       </label>
 
       <div class="grid sm:grid-cols-2 gap-3">
-        <label class="text-xs text-neutral-400 space-y-2 block">
+
+        <label class="text-xs space-y-2 block" style="color:var(--text-muted)">
           Modelo de trabalho
           <select id="cv-workMode" name="workMode" class="cv-input">
             <option value="">Selecione</option>
@@ -87,80 +124,161 @@
             <option value="Qualquer modelo">Qualquer modelo</option>
           </select>
         </label>
-        <label class="text-xs text-neutral-400 space-y-2 block">
+
+        <label class="text-xs space-y-2 block" style="color:var(--text-muted)">
           Localização
-          <input id="cv-location" name="location" placeholder="Cidade, estado ou país"
+          <input id="cv-location" name="location"
+            placeholder="Cidade, estado ou país"
             class="cv-input">
         </label>
+
       </div>
 
       <div class="grid sm:grid-cols-3 gap-3">
-        <label class="text-xs text-neutral-400 space-y-2 block">
+
+        <label class="text-xs space-y-2 block" style="color:var(--text-muted)">
           LinkedIn
           <input id="cv-linkedin" name="linkedin" type="url"
             placeholder="https://linkedin.com/in/..."
             class="cv-input">
         </label>
-        <label class="text-xs text-neutral-400 space-y-2 block">
+
+        <label class="text-xs space-y-2 block" style="color:var(--text-muted)">
           Portfólio
           <input id="cv-portfolio" name="portfolio" type="url"
             placeholder="https://..."
             class="cv-input">
         </label>
-        <label class="text-xs text-neutral-400 space-y-2 block">
+
+        <label class="text-xs space-y-2 block" style="color:var(--text-muted)">
           GitHub
           <input id="cv-github" name="github" type="url"
             placeholder="https://github.com/..."
             class="cv-input">
         </label>
+
       </div>
 
       <button id="curriculo-salvar" type="submit"
-        class="w-full rounded-xl bg-white text-black py-3 text-sm font-semibold">
+        class="w-full rounded-xl py-3 text-sm font-semibold"
+        style="background:var(--text); color:var(--bg-theme)">
         Salvar currículo
       </button>
+
     </form>
 
-    <section class="border-t border-neutral-800 pt-5 space-y-4">
+
+    <!-- EXPERIÊNCIA PROFISSIONAL -->
+    <section class="border-t pt-5 space-y-4"
+      style="border-color:var(--border)">
+
       <div class="flex items-center justify-between">
         <div>
           <h2 class="text-sm font-semibold">Experiência profissional</h2>
-          <p class="text-xs text-neutral-500 mt-1">Importada do banco de histórias</p>
+          <p class="text-xs mt-1" style="color:var(--text-muted)">
+            Importada do banco de histórias
+          </p>
         </div>
+
         <span id="curriculo-total-historias"
-          class="text-xs rounded-full bg-neutral-900 px-3 py-2">—</span>
+          class="text-xs rounded-full px-3 py-2"
+          style="background:var(--card); color:var(--text-muted)">
+          —
+        </span>
       </div>
+
       <div id="curriculo-historias" class="space-y-3"></div>
+
     </section>
 
-    <section class="border-t border-neutral-800 pt-5 space-y-4">
+
+    <!-- FORMAÇÃO ACADÊMICA -->
+    <section class="border-t pt-5 space-y-4"
+      style="border-color:var(--border)">
+
       <div class="flex items-center justify-between">
         <div>
           <h2 class="text-sm font-semibold">Formação acadêmica</h2>
-          <p class="text-xs text-neutral-500 mt-1">Importada do banco acadêmico</p>
+          <p class="text-xs mt-1" style="color:var(--text-muted)">
+            Importada do banco acadêmico
+          </p>
         </div>
+
         <span id="curriculo-total-academica"
-          class="text-xs rounded-full bg-neutral-900 px-3 py-2">—</span>
+          class="text-xs rounded-full px-3 py-2"
+          style="background:var(--card); color:var(--text-muted)">
+          —
+        </span>
       </div>
+
       <div id="curriculo-academica" class="space-y-3"></div>
+
     </section>
 
-    <section class="border-t border-neutral-800 pt-5">
+
+    <!-- PENDÊNCIAS -->
+    <section class="border-t pt-5"
+      style="border-color:var(--border)">
+
       <h2 class="text-sm font-semibold mb-3">O que falta?</h2>
+
       <div id="curriculo-pendencias" class="space-y-2"></div>
+
     </section>
 
+
+    <!-- FEEDBACK -->
     <p id="curriculo-feedback" role="status"
-      class="text-xs text-neutral-500 text-center"></p>
+      class="text-xs text-center"
+      style="color:var(--text-muted)">
+    </p>
+
   </main>
 
+
+  <!-- THEME ADAPTATION -->
   <style>
     #curriculo-app .cv-input {
-      display:block;width:100%;background:#171717;border:1px solid #333;
-      border-radius:10px;padding:11px 12px;color:#fff;outline:none;
-      font-size:13px;
+      display: block;
+      width: 100%;
+      background: var(--input-bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 11px 12px;
+      color: var(--text);
+      outline: none;
+      font-size: 13px;
+      transition: border-color .2s ease, background .2s ease, color .2s ease;
     }
-    #curriculo-app .cv-input:focus {border-color:#737373}
-    #curriculo-app textarea {resize:vertical}
+
+    #curriculo-app .cv-input:focus {
+      border-color: var(--primary);
+    }
+
+    #curriculo-app .cv-input::placeholder {
+      color: var(--text-muted);
+      opacity: .75;
+    }
+
+    #curriculo-app textarea {
+      resize: vertical;
+    }
+
+    #curriculo-app select option {
+      background: var(--card);
+      color: var(--text);
+    }
+
+    #curriculo-app input,
+    #curriculo-app textarea,
+    #curriculo-app select {
+      color-scheme: inherit;
+    }
+
+    #curriculo-app button,
+    #curriculo-app a {
+      transition: background-color .2s ease, color .2s ease, border-color .2s ease;
+    }
   </style>
+
 </div>

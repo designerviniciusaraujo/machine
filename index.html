@@ -2962,7 +2962,42 @@ verificarCurriculo();
 const observadorCurriculo = new MutationObserver(verificarCurriculo);
 observadorCurriculo.observe(document.body, { childList: true, subtree: true });
 </script>
+<script>
+    // FULLSCREEN TOGGLE
 
+    function toggleFullscreen() {
+        if (!document.fullscreenElement) {
+            document.documentElement.requestFullscreen?.();
+        } else {
+            document.exitFullscreen?.();
+        }
+    }
+
+    // Atualiza o ícone automaticamente
+    document.addEventListener('fullscreenchange', () => {
+        const btn = document.getElementById('fullscreenToggle');
+
+        if (!btn) return;
+
+        const icon = btn.querySelector('i');
+
+        if (document.fullscreenElement) {
+            btn.title = 'Sair da tela cheia';
+            btn.setAttribute('aria-label', 'Sair da tela cheia');
+
+            if (icon) icon.setAttribute('data-lucide', 'minimize');
+        } else {
+            btn.title = 'Tela cheia';
+            btn.setAttribute('aria-label', 'Ativar tela cheia');
+
+            if (icon) icon.setAttribute('data-lucide', 'maximize');
+        }
+
+        if (window.lucide) {
+            lucide.createIcons();
+        }
+    });
+</script>
 </body>
 
 </html>
