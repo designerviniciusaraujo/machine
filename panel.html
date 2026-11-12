@@ -1,0 +1,178 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Central de Atendimento</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lucide@latest"></script>
+<style>
+*{box-sizing:border-box}body{font-family:Inter,Arial,sans-serif}
+::-webkit-scrollbar{width:5px}::-webkit-scrollbar-thumb{background:#d1d5db;border-radius:9px}
+.chat-bg{background:#efeae2;background-image:radial-gradient(#d9d2c8 0.6px,transparent .6px);background-size:14px 14px}
+.msg{max-width:75%;padding:10px 13px;border-radius:10px;font-size:14px;overflow-wrap:anywhere}
+.in{background:white;border-top-left-radius:2px}.out{background:#d9fdd3;border-top-right-radius:2px;margin-left:auto}
+.active{background:#eff6ff}
+</style>
+</head>
+<body class="bg-slate-100 text-slate-800">
+<div class="h-screen flex flex-col overflow-hidden">
+<header class="h-16 bg-white border-b flex items-center justify-between px-5 shrink-0">
+<div class="flex items-center gap-3"><div class="bg-green-600 text-white rounded-xl p-2"><i data-lucide="messages-square"></i></div><div><b>Central de Atendimento</b><p class="text-xs text-slate-400">Conversas multicanal</p></div></div>
+<div class="flex items-center gap-3"><span id="status" class="text-xs text-amber-600">● Demonstração</span><button onclick="config()" class="p-2"><i data-lucide="settings"></i></button></div>
+</header>
+<main class="flex flex-1 min-h-0">
+<aside id="channels" class="w-60 bg-white border-r p-3 shrink-0 overflow-y-auto">
+<p class="text-xs font-bold text-slate-400 uppercase p-2">Canais</p>
+<div id="channelList"></div>
+</aside>
+<section id="contacts" class="w-80 bg-white border-r flex flex-col shrink-0">
+<div class="p-4 border-b"><h2 id="channelName" class="font-bold text-lg mb-3">WhatsApp</h2><input id="search" oninput="renderContacts()" placeholder="Buscar conversa..." class="bg-slate-100 rounded-lg w-full p-3 text-sm outline-none"></div>
+<div id="contactList" class="flex-1 overflow-y-auto"></div>
+</section>
+<section id="chat" class="flex-1 min-w-0 flex flex-col">
+<div id="empty" class="flex-1 flex items-center justify-center text-slate-400 text-sm">Selecione uma conversa</div>
+<div id="conversation" class="hidden flex-1 min-h-0 flex-col">
+<header class="bg-white border-b p-3 flex items-center gap-3">
+<button onclick="back()" class="md:hidden"><i data-lucide="arrow-left"></i></button>
+<div class="w-10 h-10 bg-green-100 text-green-700 rounded-full grid place-items-center font-bold" id="avatar">?</div>
+<div class="flex-1 min-w-0"><b id="person"></b><p class="text-xs text-slate-400" id="personInfo"></p></div>
+<button onclick="finishConversation()" class="text-xs text-red-500 border rounded-lg px-3 py-2">Encerrar</button>
+</header>
+<div id="messages" class="chat-bg flex-1 overflow-y-auto p-5 space-y-3"></div>
+<form onsubmit="send(event)" class="bg-white p-3 flex gap-2">
+<input id="reply" autocomplete="off" placeholder="Digite uma mensagem..." class="flex-1 bg-slate-100 rounded-full px-5 py-3 outline-none text-sm">
+<button class="bg-green-600 text-white rounded-full w-12 h-12 grid place-items-center"><i data-lucide="send"></i></button>
+</form>
+</div>
+</section>
+</main>
+</div>
+
+<div id="modal" class="hidden fixed inset-0 bg-black/40 z-50 items-center justify-center p-4">
+<div class="bg-white rounded-xl p-6 w-full max-w-lg space-y-3">
+<div class="flex justify-between"><b>Firebase Realtime Database</b><button onclick="config()"><i data-lucide="x"></i></button></div>
+<input id="apiKey" placeholder="apiKey" class="field">
+<input id="authDomain" placeholder="authDomain" class="field">
+<input id="projectId" placeholder="projectId" class="field">
+<input id="databaseURL" placeholder="databaseURL" class="field">
+<input id="appId" placeholder="appId" class="field">
+<button onclick="connect()" class="bg-green-600 text-white w-full rounded-lg p-3">Conectar Firebase</button>
+</div>
+</div>
+<style>.field{width:100%;padding:11px;border:1px solid #ddd;border-radius:8px;font-size:13px}</style>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+<script>
+const ROOT="conversations";
+const CHANNELS=[
+{id:"whatsapp",name:"WhatsApp",icon:"message-circle",color:"#16a34a"},
+{id:"site",name:"Site",icon:"globe",color:"#2563eb"},
+{id:"instagram",name:"Instagram",icon:"instagram",color:"#db2777"}
+];
+let db=null,demo=true,channel="whatsapp",selected=null,data={},messageRef=null,channelRef=null;
+
+const $=id=>document.getElementById(id);
+const safe=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const time=t=>t?new Date(t).toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"}):"";
+
+function config(){$("modal").classList.toggle("hidden");$("modal").classList.toggle("flex")}
+function connect(){
+ const cfg={apiKey:$("apiKey").value,authDomain:$("authDomain").value,projectId:$("projectId").value,databaseURL:$("databaseURL").value,appId:$("appId").value};
+ try{
+ if(firebase.apps.length)firebase.app().delete();
+ firebase.initializeApp(cfg);db=firebase.database();demo=false;
+ $("status").textContent="● Firebase conectado";
+ $("status").className="text-xs text-green-600";
+ $("modal").classList.add("hidden");$("modal").classList.remove("flex");
+ subscribe();
+ }catch(e){alert(e.message)}
+}
+function subscribe(){
+ if(channelRef)channelRef();
+ const ref=db.ref(ROOT);
+ const handler=ref.on("value",snap=>{
+ data={};
+ const all=snap.val()||{};
+ Object.entries(all).forEach(([id,c])=>{
+ if(c.status==="closed")return;
+ const key=c.channelId||"whatsapp";
+ (data[key]??=[]).push({id,...c});
+ });
+ Object.values(data).forEach(a=>a.sort((x,y)=>(y.updatedAt||0)-(x.updatedAt||0)));
+ render();
+ if(selected){const found=(data[channel]||[]).find(c=>c.id===selected);if(found)selected=found;else closeChat();}
+ },console.error);
+ channelRef=()=>ref.off("value",handler);
+}
+function render(){
+ $("channelList").innerHTML=CHANNELS.map(c=>{
+ const list=data[c.id]||[],unread=list.reduce((n,x)=>n+(x.unread||0),0);
+ return `<button onclick="selectChannel('${c.id}')" class="w-full p-3 rounded-xl flex items-center gap-3 text-left mb-1 ${channel===c.id?'active':''}">
+ <span style="color:${c.color}"><i data-lucide="${c.icon}"></i></span><span class="flex-1 text-sm font-semibold">${c.name}<small class="block text-slate-400 font-normal">${list.length} conversas</small></span>${unread?`<b class="bg-green-600 text-white text-xs rounded-full px-2">${unread}</b>`:''}</button>`;
+ }).join("");
+ renderContacts();lucide.createIcons();
+}
+function selectChannel(id){channel=id;selected=null;if(messageRef)messageRef();$("conversation").classList.add("hidden");$("empty").classList.remove("hidden");render()}
+function renderContacts(){
+ const list=data[channel]||[],q=$("search").value.toLowerCase();
+ $("channelName").textContent=CHANNELS.find(c=>c.id===channel).name;
+ $("contactList").innerHTML=list.filter(c=>(c.client?.name||"Cliente").toLowerCase().includes(q)).map(c=>`
+ <button onclick="openChat('${c.id}')" class="w-full flex gap-3 p-4 text-left border-b hover:bg-slate-50 ${selected?.id===c.id?'active':''}">
+ <div class="w-11 h-11 bg-green-100 text-green-700 rounded-full grid place-items-center font-bold">${safe((c.client?.name||"C").charAt(0).toUpperCase())}</div>
+ <div class="flex-1 min-w-0"><div class="flex justify-between gap-2"><b class="text-sm truncate">${safe(c.client?.name||"Cliente")}</b><small class="text-slate-400">${time(c.updatedAt)}</small></div><p class="text-xs text-slate-400 truncate mt-1">${safe(c.lastMessage||"Nova conversa")}</p></div>
+ ${c.unread?`<b class="bg-green-600 text-white rounded-full text-xs w-5 h-5 grid place-items-center">${c.unread}</b>`:''}
+ </button>`).join("")||'<p class="p-6 text-center text-sm text-slate-400">Nenhuma conversa.</p>';
+}
+function openChat(id){
+ selected=(data[channel]||[]).find(c=>c.id===id);if(!selected)return;
+ $("empty").classList.add("hidden");$("conversation").classList.remove("hidden");$("conversation").classList.add("flex");
+ $("person").textContent=selected.client?.name||"Cliente";$("personInfo").textContent=CHANNELS.find(c=>c.id===channel).name;
+ $("avatar").textContent=($("person").textContent||"C")[0].toUpperCase();
+ if(demo){draw(selected.messages||{});return}
+ if(messageRef)messageRef();
+ db.ref(`${ROOT}/${id}/unread`).set(0);
+ const ref=db.ref(`${ROOT}/${id}/messages`);
+ const handler=ref.on("value",s=>draw(s.val()||{}));
+ messageRef=()=>ref.off("value",handler);
+}
+function draw(messages){
+ const arr=Array.isArray(messages)?messages:Object.entries(messages).map(([id,m])=>({id,...m}));
+ $("messages").innerHTML=arr.sort((a,b)=>(a.timestamp||0)-(b.timestamp||0)).map(m=>{
+ const sent=m.sender==="agent";
+ return `<div class="flex flex-col ${sent?'items-end':'items-start'}"><div class="msg ${sent?'out':'in'}">${safe(m.text)}</div><small class="text-slate-400 text-[10px] mt-1">${time(m.timestamp)}</small></div>`;
+ }).join("");
+ $("messages").scrollTop=$("messages").scrollHeight;
+}
+async function send(e){
+ e.preventDefault();const input=$("reply"),text=input.value.trim();if(!text||!selected)return;
+ input.value="";
+ try{
+ if(demo){selected.messages??=[];selected.messages.push({text,sender:"agent",timestamp:Date.now()});selected.lastMessage=text;draw(selected.messages);renderContacts()}
+ else{
+ const base=`${ROOT}/${selected.id}`;
+ await db.ref(`${base}/messages`).push({text,sender:"agent",timestamp:firebase.database.ServerValue.TIMESTAMP});
+ await db.ref(base).update({lastMessage:text,updatedAt:firebase.database.ServerValue.TIMESTAMP});
+ }
+ }catch(err){input.value=text;alert(err.message)}
+}
+async function finishConversation(){
+ if(!selected||!confirm("Encerrar este atendimento?"))return;
+ if(!demo)await db.ref(`${ROOT}/${selected.id}`).update({status:"closed",closedAt:firebase.database.ServerValue.TIMESTAMP});
+ else data[channel]=data[channel].filter(c=>c.id!==selected.id);
+ closeChat();render();
+}
+function closeChat(){selected=null;if(messageRef)messageRef();messageRef=null;$("conversation").classList.add("hidden");$("empty").classList.remove("hidden")}
+function back(){$("contacts").classList.remove("mobile-hidden")}
+function demoData(){
+ const now=Date.now();
+ data.whatsapp=[{id:"demo1",channelId:"whatsapp",client:{name:"Mariana Oliveira"},unread:1,lastMessage:"Qual o prazo de entrega?",updatedAt:now,messages:[{text:"Olá! Gostaria de conhecer os produtos.",sender:"customer",timestamp:now-300000},{text:"Olá Mariana! Como posso ajudar?",sender:"agent",timestamp:now-200000},{text:"Qual o prazo de entrega?",sender:"customer",timestamp:now}]}];
+ data.site=[{id:"demo2",client:{name:"Ana Paula"},unread:0,lastMessage:"Tenho interesse.",updatedAt:now-60000,messages:[{text:"Tenho interesse.",sender:"customer",timestamp:now-60000}]}];
+ data.instagram=[{id:"demo3",client:{name:"Lucas Ferreira"},unread:0,lastMessage:"Quais os valores?",updatedAt:now-120000,messages:[{text:"Quais os valores?",sender:"customer",timestamp:now-120000}]}];
+}
+demoData();render();
+</script>
+</body>
+</html>

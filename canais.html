@@ -1,0 +1,648 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Central de Atendimento</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lucide@latest"></script>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Inter,system-ui,sans-serif}
+button,input{font:inherit}
+.panel{background:white;border:1px solid #e5e7eb}
+.active{background:#eff6ff;color:#2563eb}
+.avatar{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;font-weight:700;flex-shrink:0}
+.chat-bg{background-color:#f8fafc;background-image:radial-gradient(#dce3ed 0.7px,transparent 0.7px);background-size:16px 16px}
+.message{max-width:78%;padding:11px 14px;border-radius:15px;font-size:14px;line-height:1.5;overflow-wrap:anywhere}
+.sent{background:#2563eb;color:white;border-bottom-right-radius:4px;margin-left:auto}
+.received{background:white;border:1px solid #e5e7eb;color:#1f2937;border-bottom-left-radius:4px}
+::-webkit-scrollbar{width:5px}
+::-webkit-scrollbar-thumb{background:#d1d5db;border-radius:10px}
+@media(max-width:767px){
+  #sidebar{width:100%;flex:none}
+  #contacts{width:100%;flex:none}
+  #chat{width:100%;flex:none}
+  .mobile-hidden{display:none!important}
+}
+</style>
+</head>
+
+<body class="bg-slate-100 text-slate-800">
+
+<div class="h-screen flex flex-col overflow-hidden">
+
+  <!-- TOPBAR -->
+  <header class="h-16 bg-white border-b flex items-center justify-between px-5 shrink-0">
+    <div class="flex items-center gap-3">
+      <div class="w-9 h-9 rounded-xl bg-blue-600 text-white grid place-items-center">
+        <i data-lucide="messages-square"></i>
+      </div>
+      <div>
+        <h1 class="font-bold text-base">Atendimento</h1>
+        <p class="text-xs text-slate-400">Central de conversas</p>
+      </div>
+    </div>
+
+    <div class="flex items-center gap-3">
+      <span id="connection" class="text-xs text-amber-600 flex items-center gap-2">
+        <span class="w-2 h-2 bg-amber-500 rounded-full"></span>
+        Demonstração
+      </span>
+      <button onclick="toggleConfig()" class="p-2 hover:bg-slate-100 rounded-lg" title="Configurações">
+        <i data-lucide="settings" class="w-5"></i>
+      </button>
+      <div class="avatar bg-blue-100 text-blue-700">VA</div>
+    </div>
+  </header>
+
+  <!-- MAIN -->
+  <main class="flex flex-1 min-h-0 overflow-hidden">
+
+    <!-- CHANNELS -->
+    <aside id="sidebar" class="w-64 bg-white border-r flex flex-col shrink-0">
+
+      <div class="p-4">
+        <p class="text-xs uppercase font-bold text-slate-400 tracking-wider mb-3">Canais de vendas</p>
+        <div id="channelList" class="space-y-2"></div>
+        <button onclick="addChannel()" class="mt-4 w-full border border-dashed rounded-lg py-2.5 text-sm text-slate-500 hover:border-blue-400 hover:text-blue-600">
+          + Adicionar canal
+        </button>
+      </div>
+
+      <div class="mt-auto border-t p-4">
+        <div class="text-xs text-slate-400">Status da operação</div>
+        <div class="flex justify-between mt-2 text-sm">
+          <span>Conversas abertas</span>
+          <strong id="totalOpen">0</strong>
+        </div>
+        <div class="flex justify-between mt-2 text-sm">
+          <span>Não lidas</span>
+          <strong id="totalUnread" class="text-blue-600">0</strong>
+        </div>
+      </div>
+    </aside>
+
+    <!-- CONTACTS -->
+    <section id="contacts" class="w-80 bg-white border-r flex flex-col shrink-0">
+
+      <div class="p-4 border-b">
+        <div class="flex justify-between items-center mb-3">
+          <div>
+            <h2 class="font-bold text-lg" id="channelTitle">WhatsApp</h2>
+            <p class="text-xs text-slate-400" id="contactCount">Contatos</p>
+          </div>
+          <button onclick="showAllChannels()" class="text-xs text-blue-600">Todos</button>
+        </div>
+
+        <div class="relative">
+          <i data-lucide="search" class="absolute left-3 top-3 w-4 text-slate-400"></i>
+          <input id="search" oninput="renderContacts()" placeholder="Buscar conversa..."
+          class="w-full bg-slate-100 rounded-lg pl-9 pr-3 py-2.5 text-sm outline-none focus:ring-2 focus:ring-blue-100">
+        </div>
+      </div>
+
+      <div id="contactList" class="flex-1 overflow-y-auto"></div>
+    </section>
+
+    <!-- CHAT -->
+    <section id="chat" class="flex-1 flex flex-col min-w-0 bg-slate-50">
+
+      <div id="emptyChat" class="flex-1 flex flex-col items-center justify-center text-center p-6">
+        <div class="w-16 h-16 rounded-2xl bg-blue-100 text-blue-600 grid place-items-center mb-4">
+          <i data-lucide="messages-square" class="w-8 h-8"></i>
+        </div>
+        <h2 class="font-bold text-lg">Sua central de atendimento</h2>
+        <p class="text-sm text-slate-400 mt-2 max-w-xs">Selecione um canal e uma conversa para visualizar as mensagens.</p>
+      </div>
+
+      <div id="chatContent" class="hidden flex-1 flex-col min-h-0">
+
+        <header class="h-[72px] bg-white border-b flex items-center justify-between px-5 shrink-0">
+          <div class="flex items-center gap-3 min-w-0">
+            <button onclick="mobileBack()" class="md:hidden p-2">
+              <i data-lucide="arrow-left"></i>
+            </button>
+            <div id="chatAvatar" class="avatar bg-blue-100 text-blue-600">?</div>
+            <div class="min-w-0">
+              <h3 id="chatName" class="font-bold truncate">Contato</h3>
+              <p id="chatInfo" class="text-xs text-slate-400">Canal</p>
+            </div>
+          </div>
+          <button onclick="closeChat()" class="p-2 rounded-lg hover:bg-slate-100" title="Fechar conversa">
+            <i data-lucide="x" class="w-5"></i>
+          </button>
+        </header>
+
+        <div id="messages" class="flex-1 overflow-y-auto p-5 chat-bg space-y-3">
+        </div>
+
+        <form onsubmit="sendMessage(event)" class="bg-white border-t p-3 flex gap-3 items-end shrink-0">
+          <textarea id="messageInput" rows="1" placeholder="Digite sua mensagem..."
+          class="flex-1 resize-none outline-none bg-slate-100 rounded-xl p-3 text-sm max-h-32"
+          onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();document.getElementById('sendBtn').click()}"></textarea>
+          <button id="sendBtn" type="submit" class="bg-blue-600 text-white rounded-xl w-12 h-11 grid place-items-center hover:bg-blue-700">
+            <i data-lucide="send" class="w-5"></i>
+          </button>
+        </form>
+
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<!-- CONFIG MODAL -->
+<div id="configModal" class="hidden fixed inset-0 bg-black/40 z-50 items-center justify-center p-4">
+  <div class="bg-white rounded-2xl w-full max-w-lg p-6 shadow-xl">
+    <div class="flex justify-between items-center mb-5">
+      <h2 class="font-bold text-lg">Configuração Firebase</h2>
+      <button onclick="toggleConfig()"><i data-lucide="x"></i></button>
+    </div>
+
+    <p class="text-sm text-slate-500 mb-4">Insira as credenciais do seu projeto para conectar a central.</p>
+
+    <div class="space-y-3">
+      <input id="fbApi" placeholder="apiKey" class="config-input">
+      <input id="fbAuth" placeholder="authDomain" class="config-input">
+      <input id="fbProject" placeholder="projectId" class="config-input">
+      <input id="fbDB" placeholder="databaseURL" class="config-input">
+      <input id="fbApp" placeholder="appId" class="config-input">
+    </div>
+
+    <div class="mt-5 p-3 bg-amber-50 rounded-lg text-xs text-amber-800">
+      Ajuste também os caminhos do banco e o modelo de mensagens no bloco FIREBASE ADAPTER do código. As credenciais, sozinhas, não identificam a estrutura existente.
+    </div>
+
+    <div class="flex gap-2 mt-5">
+      <button onclick="toggleConfig()" class="flex-1 border rounded-lg py-2.5 text-sm">Cancelar</button>
+      <button onclick="connectFirebase()" class="flex-1 bg-blue-600 text-white rounded-lg py-2.5 text-sm">Conectar</button>
+    </div>
+  </div>
+</div>
+
+<style>
+.config-input{
+width:100%;padding:11px;border:1px solid #e5e7eb;
+border-radius:8px;font-size:13px;outline:none
+}
+.config-input:focus{border-color:#2563eb}
+</style>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+
+<script>
+// ==========================================
+// 1. CONFIGURAÇÃO
+// ==========================================
+
+const FIREBASE_CONFIG = {
+ 
+apiKey: "AIzaSyD-xzRjMRVUpey19g745DvPjjpCApqSHVE",
+  authDomain: "myops-d7525.firebaseapp.com",
+  projectId: "myops-d7525",
+  storageBucket: "myops-d7525.firebasestorage.app",
+  messagingSenderId: "247824192162",
+  appId: "1:247824192162:web:77c91ab1e3df855dc7fdfb"
+};
+
+// Estrutura sugerida:
+// channels/{channelId}/conversations/{conversationId}
+// channels/{channelId}/conversations/{conversationId}/messages/{messageId}
+
+// ==========================================
+// 2. CANAIS
+// ==========================================
+
+let channels = [
+  {id:"whatsapp",name:"WhatsApp",icon:"message-circle",color:"#16a34a"},
+  {id:"site",name:"Site",icon:"globe",color:"#2563eb"},
+  {id:"instagram",name:"Instagram",icon:"instagram",color:"#db2777"}
+];
+
+let selectedChannel = "whatsapp";
+let selectedConversation = null;
+let conversations = {};
+let db = null;
+let demoMode = true;
+let unsubscribe = [];
+let messagesUnsubscribe = null;
+
+const $ = id => document.getElementById(id);
+
+// ==========================================
+// 3. DADOS DE DEMONSTRAÇÃO
+// ==========================================
+
+function demoData(){
+  const now = Date.now();
+
+  conversations = {
+    whatsapp:[
+      {
+        id:"conv001",name:"Mariana Oliveira",phone:"(12) 99999-1111",
+        unread:2,lastMessage:"Qual o prazo de entrega?",
+        updatedAt:now-60000,
+        messages:[
+          {id:"m1",text:"Olá! Gostaria de conhecer os produtos.",from:"customer",timestamp:now-3600000},
+          {id:"m2",text:"Olá Mariana! Claro, posso ajudar.",from:"agent",timestamp:now-3500000},
+          {id:"m3",text:"Qual o prazo de entrega?",from:"customer",timestamp:now-60000}
+        ]
+      },
+      {
+        id:"conv002",name:"Carlos Mendes",phone:"(12) 98888-2222",
+        unread:0,lastMessage:"Obrigado pelo atendimento!",
+        updatedAt:now-1800000,
+        messages:[
+          {id:"m4",text:"Vocês aceitam Pix?",from:"customer",timestamp:now-7200000},
+          {id:"m5",text:"Sim! Aceitamos Pix e cartão.",from:"agent",timestamp:now-7000000},
+          {id:"m6",text:"Obrigado pelo atendimento!",from:"customer",timestamp:now-1800000}
+        ]
+      }
+    ],
+    site:[
+      {
+        id:"conv003",name:"Ana Paula",phone:"Visitante do site",
+        unread:1,lastMessage:"Tenho interesse no produto.",
+        updatedAt:now-300000,
+        messages:[
+          {id:"m7",text:"Tenho interesse no produto.",from:"customer",timestamp:now-300000}
+        ]
+      }
+    ],
+    instagram:[
+      {
+        id:"conv004",name:"Lucas Ferreira",phone:"@lucas.ferreira",
+        unread:0,lastMessage:"Pode me passar os valores?",
+        updatedAt:now-900000,
+        messages:[
+          {id:"m8",text:"Olá! Vi seu perfil e gostaria de informações.",from:"customer",timestamp:now-1200000},
+          {id:"m9",text:"Oi Lucas! Seja bem-vindo.",from:"agent",timestamp:now-1100000},
+          {id:"m10",text:"Pode me passar os valores?",from:"customer",timestamp:now-900000}
+        ]
+      }
+    ]
+  };
+}
+
+// ==========================================
+// 4. FIREBASE ADAPTER
+// ==========================================
+
+// IMPORTANTE:
+// Este adapter usa o modelo de banco sugerido.
+// Se seu banco tiver outros caminhos ou campos,
+// alteraremos somente esta seção.
+
+function listenChannels(){
+  unsubscribe.forEach(fn=>fn());
+  unsubscribe=[];
+
+  channels.forEach(channel=>{
+    const ref=db.ref(`channels/${channel.id}/conversations`);
+
+    const handler=ref.on("value",snapshot=>{
+      const data=snapshot.val() || {};
+
+      conversations[channel.id]=Object.entries(data).map(([id,c])=>({
+        id,
+        name:c.name || c.contactName || "Novo contato",
+        phone:c.phone || c.identifier || "",
+        unread:c.unread || 0,
+        lastMessage:c.lastMessage || "",
+        updatedAt:c.updatedAt || 0,
+        ...c
+      })).sort((a,b)=>(b.updatedAt||0)-(a.updatedAt||0));
+
+      render();
+      if(selectedConversation && selectedChannel===channel.id){
+        const updated=conversations[channel.id].find(c=>c.id===selectedConversation.id);
+        if(updated) selectedConversation=updated;
+      }
+    },error=>console.error("Erro ao ler canal:",error));
+
+    unsubscribe.push(()=>ref.off("value",handler));
+  });
+}
+
+function listenMessages(){
+  if(messagesUnsubscribe){
+    messagesUnsubscribe();
+    messagesUnsubscribe=null;
+  }
+
+  if(!selectedConversation || demoMode) return;
+
+  const path=`channels/${selectedChannel}/conversations/${selectedConversation.id}/messages`;
+  const ref=db.ref(path);
+
+  const handler=ref.on("value",snapshot=>{
+    const data=snapshot.val() || {};
+    const msgs=Object.entries(data).map(([id,m])=>({id,...m}))
+      .sort((a,b)=>(a.timestamp||0)-(b.timestamp||0));
+
+    renderMessages(msgs);
+  },error=>console.error("Erro nas mensagens:",error));
+
+  messagesUnsubscribe=()=>ref.off("value",handler);
+}
+
+async function sendToFirebase(text){
+  if(!db || !selectedConversation) return;
+
+  const base=`channels/${selectedChannel}/conversations/${selectedConversation.id}`;
+
+  await db.ref(`${base}/messages`).push({
+    text,
+    from:"agent",
+    sender:"admin",
+    timestamp:firebase.database.ServerValue.TIMESTAMP
+  });
+
+  await db.ref(base).update({
+    lastMessage:text,
+    updatedAt:firebase.database.ServerValue.TIMESTAMP
+  });
+}
+
+// ==========================================
+// 5. CONEXÃO
+// ==========================================
+
+function connectFirebase(){
+  const config={
+    apiKey:$("fbApi").value.trim(),
+    authDomain:$("fbAuth").value.trim(),
+    projectId:$("fbProject").value.trim(),
+    databaseURL:$("fbDB").value.trim(),
+    appId:$("fbApp").value.trim()
+  };
+
+  if(!config.apiKey || !config.databaseURL || !config.projectId){
+    alert("Preencha apiKey, projectId e databaseURL.");
+    return;
+  }
+
+  try{
+    if(!firebase.apps.length) firebase.initializeApp(config);
+    else firebase.app().options;
+
+    db=firebase.database();
+    demoMode=false;
+
+    $("connection").innerHTML='<span class="w-2 h-2 bg-green-500 rounded-full"></span> Firebase conectado';
+    $("connection").className="text-xs text-green-600 flex items-center gap-2";
+
+    $("configModal").classList.add("hidden");
+    $("configModal").classList.remove("flex");
+
+    listenChannels();
+  }catch(error){
+    alert("Erro ao conectar: "+error.message);
+  }
+}
+
+// ==========================================
+// 6. INTERFACE
+// ==========================================
+
+function render(){
+  renderChannels();
+  renderContacts();
+  updateStats();
+  lucide.createIcons();
+}
+
+function renderChannels(){
+  $("channelList").innerHTML=channels.map(c=>{
+    const items=conversations[c.id]||[];
+    const unread=items.reduce((n,x)=>n+(Number(x.unread)||0),0);
+    const active=selectedChannel===c.id;
+
+    return `
+    <button onclick="selectChannel('${c.id}')"
+      class="w-full flex items-center gap-3 p-3 rounded-xl text-left ${active?'active':'hover:bg-slate-50'}">
+      <div class="w-9 h-9 rounded-lg grid place-items-center" style="background:${c.color}18;color:${c.color}">
+        <i data-lucide="${c.icon}" class="w-5"></i>
+      </div>
+      <div class="flex-1 min-w-0">
+        <div class="font-semibold text-sm">${c.name}</div>
+        <div class="text-xs opacity-60">${items.length} conversas</div>
+      </div>
+      ${unread?`<span class="bg-blue-600 text-white text-xs rounded-full px-2 py-1">${unread}</span>`:''}
+    </button>`;
+  }).join("");
+}
+
+function renderContacts(){
+  const list=conversations[selectedChannel]||[];
+  const query=$("search").value.toLowerCase();
+
+  const filtered=list.filter(c=>
+    (c.name||"").toLowerCase().includes(query) ||
+    (c.phone||"").toLowerCase().includes(query)
+  );
+
+  $("channelTitle").textContent=channels.find(c=>c.id===selectedChannel)?.name||"Canal";
+  $("contactCount").textContent=`${list.length} conversas`;
+
+  $("contactList").innerHTML=filtered.map(c=>{
+    const active=selectedConversation?.id===c.id;
+    const initial=(c.name||"?").charAt(0).toUpperCase();
+
+    return `
+    <button onclick="openConversation('${c.id}')"
+      class="w-full p-4 border-b flex gap-3 text-left hover:bg-slate-50 ${active?'bg-blue-50':''}">
+      <div class="avatar bg-slate-200 text-slate-600">${initial}</div>
+      <div class="flex-1 min-w-0">
+        <div class="flex justify-between gap-2">
+          <strong class="text-sm truncate">${escapeHTML(c.name)}</strong>
+          <span class="text-[10px] text-slate-400">${formatTime(c.updatedAt)}</span>
+        </div>
+        <p class="text-xs text-slate-400 mt-1 truncate">${escapeHTML(c.lastMessage||"Nova conversa")}</p>
+      </div>
+      ${c.unread?`<span class="w-5 h-5 bg-blue-600 text-white rounded-full text-[10px] grid place-items-center">${c.unread}</span>`:''}
+    </button>`;
+  }).join("") || `<div class="p-8 text-center text-sm text-slate-400">Nenhuma conversa encontrada.</div>`;
+}
+
+function selectChannel(id){
+  selectedChannel=id;
+  selectedConversation=null;
+  if(messagesUnsubscribe) messagesUnsubscribe();
+  $("chatContent").classList.add("hidden");
+  $("emptyChat").classList.remove("hidden");
+  $("contacts").classList.remove("mobile-hidden");
+  $("sidebar").classList.remove("mobile-hidden");
+  render();
+}
+
+function showAllChannels(){
+  $("search").value="";
+  renderContacts();
+}
+
+function openConversation(id){
+  const conversation=(conversations[selectedChannel]||[]).find(c=>c.id===id);
+  if(!conversation)return;
+
+  selectedConversation=conversation;
+
+  if(demoMode){
+    conversation.unread=0;
+  }else{
+    db.ref(`channels/${selectedChannel}/conversations/${id}/unread`).set(0);
+  }
+
+  $("emptyChat").classList.add("hidden");
+  $("chatContent").classList.remove("hidden");
+  $("chatContent").classList.add("flex");
+
+  $("chatName").textContent=conversation.name;
+  $("chatInfo").textContent=conversation.phone+" · "+channels.find(c=>c.id===selectedChannel).name;
+  $("chatAvatar").textContent=conversation.name.charAt(0).toUpperCase();
+
+  if(demoMode){
+    renderMessages(conversation.messages||[]);
+  }else{
+    listenMessages();
+  }
+
+  render();
+  $("contacts").classList.add("mobile-hidden");
+  $("sidebar").classList.add("mobile-hidden");
+}
+
+function closeChat(){
+  selectedConversation=null;
+  if(messagesUnsubscribe)messagesUnsubscribe();
+  $("chatContent").classList.add("hidden");
+  $("emptyChat").classList.remove("hidden");
+  $("contacts").classList.remove("mobile-hidden");
+  $("sidebar").classList.remove("mobile-hidden");
+  render();
+}
+
+function mobileBack(){
+  $("contacts").classList.remove("mobile-hidden");
+  $("sidebar").classList.add("mobile-hidden");
+  $("chat").classList.add("mobile-hidden");
+}
+
+// ==========================================
+// 7. MENSAGENS
+// ==========================================
+
+function renderMessages(messages){
+  const container=$("messages");
+
+  container.innerHTML=messages.map(m=>{
+    const sent=m.from==="agent"||m.from==="admin"||m.sender==="admin";
+    return `
+    <div class="flex flex-col ${sent?'items-end':'items-start'}">
+      <div class="message ${sent?'sent':'received'}">${escapeHTML(m.text||m.message||"")}</div>
+      <span class="text-[10px] text-slate-400 mt-1 px-1">${formatTime(m.timestamp)}</span>
+    </div>`;
+  }).join("");
+
+  container.scrollTop=container.scrollHeight;
+}
+
+async function sendMessage(event){
+  event.preventDefault();
+
+  const input=$("messageInput");
+  const text=input.value.trim();
+
+  if(!text || !selectedConversation)return;
+
+  input.value="";
+
+  try{
+    if(demoMode){
+      const message={
+        id:"m"+Date.now(),
+        text,
+        from:"agent",
+        timestamp:Date.now()
+      };
+
+      selectedConversation.messages.push(message);
+      selectedConversation.lastMessage=text;
+      selectedConversation.updatedAt=Date.now();
+
+      renderMessages(selectedConversation.messages);
+      render();
+    }else{
+      await sendToFirebase(text);
+    }
+  }catch(error){
+    alert("Não foi possível enviar: "+error.message);
+    input.value=text;
+  }
+}
+
+// ==========================================
+// 8. UTILITÁRIOS
+// ==========================================
+
+function formatTime(timestamp){
+  if(!timestamp)return "";
+  const date=new Date(timestamp);
+  return date.toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"});
+}
+
+function escapeHTML(value){
+  return String(value).replace(/[&<>"']/g,c=>({
+    "&":"&amp;","<":"&lt;",">":"&gt;",
+    '"':"&quot;","'":"&#039;"
+  })[c]);
+}
+
+function updateStats(){
+  let total=0,unread=0;
+  channels.forEach(c=>{
+    const list=conversations[c.id]||[];
+    total+=list.length;
+    unread+=list.reduce((n,x)=>n+(Number(x.unread)||0),0);
+  });
+  $("totalOpen").textContent=total;
+  $("totalUnread").textContent=unread;
+}
+
+function toggleConfig(){
+  const modal=$("configModal");
+  modal.classList.toggle("hidden");
+  modal.classList.toggle("flex");
+}
+
+function addChannel(){
+  const name=prompt("Nome do novo canal:");
+  if(!name)return;
+
+  const id=prompt("Identificador único (ex: loja2):");
+  if(!id || !/^[a-z0-9_-]+$/i.test(id))return alert("Identificador inválido.");
+
+  if(channels.some(c=>c.id===id))return alert("Canal já existe.");
+
+  channels.push({
+    id,name,icon:"message-circle",color:"#64748b"
+  });
+
+  conversations[id]=[];
+  render();
+  alert("Canal criado. Configure o caminho correspondente no Firebase Adapter.");
+}
+
+// ==========================================
+// 9. INICIALIZAÇÃO
+// ==========================================
+
+demoData();
+render();
+
+</script>
+</body>
+</html>
