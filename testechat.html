@@ -1,0 +1,87 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Teste de Atendimento | Chat Global</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:#f3f6f9;color:#172033}
+header{background:#075e54;color:white;padding:22px}
+header small{opacity:.75}
+main{max-width:650px;margin:50px auto;padding:20px}
+.card{background:white;padding:28px;border-radius:18px;box-shadow:0 8px 35px #0000000b}
+h1{font-size:25px;margin:0 0 12px}
+p{color:#667085;line-height:1.6}
+.status{display:flex;align-items:center;gap:8px;margin-top:20px;font-size:13px}
+.dot{width:9px;height:9px;border-radius:50%;background:#f59e0b}
+.instructions{background:#f0fdf4;padding:15px;border-radius:10px;margin-top:25px;font-size:13px;line-height:1.7;color:#166534}
+button{border:0;border-radius:9px;padding:12px 16px;background:#16a34a;color:white;cursor:pointer;margin-top:15px}
+</style>
+</head>
+<body>
+
+<header>
+  <strong>CHAT GLOBAL</strong><br>
+  <small>Ambiente de teste do atendimento</small>
+</header>
+
+<main>
+  <section class="card">
+    <h1>Olá! Seja bem-vindo.</h1>
+    <p>
+      Esta é uma página de demonstração do nosso atendimento online.
+      Clique no botão verde no canto inferior da tela para iniciar uma conversa.
+    </p>
+
+    <div class="status">
+      <span class="dot" id="dot"></span>
+      <span id="status">Inicializando atendimento...</span>
+    </div>
+
+    <div class="instructions">
+      <strong>Como testar:</strong><br>
+      1. Abra o botão de WhatsApp no canto inferior.<br>
+      2. Informe seu nome.<br>
+      3. Envie uma mensagem.<br>
+      4. Abra o painel de atendimento em outra aba.<br>
+      5. Responda pelo painel e veja a resposta chegar aqui.
+    </div>
+
+    <button onclick="window.SiteChat && window.SiteChat.channelId ? navigator.clipboard.writeText(window.SiteChat.channelId).then(()=>alert('ID do canal copiado!')) : alert('Aguarde a conexão com o Firebase.')">
+      Copiar ID do canal
+    </button>
+  </section>
+</main>
+
+<script>
+(() => {
+  const originalLog = console.info;
+  const status = document.getElementById("status");
+  const dot = document.getElementById("dot");
+
+  const check = setInterval(() => {
+    if (window.SiteChat && window.SiteChat.channelId) {
+      status.textContent = "Atendimento conectado · Canal criado";
+      dot.style.background = "#16a34a";
+      clearInterval(check);
+    }
+  }, 500);
+
+  setTimeout(() => {
+    if (!window.SiteChat) {
+      status.textContent = "Aguardando conexão com Firebase...";
+    }
+  }, 5000);
+})();
+</script>
+
+<!-- WIDGET REAL DO CHAT -->
+<script>
+window.CHAT_GLOBAL_TEST = true;
+</script>
+<script src="./xat.js"></script>
+
+</body>
+</html>
