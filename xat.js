@@ -1,0 +1,209 @@
+
+(function () {
+  if (window.__siteChat) return;
+  window.__siteChat = true;
+
+  const ROOT = "conversations";
+
+  const FIREBASE_CONFIG = {
+    apiKey: "SUA_API_KEY",
+    authDomain: "SEU_PROJETO.firebaseapp.com",
+    databaseURL: "https://SEU_PROJETO-default-rtdb.firebaseio.com",
+    projectId: "SEU_PROJETO",
+    appId: "SEU_APP_ID"
+  };
+
+  const SDK = "https://www.gstatic.com/firebasejs/10.12.2";
+
+  function load(src) {
+    return new Promise((resolve, reject) => {
+      const s = document.createElement("script");
+      s.src = src;
+      s.onload = resolve;
+      s.onerror = reject;
+      document.head.appendChild(s);
+    });
+  }
+
+  async function init() {
+    await load(SDK + "/firebase-app-compat.js");
+    await load(SDK + "/firebase-database-compat.js");
+
+    if (!firebase.apps.length) {
+      firebase.initializeApp(FIREBASE_CONFIG);
+    }
+
+    const db = firebase.database();
+    const timestamp = firebase.database.ServerValue.TIMESTAMP;
+
+    // Um canal exclusivo para esta visita
+    const ref = db.ref(ROOT).push();
+    const channelId = ref.key;
+
+    await ref.set({
+      channelId: "site",
+      title: document.title,
+      url: location.href,
+      domain: location.hostname,
+      status: "open",
+
+      client: {
+        name: "Visitante"
+      },
+
+      lastMessage: "Novo visitante",
+      unread: 0,
+      createdAt: timestamp,
+      updatedAt: timestamp
+    });
+
+    // Interface do chat
+    const button = document.createElement("button");
+    button.innerHTML = "💬 Fale conosco";
+
+    Object.assign(button.style, {
+      position: "fixed",
+      bottom: "20px",
+      right: "20px",
+      zIndex: "999999",
+      background: "#16a34a",
+      color: "#fff",
+      border: "none",
+      borderRadius: "50px",
+      padding: "15px 22px",
+      fontSize: "15px",
+      fontWeight: "bold",
+      cursor: "pointer"
+    });
+
+    const box = document.createElement("div");
+
+    Object.assign(box.style, {
+      display: "none",
+      position: "fixed",
+      bottom: "85px",
+      right: "20px",
+      width: "330px",
+      height: "440px",
+      maxWidth: "calc(100vw - 30px)",
+      maxHeight: "70vh",
+      background: "#fff",
+      borderRadius: "14px",
+      boxShadow: "0 5px 30px #0003",
+      zIndex: "999999",
+      overflow: "hidden",
+      fontFamily: "Arial,sans-serif"
+    });
+
+    box.innerHTML = `
+      <div style="background:#16a34a;color:white;padding:17px;font-weight:bold">
+        Atendimento online
+        <span id="site-chat-close" style="float:right;cursor:pointer">✕</span>
+      </div>
+
+      <div id="site-chat-messages"
+        style="height:315px;overflow:auto;padding:12px;background:#f1f5f9">
+      </div>
+
+      <form id="site-chat-form"
+        style="display:flex;padding:10px;gap:5px">
+        <input id="site-chat-input"
+          placeholder="Digite sua mensagem..."
+          autocomplete="off"
+          style="flex:1;min-width:0;border:1px solid #ddd;border-radius:20px;padding:11px">
+        <button style="background:#16a34a;color:white;border:0;border-radius:20px;padding:0 15px">
+          ➤
+        </button>
+      </form>
+    `;
+
+    document.body.append(button, box);
+
+    button.onclick = () => {
+      box.style.display = "block";
+      button.style.display = "none";
+    };
+
+    box.querySelector("#site-chat-close").onclick = () => {
+      box.style.display = "none";
+      button.style.display = "block";
+    };
+
+    // Renderiza mensagens em tempo real
+    const messagesRef = ref.child("messages");
+
+    messagesRef.on("value", snap => {
+      const messages = snap.val() || {};
+      const container = box.querySelector("#site-chat-messages");
+
+      container.innerHTML = Object.values(messages).map(m => {
+        const mine = m.sender === "customer";
+
+        const item = document.createElement("div");
+        item.style.cssText = `
+          display:flex;
+          justify-content:${mine ? "flex-end" : "flex-start"};
+          margin-bottom:10px;
+        `;
+
+        const bubble = document.createElement("div");
+        bubble.style.cssText = `
+          background:${mine ? "#d9fdd3" : "#fff"};
+          padding:10px 13px;
+          border-radius:10px;
+          max-width:85%;
+          overflow-wrap:anywhere;
+          font-size:14px;
+        `;
+
+        bubble.textContent = m.text || "";
+        item.appendChild(bubble);
+        return item.outerHTML;
+      }).join("");
+
+      container.scrollTop = container.scrollHeight;
+    });
+
+    // Envia mensagem do visitante
+    box.querySelector("#site-chat-form").onsubmit = async e => {
+      e.preventDefault();
+
+      const input = box.querySelector("#site-chat-input");
+      const text = input.value.trim();
+
+      if (!text) return;
+
+      input.value = "";
+
+      try {
+        await messagesRef.push({
+          text,
+          sender: "customer",
+          timestamp
+        });
+
+        await ref.update({
+          lastMessage: text,
+          updatedAt: timestamp
+        });
+      } catch (err) {
+        input.value = text;
+        console.error("Erro ao enviar:", err);
+      }
+    };
+
+    // Disponibiliza identificação do canal
+    window.SiteChat = {
+      id: channelId,
+      database: db
+    };
+
+    console.log("Site conectado ao atendimento:", channelId);
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", init);
+  } else {
+    init();
+  }
+})();
