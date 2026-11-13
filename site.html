@@ -2,149 +2,540 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Minha Loja Online</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      background: #f8fafc;
-      color: #1e293b;
-    }
-    header {
-      background: white;
-      padding: 25px;
-      border-bottom: 1px solid #ddd;
-    }
-    main {
-      max-width: 900px;
-      margin: 60px auto;
-      padding: 20px;
-    }
-    .produto {
-      background: white;
-      padding: 30px;
-      border-radius: 12px;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Documentação | Chat Global</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lucide@latest"></script>
+<style>
+*{box-sizing:border-box}
+body{font-family:Inter,Arial,sans-serif}
+html{scroll-behavior:smooth}
+pre,textarea{font-family:Consolas,monospace}
+.code{background:#111827;color:#d1d5db;border-radius:12px;padding:18px;overflow:auto;font-size:12px;line-height:1.7;white-space:pre;max-height:560px}
+</style>
 </head>
-<body>
+<body class="bg-slate-50 text-slate-800">
 
-  <header>
-    <h2>Minha Loja Online</h2>
-  </header>
+<header class="bg-white border-b sticky top-0 z-30">
+ <div class="max-w-5xl mx-auto px-5 h-16 flex items-center justify-between">
+  <div class="flex items-center gap-3">
+   <div class="bg-green-600 text-white rounded-xl p-2">
+    <i data-lucide="message-circle"></i>
+   </div>
+   <div>
+    <b>Chat Global</b>
+    <p class="text-xs text-slate-400">Documentação de integração</p>
+   </div>
+  </div>
+  <span class="text-xs text-green-600 font-semibold">v1.0</span>
+ </div>
+</header>
 
-  <main>
-    <div class="produto">
-      <h1>Bem-vindo à nossa loja!</h1>
-      <p>Conheça nossos produtos e ofertas especiais.</p>
-      <button>Ver produtos</button>
-    </div>
-  </main>
+<main class="max-w-5xl mx-auto px-5 py-10 space-y-10">
 
-  <!-- NOSSO ÚNICO SCRIPT -->
-  <script src="https://designerviniciusaraujo.github.io/machine/xat.js"></script>
-<script>
-  
-// chat-global.js
-// Script universal para instalar chat em qualquer site.
-// Firebase compat SDK carregado pelo próprio script.
+<section>
+ <span class="text-xs font-bold uppercase tracking-widest text-green-600">Atendimento universal</span>
+ <h1 class="text-4xl font-bold tracking-tight mt-3">Um chat. Qualquer site.</h1>
+ <p class="text-slate-500 mt-4 max-w-2xl leading-relaxed">
+  Instale uma única linha de JavaScript em qualquer página.
+  Cada carregamento gera um canal independente no Firestore.
+  Todas as conversas chegam automaticamente à Central de Atendimento.
+ </p>
+ <div class="flex flex-wrap gap-3 mt-6">
+  <a href="#instalacao" class="bg-green-600 text-white px-5 py-3 rounded-xl text-sm font-semibold">Instalar chat</a>
+  <a href="#codigo" class="bg-white border px-5 py-3 rounded-xl text-sm font-semibold">Ver código</a>
+ </div>
+</section>
 
+<section class="grid md:grid-cols-3 gap-4">
+ <div class="bg-white border rounded-2xl p-5">
+  <i data-lucide="globe" class="text-blue-600"></i>
+  <h3 class="font-bold mt-4">Universal</h3>
+  <p class="text-sm text-slate-500 mt-2">Funciona em HTML, WordPress, Shopify e qualquer site.</p>
+ </div>
+ <div class="bg-white border rounded-2xl p-5">
+  <i data-lucide="radio-tower" class="text-green-600"></i>
+  <h3 class="font-bold mt-4">Tempo real</h3>
+  <p class="text-sm text-slate-500 mt-2">Mensagens sincronizadas entre visitante e atendente.</p>
+ </div>
+ <div class="bg-white border rounded-2xl p-5">
+  <i data-lucide="layers" class="text-purple-600"></i>
+  <h3 class="font-bold mt-4">Multicanal</h3>
+  <p class="text-sm text-slate-500 mt-2">Todos os sites centralizados em um único painel.</p>
+ </div>
+</section>
+
+<section id="fluxo" class="bg-white border rounded-2xl p-6">
+ <h2 class="text-xl font-bold">Como funciona</h2>
+ <div class="space-y-5 mt-6">
+  <div class="flex gap-4">
+   <div class="bg-blue-50 text-blue-600 rounded-xl p-3 h-fit"><i data-lucide="globe"></i></div>
+   <div><b>1. Visitante acessa o site</b><p class="text-sm text-slate-500 mt-1">O JavaScript identifica título, URL e domínio.</p></div>
+  </div>
+  <div class="flex gap-4">
+   <div class="bg-green-50 text-green-600 rounded-xl p-3 h-fit"><i data-lucide="database"></i></div>
+   <div><b>2. Canal criado</b><p class="text-sm text-slate-500 mt-1">Um novo documento é criado em Firestore / channels.</p></div>
+  </div>
+  <div class="flex gap-4">
+   <div class="bg-purple-50 text-purple-600 rounded-xl p-3 h-fit"><i data-lucide="message-circle"></i></div>
+   <div><b>3. Visitante envia mensagem</b><p class="text-sm text-slate-500 mt-1">A mensagem é salva na subcoleção messages e incrementa unread.</p></div>
+  </div>
+  <div class="flex gap-4">
+   <div class="bg-orange-50 text-orange-600 rounded-xl p-3 h-fit"><i data-lucide="bell"></i></div>
+   <div><b>4. Painel recebe notificação</b><p class="text-sm text-slate-500 mt-1">A conversa aparece na Central com indicador de mensagens não lidas.</p></div>
+  </div>
+ </div>
+</section>
+
+<section id="instalacao" class="bg-white border rounded-2xl p-6">
+ <h2 class="text-xl font-bold">Instalação</h2>
+ <p class="text-sm text-slate-500 mt-2">Adicione esta linha antes do fechamento do body de qualquer página.</p>
+
+ <div class="bg-slate-950 rounded-xl p-4 mt-5 flex items-center justify-between gap-3">
+  <code class="text-green-400 text-sm break-all">&lt;script src="https://SEU-DOMINIO.com/chat-global.js"&gt;&lt;/script&gt;</code>
+  <button onclick="copyInstall()" class="text-white shrink-0 p-2" title="Copiar">
+   <i data-lucide="copy"></i>
+  </button>
+ </div>
+
+ <p id="copyStatus" class="text-xs text-green-600 mt-2"></p>
+ <p class="text-xs text-slate-400 mt-4">Não é necessário instalar Firebase no site cliente. O SDK é carregado pelo próprio script.</p>
+</section>
+
+<section class="bg-white border rounded-2xl p-6">
+ <h2 class="text-xl font-bold">Configuração do atendente</h2>
+ <p class="text-sm text-slate-500 mt-2">Edite estas constantes no início do script.</p>
+ <div class="bg-slate-950 text-slate-300 rounded-xl p-4 mt-4 text-sm leading-7 overflow-x-auto">
+  <pre>const AGENT = {
+  name: "Equipe de Atendimento",
+  photo: "https://SEU-DOMINIO.com/atendente.jpg",
+  status: "Online"
+};</pre>
+ </div>
+</section>
+
+<section id="codigo" class="bg-white border rounded-2xl p-6">
+ <div class="flex justify-between items-center gap-3 flex-wrap">
+  <div>
+   <h2 class="text-xl font-bold">Código completo</h2>
+   <p class="text-sm text-slate-500 mt-1">JavaScript universal para hospedar como chat-global.js.</p>
+  </div>
+  <button onclick="copyCode()" class="bg-green-600 text-white rounded-xl px-4 py-3 text-sm font-semibold flex items-center gap-2">
+   <i data-lucide="copy" class="w-4 h-4"></i> Copiar script
+  </button>
+ </div>
+
+ <div class="relative mt-5">
+  <pre id="codePreview" class="code"></pre>
+ </div>
+ <p id="codeStatus" class="text-xs text-green-600 mt-3"></p>
+</section>
+
+<section class="bg-amber-50 border border-amber-200 rounded-2xl p-6">
+ <div class="flex gap-3">
+  <i data-lucide="shield-check" class="text-amber-600 shrink-0"></i>
+  <div>
+   <b>Segurança antes de publicar</b>
+   <p class="text-sm text-slate-600 mt-2 leading-relaxed">
+    As credenciais Firebase no JavaScript identificam o projeto, mas não são autenticação. Para produção, proteja o painel com autenticação, use regras que impeçam visitantes de ler outros canais e valide a autorização de cada mensagem. Uma solução adequada é autenticação anônima para visitantes combinada com regras por UID e controle de acesso do atendente.
+   </p>
+  </div>
+ </div>
+</section>
+
+<footer class="text-center text-xs text-slate-400 py-5">
+ Chat Global · Documentação de integração
+</footer>
+
+</main>
+
+<!-- CÓDIGO FONTE DO WIDGET -->
+<script type="text/plain" id="widget-source">
 (function () {
-  if (window.__globalChatLoaded) return;
-  window.__globalChatLoaded = true;
+  if (window.__siteChatLoaded) return;
+  window.__siteChatLoaded = true;
 
-  const FIREBASE_CONFIG = {
-    
-apiKey: "AIzaSyD-xzRjMRVUpey19g745DvPjjpCApqSHVE",
-  authDomain: "myops-d7525.firebaseapp.com",
-  projectId: "myops-d7525",
-  storageBucket: "myops-d7525.firebasestorage.app",
-  messagingSenderId: "247824192162",
-  appId: "1:247824192162:web:77c91ab1e3df855dc7fdfb"
+  const CONFIG = {
+    apiKey: "AIzaSyB0JYggDaO-7klT2f15N1rcF2C27uhA5ek",
+    authDomain: "opsmac-e6d45.firebaseapp.com",
+    projectId: "opsmac-e6d45",
+    storageBucket: "opsmac-e6d45.firebasestorage.app",
+    messagingSenderId: "913611355587",
+    appId: "1:913611355587:web:3c383491b41346e3017976"
   };
 
-  const FIREBASE_VERSION = "10.14.1";
-  const SDK = `https://www.gstatic.com/firebasejs/${FIREBASE_VERSION}`;
+  const AGENT = {
+    name: "Equipe de Atendimento",
+    photo: "",
+    status: "Online"
+  };
 
-  function loadScript(src) {
+  const SDK = "https://www.gstatic.com/firebasejs/10.12.2";
+  const ROOT = "channels";
+
+  function load(src) {
     return new Promise((resolve, reject) => {
-      const script = document.createElement("script");
-      script.src = src;
-      script.onload = resolve;
-      script.onerror = reject;
-      document.head.appendChild(script);
+      const s = document.createElement("script");
+      s.src = src;
+      s.onload = resolve;
+      s.onerror = reject;
+      document.head.appendChild(s);
     });
   }
 
   async function init() {
-    await loadScript(`${SDK}/firebase-app-compat.js`);
-    await loadScript(`${SDK}/firebase-firestore-compat.js`);
+    await load(SDK + "/firebase-app-compat.js");
+    await load(SDK + "/firebase-firestore-compat.js");
 
-    if (!firebase.apps.length) {
-      firebase.initializeApp(FIREBASE_CONFIG);
-    }
+    const APP_NAME = "site-chat-widget";
 
-    const db = firebase.firestore();
+    const app = firebase.apps.find(a => a.name === APP_NAME)
+      || firebase.initializeApp(CONFIG, APP_NAME);
 
-    // Cria canal
-    const channel = await db.collection("chats").add({
+    const db = app.firestore();
+    const serverTime = firebase.firestore.FieldValue.serverTimestamp;
+
+    // Canal criado em cada carregamento
+    const channelRef = await db.collection(ROOT).add({
+      channelId: "site",
       title: document.title,
       url: location.href,
       domain: location.hostname,
       status: "open",
-      createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      client: { name: "Visitante" },
+      lastMessage: "Novo visitante",
+      unread: 0,
+      createdAt: serverTime(),
+      updatedAt: serverTime()
     });
 
-    // Botão flutuante
-    const button = document.createElement("button");
-    button.innerHTML = "💬 Fale conosco";
+    const messagesRef = channelRef.collection("messages");
 
-    Object.assign(button.style, {
-      position: "fixed",
-      bottom: "24px",
-      right: "24px",
-      zIndex: "999999",
-      background: "#16a34a",
-      color: "#fff",
-      border: "none",
-      borderRadius: "50px",
-      padding: "16px 23px",
-      fontSize: "15px",
-      fontWeight: "bold",
-      cursor: "pointer",
-      boxShadow: "0 4px 20px #0003"
-    });
+    // Interface isolada do CSS do site
+    const host = document.createElement("div");
+    host.id = "global-site-chat";
+    document.body.appendChild(host);
 
-    button.onclick = () => {
-      window.dispatchEvent(new CustomEvent("global-chat-open", {
-        detail: {
-          channelId: channel.id,
-          db
+    const shadow = host.attachShadow({ mode: "open" });
+
+    shadow.innerHTML = `
+      <style>
+        *{box-sizing:border-box}
+        .launcher{
+          position:fixed;bottom:20px;right:20px;z-index:2147483000;
+          border:0;border-radius:50px;background:#25D366;color:white;
+          padding:14px 20px;display:flex;align-items:center;gap:10px;
+          font:600 14px Arial;cursor:pointer;
+          box-shadow:0 5px 22px #0003
         }
-      }));
+        .launcher svg{width:25px;height:25px}
+        .window{
+          display:none;position:fixed;z-index:2147483000;
+          right:20px;bottom:85px;width:370px;height:570px;
+          max-height:calc(100dvh - 110px);background:#fff;
+          border-radius:16px;overflow:hidden;
+          box-shadow:0 8px 40px #0003;
+          font:14px Arial,sans-serif;color:#222;
+          flex-direction:column
+        }
+        .window.open{display:flex}
+        .head{
+          background:#075E54;color:#fff;padding:15px;
+          display:flex;align-items:center;gap:12px;
+          flex-shrink:0
+        }
+        .avatar{
+          width:43px;height:43px;border-radius:50%;
+          background:#d1fae5;display:grid;place-items:center;
+          overflow:hidden;flex-shrink:0;font-weight:bold;color:#075E54
+        }
+        .avatar img{width:100%;height:100%;object-fit:cover}
+        .headinfo{flex:1;min-width:0}
+        .headinfo b{display:block;font-size:15px}
+        .headinfo small{display:block;font-size:11px;color:#c5e9df;margin-top:4px}
+        .close{
+          background:none;border:0;color:white;font-size:24px;
+          cursor:pointer;padding:5px
+        }
+        .channel{
+          background:#f0f2f5;padding:9px 13px;font-size:11px;
+          color:#667781;overflow:hidden;text-overflow:ellipsis;
+          white-space:nowrap;flex-shrink:0
+        }
+        .messages{
+          flex:1;min-height:0;overflow:auto;padding:14px;
+          background:#efeae2;
+          background-image:radial-gradient(#d9d2c8 .6px,transparent .6px);
+          background-size:14px 14px
+        }
+        .welcome{
+          background:#fff;border-radius:10px;padding:12px;
+          max-width:90%;margin:0 auto 14px;
+          font-size:12px;line-height:1.6;color:#52606b
+        }
+        .message-line{display:flex;margin:9px 0}
+        .message-line.customer{justify-content:flex-end}
+        .bubble{
+          max-width:85%;padding:10px 12px;background:#fff;
+          border-radius:10px;font-size:13px;line-height:1.5;
+          overflow-wrap:anywhere;white-space:pre-wrap
+        }
+        .customer .bubble{background:#d9fdd3}
+        .bubble small{
+          display:block;text-align:right;color:#84918b;
+          font-size:9px;margin-top:5px
+        }
+        .profile{
+          background:white;padding:9px 12px;border-top:1px solid #eee;
+          flex-shrink:0
+        }
+        .profile input{
+          width:100%;border:1px solid #e5e7eb;border-radius:8px;
+          padding:9px;font-size:12px;outline:none
+        }
+        .composer{
+          display:flex;gap:8px;padding:10px;background:#fff;
+          border-top:1px solid #eee;flex-shrink:0
+        }
+        .composer input{
+          min-width:0;flex:1;border:0;background:#f0f2f5;
+          border-radius:25px;padding:12px 15px;font-size:13px;
+          outline:none
+        }
+        .send{
+          border:0;border-radius:50%;width:42px;height:42px;
+          background:#075E54;color:white;cursor:pointer;
+          font-size:18px;flex-shrink:0
+        }
+        .send:disabled{opacity:.5}
+        .error{font-size:11px;color:#b91c1c;padding:8px}
+        @media(max-width:600px){
+          .window{
+            inset:0;width:100%;height:100%;max-height:none;
+            border-radius:0
+          }
+          .launcher{bottom:15px;right:15px}
+        }
+      </style>
 
-      console.log("Chat aberto:", channel.id);
+      <button class="launcher" id="launcher" aria-label="Abrir atendimento">
+        <svg viewBox="0 0 32 32" fill="currentColor" aria-hidden="true">
+          <path d="M16 3C8.8 3 3 8.6 3 15.6c0 2.5.8 4.9 2.2 6.9L3.5 29l6.8-1.8c1.8.9 3.7 1.3 5.7 1.3 7.2 0 13-5.7 13-12.8S23.2 3 16 3zm0 23.2c-1.8 0-3.5-.5-5-1.4l-.4-.2-4 .9 1-3.8-.3-.4a10.4 10.4 0 0 1-1.6-5.7c0-5.7 4.6-10.3 10.3-10.3s10.3 4.6 10.3 10.3S21.7 26.2 16 26.2zm5.7-7.7c-.3-.2-1.9-.9-2.2-1s-.5-.2-.7.2-.8 1-.9 1.1-.3.2-.6.1c-.3-.2-1.3-.5-2.5-1.5-.9-.8-1.5-1.8-1.7-2.1-.2-.3 0-.5.1-.6l.5-.6.3-.5c.1-.2 0-.4 0-.6s-.7-1.7-1-2.3c-.3-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4s-1.1 1.1-1.1 2.6 1.1 3 1.3 3.2c.2.2 2.2 3.4 5.3 4.6 2.6 1 3.1.8 3.7.7.6-.1 1.9-.8 2.1-1.5.3-.7.3-1.3.2-1.5-.1-.1-.3-.2-.6-.4z"/>
+        </svg>
+        <span>Fale conosco</span>
+      </button>
+
+      <section class="window" id="window">
+        <header class="head">
+          <div class="avatar" id="avatar"></div>
+          <div class="headinfo">
+            <b id="agentName"></b>
+            <small id="agentStatus"></small>
+          </div>
+          <button class="close" id="close" aria-label="Fechar">×</button>
+        </header>
+
+        <div class="channel" id="channel"></div>
+
+        <div class="messages" id="messages">
+          <div class="welcome">
+            Olá! 👋 Seja bem-vindo.<br>
+            Estamos disponíveis para ajudar.
+          </div>
+        </div>
+
+        <div class="profile">
+          <input id="visitorName" maxlength="80"
+            placeholder="Seu nome (para identificarmos você)">
+        </div>
+
+        <form class="composer" id="form">
+          <input id="input" maxlength="2000"
+            placeholder="Digite sua mensagem..." autocomplete="off">
+          <button class="send" id="send" aria-label="Enviar">➤</button>
+        </form>
+      </section>
+    `;
+
+    const $ = id => shadow.getElementById(id);
+
+    $("agentName").textContent = AGENT.name;
+    $("agentStatus").textContent = "● " + AGENT.status;
+    $("avatar").textContent = AGENT.name.charAt(0).toUpperCase();
+
+    if (AGENT.photo) {
+      const img = document.createElement("img");
+      img.src = AGENT.photo;
+      img.alt = AGENT.name;
+      img.onerror = () => img.remove();
+      $("avatar").replaceChildren(img);
+    }
+
+    $("channel").textContent = "Canal: " + document.title;
+
+    $("launcher").onclick = () => {
+      $("window").classList.add("open");
+      $("launcher").style.display = "none";
+      $("input").focus();
     };
 
-    document.body.appendChild(button);
-
-    window.GlobalChat = {
-      channelId: channel.id,
-      db
+    $("close").onclick = () => {
+      $("window").classList.remove("open");
+      $("launcher").style.display = "flex";
     };
 
-    console.log("Global Chat conectado:", channel.id);
+    // Escuta mensagens do atendente
+    let firstRender = true;
+
+    messagesRef.orderBy("timestamp", "asc").onSnapshot(snapshot => {
+      const container = $("messages");
+
+      // Mantém a mensagem inicial de boas-vindas.
+      const welcome = container.querySelector(".welcome");
+      container.innerHTML = "";
+      if (welcome) container.appendChild(welcome);
+
+      snapshot.docs.forEach(doc => {
+        const m = doc.data();
+
+        const line = document.createElement("div");
+        line.className = "message-line " +
+          (m.sender === "customer" ? "customer" : "agent");
+
+        const bubble = document.createElement("div");
+        bubble.className = "bubble";
+        bubble.textContent = m.text || "";
+
+        const date = document.createElement("small");
+        date.textContent = m.timestamp?.toDate
+          ? m.timestamp.toDate().toLocaleTimeString("pt-BR", {
+              hour: "2-digit",
+              minute: "2-digit"
+            })
+          : "";
+
+        bubble.appendChild(date);
+        line.appendChild(bubble);
+        container.appendChild(line);
+      });
+
+      container.scrollTop = container.scrollHeight;
+      firstRender = false;
+    }, error => {
+      console.error("Erro ao receber mensagens:", error);
+    });
+
+    // Escuta encerramento do canal pelo painel
+    channelRef.onSnapshot(snapshot => {
+      const channel = snapshot.data();
+
+      if (!channel || channel.status === "closed") {
+        $("input").disabled = true;
+        $("send").disabled = true;
+        $("input").placeholder = "Atendimento encerrado";
+        $("agentStatus").textContent = "Atendimento encerrado";
+      }
+    });
+
+    // Somente visitante pode enviar
+    $("form").onsubmit = async event => {
+      event.preventDefault();
+
+      const input = $("input");
+      const nameInput = $("visitorName");
+
+      const text = input.value.trim();
+      const name = nameInput.value.trim().slice(0, 80) || "Visitante";
+
+      if (!text) return;
+
+      input.disabled = true;
+      $("send").disabled = true;
+
+      try {
+        const current = await channelRef.get();
+
+        if (!current.exists || current.data().status === "closed") {
+          throw new Error("Este atendimento foi encerrado.");
+        }
+
+        await messagesRef.add({
+          text,
+          sender: "customer",
+          timestamp: serverTime()
+        });
+
+        await channelRef.update({
+          client: { name },
+          lastMessage: text,
+          updatedAt: serverTime(),
+          unread: firebase.firestore.FieldValue.increment(1)
+        });
+
+        nameInput.disabled = true;
+        input.value = "";
+
+      } catch (error) {
+        console.error("Erro ao enviar:", error);
+        const warning = document.createElement("div");
+        warning.className = "error";
+        warning.textContent = error.message || "Não foi possível enviar.";
+        $("messages").appendChild(warning);
+        input.disabled = false;
+        $("send").disabled = false;
+      }
+    };
+
+    // Identificação pública do canal para integração futura
+    window.SiteChat = {
+      channelId: channelRef.id,
+      close: () => $("close").click()
+    };
+
+    console.log("Chat Global iniciado:", channelRef.id);
   }
 
   if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", init);
+    document.addEventListener("DOMContentLoaded", () => {
+      init().catch(console.error);
+    });
   } else {
-    init();
+    init().catch(console.error);
   }
 })();
+</script>
 
-  </script>
+<script>
+// Documentação e cópia do código
+
+const source = document.getElementById("widget-source").textContent.trim();
+
+document.getElementById("codePreview").textContent = source;
+
+async function copyCode(){
+ try{
+  await navigator.clipboard.writeText(source);
+  document.getElementById("codeStatus").textContent =
+   "✓ Script copiado. Salve como chat-global.js";
+ }catch(e){
+  document.getElementById("codeStatus").textContent =
+   "Não foi possível copiar automaticamente. Selecione o código.";
+ }
+}
+
+async function copyInstall(){
+ const install = '<script src="https://designerviniciusaraujo.github.io/machine/xat.js"><\/script>';
+ try{
+  await navigator.clipboard.writeText(install);
+  document.getElementById("copyStatus").textContent = "✓ Instalação copiada!";
+ }catch(e){
+  document.getElementById("copyStatus").textContent = install;
+ }
+}
+
+lucide.createIcons();
+</script>
+
 </body>
-</html>
+</html> 
