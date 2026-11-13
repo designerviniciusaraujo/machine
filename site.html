@@ -2,218 +2,259 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Atendimento</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<script src="https://unpkg.com/lucide@latest"></script>
-<style>
-*{box-sizing:border-box}
-body{font-family:Arial,sans-serif}
-#chatWindow{width:min(370px,calc(100vw - 28px));height:min(570px,calc(100dvh - 105px));box-shadow:0 8px 40px #0002}
-#messages{background:#efeae2;background-image:radial-gradient(#d9d2c8 .6px,transparent .6px);background-size:14px 14px}
-.msg{max-width:83%;padding:10px 13px;border-radius:10px;font-size:14px;overflow-wrap:anywhere;line-height:1.45}
-.in{background:white;border-top-left-radius:2px}
-.out{background:#d9fdd3;border-top-right-radius:2px;margin-left:auto}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Minha Loja Online</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      background: #f8fafc;
+      color: #1e293b;
+    }
+    header {
+      background: white;
+      padding: 25px;
+      border-bottom: 1px solid #ddd;
+    }
+    main {
+      max-width: 900px;
+      margin: 60px auto;
+      padding: 20px;
+    }
+    .produto {
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+    }
+  </style>
 </head>
-<body class="bg-white">
+<body>
 
-<!-- BOTÃO FLUTUANTE -->
-<button id="launcher" onclick="toggleChat()" class="fixed bottom-5 right-5 z-40 w-16 h-16 bg-green-600 hover:bg-green-700 text-white rounded-full shadow-xl grid place-items-center">
-<i data-lucide="message-circle" class="w-8 h-8"></i>
-<span id="badge" class="hidden absolute -top-1 -right-1 bg-red-500 text-white rounded-full w-5 h-5 text-xs grid place-items-center">1</span>
-</button>
+  <header>
+    <h2>Minha Loja Online</h2>
+  </header>
 
-<!-- CHAT -->
-<div id="chatWindow" class="hidden fixed bottom-24 right-5 z-50 bg-white rounded-2xl overflow-hidden flex-col">
+  <main>
+    <div class="produto">
+      <h1>Bem-vindo à nossa loja!</h1>
+      <p>Conheça nossos produtos e ofertas especiais.</p>
+      <button>Ver produtos</button>
+    </div>
+  </main>
 
-<header class="bg-[#075e54] text-white p-4 flex items-center gap-3 shrink-0">
-<div class="w-11 h-11 bg-white/15 rounded-full grid place-items-center"><i data-lucide="headset"></i></div>
-<div class="flex-1"><b class="text-sm">Atendimento</b><p class="text-xs text-green-100">Estamos aqui para ajudar</p></div>
-<button onclick="toggleChat()" class="p-2 hover:bg-white/10 rounded-full"><i data-lucide="minus"></i></button>
-<button onclick="closeChat()" class="p-2 hover:bg-white/10 rounded-full"><i data-lucide="x"></i></button>
-</header>
-
-<div id="welcome" class="flex-1 flex flex-col justify-center items-center p-6 text-center">
-<div class="w-14 h-14 bg-green-100 text-green-700 rounded-full grid place-items-center mb-4"><i data-lucide="messages-square" class="w-7 h-7"></i></div>
-<h2 class="font-bold text-lg">Olá! Como podemos ajudar?</h2>
-<p class="text-sm text-slate-400 mt-2">Inicie uma conversa com nossa equipe.</p>
-<form onsubmit="startChat(event)" class="w-full mt-5 space-y-3">
-<input id="clientName" required maxlength="60" placeholder="Seu nome" class="w-full border rounded-lg p-3 text-sm outline-none focus:border-green-600">
-<button class="w-full bg-green-600 text-white rounded-lg p-3 font-semibold text-sm">Iniciar conversa</button>
-</form>
-</div>
-
-<div id="chatContent" class="hidden flex-1 min-h-0 flex-col">
-<div id="messages" class="flex-1 overflow-y-auto p-4 space-y-3"></div>
-<div class="p-2 border-t bg-white flex items-end gap-2 shrink-0">
-<textarea id="messageInput" rows="1" placeholder="Digite uma mensagem..." class="flex-1 bg-slate-100 rounded-2xl p-3 text-sm resize-none outline-none max-h-24"></textarea>
-<button onclick="sendMessage()" class="w-11 h-11 rounded-full bg-green-600 text-white grid place-items-center"><i data-lucide="send"></i></button>
-</div>
-<div class="px-3 pb-2 flex justify-between items-center text-[10px] text-slate-400">
-<span id="connection">Conectando...</span>
-<button onclick="endConversation()" class="text-red-500">Encerrar conversa</button>
-</div>
-</div>
-</div>
-
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
-
+  <!-- NOSSO ÚNICO SCRIPT --> 
 <script>
-// ========================================
-// CONFIGURAÇÃO DO CANAL
-// ========================================
 
-const CHANNEL_ID="whatsapp";
+(function () {
+  if (window.__siteChat) return;
+  window.__siteChat = true;
 
-// ALTERE PELAS CREDENCIAIS DO SEU PROJETO
-const FIREBASE_CONFIG={
- 
-apiKey: "AIzaSyD-xzRjMRVUpey19g745DvPjjpCApqSHVE",
-  authDomain: "myops-d7525.firebaseapp.com",
-  projectId: "myops-d7525",
-  storageBucket: "myops-d7525.firebasestorage.app",
-  messagingSenderId: "247824192162",
-  appId: "1:247824192162:web:77c91ab1e3df855dc7fdfb"
-};
+  const ROOT = "conversations";
 
-const ROOT="conversations";
+  const FIREBASE_CONFIG = {
+    apiKey: "SUA_API_KEY",
+    authDomain: "SEU_PROJETO.firebaseapp.com",
+    databaseURL: "https://SEU_PROJETO-default-rtdb.firebaseio.com",
+    projectId: "SEU_PROJETO",
+    appId: "SEU_APP_ID"
+  };
 
-// ========================================
-// ESTADO
-// ========================================
+  const SDK = "https://www.gstatic.com/firebasejs/10.12.2";
 
-let db=null,conversationId=null,messageListener=null;
-let isOpen=false,unread=0;
-let clientId=localStorage.getItem("chat_client_id");
-if(!clientId){
- clientId=crypto.randomUUID();
- localStorage.setItem("chat_client_id",clientId);
-}
-let saved=JSON.parse(localStorage.getItem("chat_conversation")||"{}");
-let clientName=localStorage.getItem("chat_client_name")||"";
-const $=id=>document.getElementById(id);
-const safe=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-const time=t=>t?new Date(t).toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"}):"";
+  function load(src) {
+    return new Promise((resolve, reject) => {
+      const s = document.createElement("script");
+      s.src = src;
+      s.onload = resolve;
+      s.onerror = reject;
+      document.head.appendChild(s);
+    });
+  }
 
-function init(){
- try{
- if(!FIREBASE_CONFIG.apiKey||!FIREBASE_CONFIG.databaseURL)throw Error("Credenciais não configuradas");
- if(!firebase.apps.length)firebase.initializeApp(FIREBASE_CONFIG);
- db=firebase.database();
- $("connection").textContent="Conectado";
- restoreConversation();
- }catch(e){
- $("connection").textContent="Configure o Firebase";
- console.warn(e.message);
- }
-}
-function toggleChat(){
- isOpen=!isOpen;
- $("chatWindow").classList.toggle("hidden",!isOpen);
- $("chatWindow").classList.toggle("flex",isOpen);
- if(isOpen){unread=0;$("badge").classList.add("hidden");}
-}
-function closeChat(){
- toggleChat();
-}
-function restoreConversation(){
- if(!saved.id)return;
- db.ref(`${ROOT}/${saved.id}`).once("value").then(s=>{
- const c=s.val();
- if(!c||c.status==="closed"||c.clientId!==clientId||c.channelId!==CHANNEL_ID){
- localStorage.removeItem("chat_conversation");return;
- }
- conversationId=saved.id;
- clientName=c.client?.name||clientName;
- showConversation();
- listenMessages();
- });
-}
-async function startChat(e){
- e.preventDefault();
- clientName=$("clientName").value.trim();
- if(!clientName||!db)return;
- localStorage.setItem("chat_client_name",clientName);
- const ref=db.ref(ROOT).push();
- conversationId=ref.key;
- const now=firebase.database.ServerValue.TIMESTAMP;
- await ref.set({
- channelId:CHANNEL_ID,
- clientId,
- client:{name:clientName,identifier:clientId},
- status:"open",
- unread:0,
- lastMessage:"",
- createdAt:now,
- updatedAt:now,
- messages:{}
- });
- saved={id:conversationId};
- localStorage.setItem("chat_conversation",JSON.stringify(saved));
- showConversation();
- listenMessages();
-}
-function showConversation(){
- $("welcome").classList.add("hidden");
- $("chatContent").classList.remove("hidden");
- $("chatContent").classList.add("flex");
-}
-function listenMessages(){
- if(messageListener)messageListener();
- const ref=db.ref(`${ROOT}/${conversationId}/messages`);
- const handler=ref.on("value",s=>{
- const messages=s.val()||{};
- const arr=Object.entries(messages).map(([id,m])=>({id,...m}));
- renderMessages(arr);
- });
- messageListener=()=>ref.off("value",handler);
-}
-function renderMessages(messages){
- const container=$("messages");
- container.innerHTML=messages.sort((a,b)=>(a.timestamp||0)-(b.timestamp||0)).map(m=>{
- const sent=m.sender==="customer";
- return `<div class="flex flex-col ${sent?'items-end':'items-start'}"><div class="msg ${sent?'out':'in'}">${safe(m.text)}</div><small class="text-[10px] text-slate-400 mt-1">${time(m.timestamp)}</small></div>`;
- }).join("");
- container.scrollTop=container.scrollHeight;
-}
-async function sendMessage(){
- const input=$("messageInput"),text=input.value.trim();
- if(!text||!conversationId||!db)return;
- input.value="";
- try{
- const base=`${ROOT}/${conversationId}`;
- await db.ref(`${base}/messages`).push({
- text,sender:"customer",
- timestamp:firebase.database.ServerValue.TIMESTAMP
- });
- await db.ref(base).update({
- lastMessage:text,
- updatedAt:firebase.database.ServerValue.TIMESTAMP
- });
- }catch(e){input.value=text;alert("Não foi possível enviar a mensagem.")}
-}
-async function endConversation(){
- if(!conversationId||!confirm("Deseja realmente encerrar esta conversa?"))return;
- await db.ref(`${ROOT}/${conversationId}`).update({
- status:"closed",
- closedAt:firebase.database.ServerValue.TIMESTAMP
- });
- if(messageListener)messageListener();
- messageListener=null;
- conversationId=null;saved={};
- localStorage.removeItem("chat_conversation");
- $("chatContent").classList.add("hidden");
- $("welcome").classList.remove("hidden");
- $("clientName").value=clientName;
-}
-$("messageInput").addEventListener("keydown",e=>{
- if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();sendMessage()}
-});
-init();
-lucide.createIcons();
-</script>
+  async function init() {
+    await load(SDK + "/firebase-app-compat.js");
+    await load(SDK + "/firebase-database-compat.js");
+
+    if (!firebase.apps.length) {
+      firebase.initializeApp(FIREBASE_CONFIG);
+    }
+
+    const db = firebase.database();
+    const timestamp = firebase.database.ServerValue.TIMESTAMP;
+
+    // Um canal exclusivo para esta visita
+    const ref = db.ref(ROOT).push();
+    const channelId = ref.key;
+
+    await ref.set({
+      channelId: "site",
+      title: document.title,
+      url: location.href,
+      domain: location.hostname,
+      status: "open",
+
+      client: {
+        name: "Visitante"
+      },
+
+      lastMessage: "Novo visitante",
+      unread: 0,
+      createdAt: timestamp,
+      updatedAt: timestamp
+    });
+
+    // Interface do chat
+    const button = document.createElement("button");
+    button.innerHTML = "💬 Fale conosco";
+
+    Object.assign(button.style, {
+      position: "fixed",
+      bottom: "20px",
+      right: "20px",
+      zIndex: "999999",
+      background: "#16a34a",
+      color: "#fff",
+      border: "none",
+      borderRadius: "50px",
+      padding: "15px 22px",
+      fontSize: "15px",
+      fontWeight: "bold",
+      cursor: "pointer"
+    });
+
+    const box = document.createElement("div");
+
+    Object.assign(box.style, {
+      display: "none",
+      position: "fixed",
+      bottom: "85px",
+      right: "20px",
+      width: "330px",
+      height: "440px",
+      maxWidth: "calc(100vw - 30px)",
+      maxHeight: "70vh",
+      background: "#fff",
+      borderRadius: "14px",
+      boxShadow: "0 5px 30px #0003",
+      zIndex: "999999",
+      overflow: "hidden",
+      fontFamily: "Arial,sans-serif"
+    });
+
+    box.innerHTML = `
+      <div style="background:#16a34a;color:white;padding:17px;font-weight:bold">
+        Atendimento online
+        <span id="site-chat-close" style="float:right;cursor:pointer">✕</span>
+      </div>
+
+      <div id="site-chat-messages"
+        style="height:315px;overflow:auto;padding:12px;background:#f1f5f9">
+      </div>
+
+      <form id="site-chat-form"
+        style="display:flex;padding:10px;gap:5px">
+        <input id="site-chat-input"
+          placeholder="Digite sua mensagem..."
+          autocomplete="off"
+          style="flex:1;min-width:0;border:1px solid #ddd;border-radius:20px;padding:11px">
+        <button style="background:#16a34a;color:white;border:0;border-radius:20px;padding:0 15px">
+          ➤
+        </button>
+      </form>
+    `;
+
+    document.body.append(button, box);
+
+    button.onclick = () => {
+      box.style.display = "block";
+      button.style.display = "none";
+    };
+
+    box.querySelector("#site-chat-close").onclick = () => {
+      box.style.display = "none";
+      button.style.display = "block";
+    };
+
+    // Renderiza mensagens em tempo real
+    const messagesRef = ref.child("messages");
+
+    messagesRef.on("value", snap => {
+      const messages = snap.val() || {};
+      const container = box.querySelector("#site-chat-messages");
+
+      container.innerHTML = Object.values(messages).map(m => {
+        const mine = m.sender === "customer";
+
+        const item = document.createElement("div");
+        item.style.cssText = `
+          display:flex;
+          justify-content:${mine ? "flex-end" : "flex-start"};
+          margin-bottom:10px;
+        `;
+
+        const bubble = document.createElement("div");
+        bubble.style.cssText = `
+          background:${mine ? "#d9fdd3" : "#fff"};
+          padding:10px 13px;
+          border-radius:10px;
+          max-width:85%;
+          overflow-wrap:anywhere;
+          font-size:14px;
+        `;
+
+        bubble.textContent = m.text || "";
+        item.appendChild(bubble);
+        return item.outerHTML;
+      }).join("");
+
+      container.scrollTop = container.scrollHeight;
+    });
+
+    // Envia mensagem do visitante
+    box.querySelector("#site-chat-form").onsubmit = async e => {
+      e.preventDefault();
+
+      const input = box.querySelector("#site-chat-input");
+      const text = input.value.trim();
+
+      if (!text) return;
+
+      input.value = "";
+
+      try {
+        await messagesRef.push({
+          text,
+          sender: "customer",
+          timestamp
+        });
+
+        await ref.update({
+          lastMessage: text,
+          updatedAt: timestamp
+        });
+      } catch (err) {
+        input.value = text;
+        console.error("Erro ao enviar:", err);
+      }
+    };
+
+    // Disponibiliza identificação do canal
+    window.SiteChat = {
+      id: channelId,
+      database: db
+    };
+
+    console.log("Site conectado ao atendimento:", channelId);
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", init);
+  } else {
+    init();
+  }
+})();
+
+  </script>
 </body>
 </html>
