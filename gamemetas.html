@@ -1,0 +1,430 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#f8fafc">
+<title>Minhas Metas</title>
+<script src="https://cdn.tailwindcss.com"></script>
+
+<style>
+*{box-sizing:border-box}
+body{background:#f8fafc;font-family:Inter,system-ui,sans-serif}
+.progress-fill{transition:width .5s ease,background .5s ease}
+.task.done .task-name{text-decoration:line-through;color:#94a3b8}
+.task.done .check{background:#16a34a;border-color:#16a34a;color:white}
+.check{width:22px;height:22px;border:1.5px solid #cbd5e1;border-radius:7px;display:grid;place-items:center;flex-shrink:0}
+.task{width:100%;display:flex;align-items:center;gap:12px;text-align:left;padding:12px;border-radius:12px;transition:background .2s}
+.task:hover{background:#f8fafc}
+.celebration{animation:appear .5s ease both}
+@keyframes appear{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+button{ -webkit-tap-highlight-color:transparent }
+</style>
+</head>
+
+<body class="min-h-screen text-slate-800">
+
+<main class="max-w-2xl mx-auto px-5 py-8">
+
+<header class="flex justify-between items-center mb-8">
+  <div>
+    <p class="text-xs font-semibold tracking-widest text-slate-400 uppercase">Minha evolução</p>
+    <h1 class="text-2xl font-bold mt-1">Minhas metas</h1>
+  </div>
+  <div class="text-right">
+    <p class="text-xs text-slate-400">Hoje</p>
+    <p id="today" class="font-semibold text-sm"></p>
+  </div>
+</header>
+
+<div class="flex justify-between items-center mb-5">
+  <div>
+    <h2 class="font-bold">Objetivos ativos</h2>
+    <p class="text-xs text-slate-400 mt-1">Evolua um resultado por vez.</p>
+  </div>
+  <span id="totalMetas" class="text-xs font-semibold text-slate-500">0 metas</span>
+</div>
+
+<div id="loading" class="bg-white border border-slate-200 rounded-2xl p-8 text-center">
+  <div class="animate-pulse text-sm text-slate-400">Carregando suas metas...</div>
+</div>
+
+<div id="error" class="hidden bg-red-50 text-red-700 rounded-xl p-4 text-sm mb-5"></div>
+
+<div id="metasLista" class="space-y-5"></div>
+
+<div id="empty" class="hidden bg-white border border-slate-200 rounded-2xl p-8 text-center">
+  <div class="text-3xl mb-3">🎯</div>
+  <h3 class="font-bold">Nenhuma meta encontrada</h3>
+  <p class="text-sm text-slate-400 mt-2">Cadastre uma meta no seu sistema para começar.</p>
+</div>
+
+<footer class="text-center text-xs text-slate-400 mt-10">
+  Seu progresso é construído uma ação de cada vez.
+</footer>
+
+</main>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+
+import {
+  getFirestore,
+  collection,
+  query,
+  orderBy,
+  getDocs,
+  doc,
+  updateDoc,
+  serverTimestamp
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyD-xzRjMRVUpey19g745DvPjjpcaSHVE",
+  authDomain: "myops-d7525.firebaseapp.com",
+  projectId: "myops-d7525",
+  storageBucket: "myops-d7525.firebasestorage.app",
+  messagingSenderId: "247824192162",
+  appId: "1:247824192162:web:77c91ab1e3df855dc7fdfb"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const metasRef = collection(db, "metas");
+
+const $ = id => document.getElementById(id);
+
+let metas = [];
+let processando = new Set();
+
+const categorias = {
+  espiritual: {nome:"Espiritual",cor:"#a78bfa"},
+  saude: {nome:"Saúde",cor:"#34d399"},
+  trabalho: {nome:"Trabalho",cor:"#60a5fa"},
+  pessoal: {nome:"Pessoal",cor:"#fbbf24"}
+};
+
+function escapeHTML(value) {
+  return String(value ?? "").replace(/[&<>"']/g, char => ({
+    "&":"&amp;",
+    "<":"&lt;",
+    ">":"&gt;",
+    '"':"&quot;",
+    "'":"&#039;"
+  })[char]);
+}
+
+function dataTexto(value) {
+  if (!value) return "Não informada";
+
+  let date;
+
+  if (value?.toDate) {
+    date = value.toDate();
+  } else if (typeof value === "string") {
+    date = new Date(value + (value.length === 10 ? "T12:00:00" : ""));
+  } else {
+    date = new Date(value);
+  }
+
+  if (isNaN(date.getTime())) return "Não informada";
+
+  return date.toLocaleDateString("pt-BR");
+}
+
+function getColor(percent) {
+  if (percent < 25) return "#ef4444";
+  if (percent < 50) return "#f97316";
+  if (percent < 75) return "#eab308";
+  return "#16a34a";
+}
+
+function progressoMeta(meta) {
+  const tarefas = Array.isArray(meta.microResultados)
+    ? meta.microResultados
+    : [];
+
+  if (!tarefas.length) {
+    return Math.max(0, Math.min(100, Number(meta.progresso) || 0));
+  }
+
+  const concluidas = tarefas.filter(item => item.concluido).length;
+
+  return Math.round((concluidas / tarefas.length) * 100);
+}
+
+function renderMeta(meta) {
+  const tarefas = Array.isArray(meta.microResultados)
+    ? meta.microResultados
+    : [];
+
+  const percent = progressoMeta(meta);
+  const total = tarefas.length;
+  const concluidas = tarefas.filter(item => item.concluido).length;
+  const color = getColor(percent);
+  const categoria = categorias[meta.tipo] || {
+    nome: meta.tipo || "Geral",
+    cor: "#94a3b8"
+  };
+
+  const id = escapeHTML(meta.id);
+
+  return `
+    <section class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm"
+      data-meta="${id}">
+
+      <div class="flex justify-between items-start gap-3 mb-5">
+
+        <div class="min-w-0">
+          <span class="text-xs font-semibold uppercase tracking-wider"
+            style="color:${categoria.cor}">
+            ${escapeHTML(categoria.nome)}
+          </span>
+
+          <h2 class="text-xl font-bold mt-2 break-words">
+            ${escapeHTML(meta.nome)}
+          </h2>
+
+          <p class="text-xs text-slate-400 mt-2">
+            ${dataTexto(meta.inicio)} — ${dataTexto(meta.fim)}
+          </p>
+        </div>
+
+        <span class="text-xs px-3 py-1.5 rounded-full font-semibold shrink-0
+          ${percent === 100 ? "bg-green-50 text-green-700" : "bg-blue-50 text-blue-600"}">
+          ${percent === 100 ? "CONCLUÍDA" : "EM ANDAMENTO"}
+        </span>
+
+      </div>
+
+      <div class="flex items-end justify-between mb-3">
+        <span class="text-sm text-slate-500">Progresso</span>
+
+        <div class="flex items-baseline gap-1">
+          <strong class="text-5xl tracking-tight font-bold percentage"
+            style="color:${color}">
+            ${percent}
+          </strong>
+          <span class="text-xl text-slate-400">%</span>
+        </div>
+      </div>
+
+      <div class="h-3 bg-slate-100 rounded-full overflow-hidden">
+        <div class="progress-fill h-full rounded-full progress-bar"
+          style="width:${percent}%;background:${color}">
+        </div>
+      </div>
+
+      <div class="flex justify-between mt-2 text-xs text-slate-400">
+        <span>0%</span>
+        <span class="completed-count">${concluidas} de ${total} concluídos</span>
+        <span>100%</span>
+      </div>
+
+      <div class="border-t border-slate-100 mt-5 pt-5">
+
+        <div class="flex justify-between items-center mb-4">
+          <div>
+            <h3 class="font-bold">Micro-resultados</h3>
+            <p class="text-xs text-slate-400 mt-1">
+              Pequenas ações. Grandes resultados.
+            </p>
+          </div>
+
+          <span class="text-xs font-semibold text-slate-500">
+            ${String(concluidas).padStart(2,"0")} — ${String(total).padStart(2,"0")}
+          </span>
+        </div>
+
+        ${
+          tarefas.length
+          ? tarefas.map((tarefa, index) => `
+            <button
+              type="button"
+              class="task ${tarefa.concluido ? "done" : ""}"
+              data-task="${index}"
+              data-meta-id="${id}"
+              ${processando.has(meta.id) ? "disabled" : ""}
+              aria-pressed="${!!tarefa.concluido}"
+            >
+
+              <span class="text-xs font-semibold text-slate-300 w-6">
+                ${String(index + 1).padStart(2,"0")}
+              </span>
+
+              <span class="task-name flex-1 text-sm font-medium">
+                ${escapeHTML(tarefa.nome)}
+              </span>
+
+              <span class="check">
+                ${tarefa.concluido ? "✓" : ""}
+              </span>
+
+            </button>
+          `).join("")
+          : `<p class="text-sm text-slate-400 py-3">
+              Esta meta ainda não possui micro-resultados cadastrados.
+            </p>`
+        }
+
+        <div class="celebration ${percent === 100 ? "" : "hidden"} text-center py-5 mt-3 border-t border-slate-100">
+          <div class="text-5xl mb-3">🏆</div>
+          <h3 class="text-2xl font-bold text-green-600">Meta concluída!</h3>
+          <p class="text-sm text-slate-500 mt-2">
+            Você chegou aos 100%.
+          </p>
+          <p class="text-xs text-slate-400 mt-2">
+            ${meta.concluidaEm ? "Concluída em " + dataTexto(meta.concluidaEm) : "Parabéns pela conquista!"}
+          </p>
+        </div>
+
+      </div>
+    </section>
+  `;
+}
+
+function render() {
+  $("totalMetas").textContent =
+    `${metas.length} ${metas.length === 1 ? "meta" : "metas"}`;
+
+  $("metasLista").innerHTML = metas.map(renderMeta).join("");
+
+  $("empty").classList.toggle("hidden", metas.length > 0);
+}
+
+async function carregarMetas() {
+  $("loading").classList.remove("hidden");
+  $("error").classList.add("hidden");
+
+  try {
+    const q = query(metasRef, orderBy("criadoEm", "desc"));
+    const snapshot = await getDocs(q);
+
+    metas = snapshot.docs.map(documento => ({
+      id: documento.id,
+      ...documento.data()
+    }));
+
+    render();
+
+  } catch (error) {
+    console.error("Erro ao carregar metas:", error);
+
+    $("error").textContent =
+      "Não foi possível carregar suas metas. Verifique a conexão e as permissões do Firestore.";
+
+    $("error").classList.remove("hidden");
+
+  } finally {
+    $("loading").classList.add("hidden");
+  }
+}
+
+async function alternarMicroResultado(metaId, index) {
+  if (processando.has(metaId)) return;
+
+  const meta = metas.find(item => item.id === metaId);
+  if (!meta) return;
+
+  const tarefas = Array.isArray(meta.microResultados)
+    ? meta.microResultados.map(item => ({...item}))
+    : [];
+
+  if (!tarefas[index]) return;
+
+  const estadoAnterior = {...meta};
+  const estavaConcluida = !!tarefas[index].concluido;
+
+  tarefas[index].concluido = !estavaConcluida;
+
+  const total = tarefas.length;
+  const concluidas = tarefas.filter(item => item.concluido).length;
+  const percent = total
+    ? Math.round((concluidas / total) * 100)
+    : 0;
+
+  const concluida = percent === 100;
+
+  processando.add(metaId);
+
+  // Atualização otimista da interface
+  meta.microResultados = tarefas;
+  meta.progresso = percent;
+  meta.concluida = concluida;
+
+  if (concluida && !estadoAnterior.concluida) {
+    meta.concluidaEm = new Date();
+  } else if (!concluida) {
+    meta.concluidaEm = null;
+  }
+
+  render();
+
+  try {
+    const atualizacao = {
+      microResultados: tarefas,
+      progresso: percent,
+      concluida
+    };
+
+    if (concluida && !estadoAnterior.concluida) {
+      atualizacao.concluidaEm = serverTimestamp();
+    } else if (!concluida) {
+      atualizacao.concluidaEm = null;
+    }
+
+    await updateDoc(doc(db, "metas", metaId), atualizacao);
+
+    // Busca a data definitiva gravada pelo servidor.
+    if (concluida) {
+      const snapshot = await getDocs(
+        query(metasRef, orderBy("criadoEm", "desc"))
+      );
+
+      const atualizado = snapshot.docs.find(d => d.id === metaId);
+
+      if (atualizado) {
+        const dados = atualizado.data();
+        meta.concluidaEm = dados.concluidaEm || null;
+      }
+    }
+
+  } catch (error) {
+    console.error("Erro ao atualizar micro-resultado:", error);
+
+    Object.assign(meta, estadoAnterior);
+
+    $("error").textContent =
+      "Não foi possível salvar sua alteração. Confira as regras de segurança do Firestore.";
+
+    $("error").classList.remove("hidden");
+
+  } finally {
+    processando.delete(metaId);
+    render();
+  }
+}
+
+// EVENTO DOS MICRO-RESULTADOS
+$("metasLista").addEventListener("click", event => {
+  const button = event.target.closest("[data-task]");
+  if (!button) return;
+
+  const metaId = button.dataset.metaId;
+  const index = Number(button.dataset.task);
+
+  alternarMicroResultado(metaId, index);
+});
+
+// DATA ATUAL
+$("today").textContent =
+  new Date().toLocaleDateString("pt-BR");
+
+// INICIAR
+carregarMetas();
+
+</script>
+
+</body>
+</html>

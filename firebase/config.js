@@ -9,13 +9,12 @@ import { getFirestore }
 from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js"
 
 const firebaseConfig = {
-
-apiKey: "AIzaSyD-xzRjMRVUpey19g745DvPjjpCApqSHVE",
-  authDomain: "myops-d7525.firebaseapp.com",
-  projectId: "myops-d7525",
-  storageBucket: "myops-d7525.firebasestorage.app",
-  messagingSenderId: "247824192162",
-  appId: "1:247824192162:web:77c91ab1e3df855dc7fdfb"
+  apiKey: "AIzaSyDnJtEbBg94FWEkZ0j-nyqWN-VXhnD4IyU",
+  authDomain: "machine-2c41d.firebaseapp.com",
+  projectId: "machine-2c41d",
+  storageBucket: "machine-2c41d.firebasestorage.app",
+  messagingSenderId: "402989657148",
+  appId: "1:402989657148:web:7b9080399c1c2a698d2739"
 
 }
 
